@@ -1,0 +1,125 @@
+package com.unq.dapp0.c1.comprandoencasa.model;
+
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.ArrayList;
+
+/**
+ * Represents the internal administrative data of a shop and it's mecanics.
+ */
+public class Shop {
+
+    private ArrayList<ShopCategory> shopCategories;
+    private String domicile;
+    private ArrayList<DayOfWeek> days;
+    private LocalTime openingHour;
+    private LocalTime closingHour;
+    private ArrayList<PaymentMethod> paymentMethods;
+    private Integer deliveryRadius;
+    private final Manager manager;
+
+    public Shop(ArrayList<ShopCategory> shopCategories, String domicile, ArrayList<DayOfWeek> days, LocalTime openingHour, LocalTime closingHour, ArrayList<PaymentMethod> paymentMethods, Integer deliveryRadius, Manager manager) {
+        this.shopCategories = shopCategories;
+        this.domicile = domicile;
+        this.days = days;
+        this.openingHour = openingHour;
+        this.closingHour = closingHour;
+        this.paymentMethods = paymentMethods;
+        this.deliveryRadius = deliveryRadius;
+        this.manager = manager;
+    }
+
+    public ArrayList<ShopCategory> getShopCategories() {
+        return this.shopCategories;
+    }
+
+    public void addShopCategory(ShopCategory shopCategory) {
+        this.shopCategories.add(shopCategory);
+    }
+
+    public void removeShopCategory(ShopCategory shopCategory) {
+        this.shopCategories.remove(shopCategory);
+    }
+
+    public String getDomicile() {
+        return this.domicile;
+    }
+
+    public void setDomicile(String newDomicile) {
+        this.domicile = newDomicile;
+    }
+
+    public ArrayList<DayOfWeek> getDays() {
+        return this.days;
+    }
+
+    public LocalTime getOpeningHour() {
+        return this.openingHour;
+    }
+
+    public LocalTime getClosingHour() {
+        return this.closingHour;
+    }
+
+    public void removeDay(DayOfWeek dia) {
+        this.days.remove(dia);
+    }
+
+    /**
+     * @throws DayAlreadyExistsException if the day is already present.
+     */
+    public void addDay(DayOfWeek day) {
+        if (this.days.contains(day)){
+            throw new DayAlreadyExistsException(day);
+        }
+        this.days.add(day);
+    }
+
+    public void setOpeningHour(LocalTime newHour) {
+        this.openingHour = newHour;
+    }
+
+    public void setClosingHour(LocalTime newHour) {
+        this.closingHour = newHour;
+    }
+
+    public ArrayList<PaymentMethod> getPaymentMethods() {
+        return this.paymentMethods;
+    }
+
+    /**
+     * @throws PaymentMethodAlreadyExistsException if the payment method is already present.
+     */
+    public void addPaymentMethod(PaymentMethod paymentMethod) {
+        if (this.paymentMethods.contains(paymentMethod)){
+            throw new PaymentMethodAlreadyExistsException(paymentMethod);
+        }
+        this.paymentMethods.add(paymentMethod);
+    }
+
+    public void removePaymentMethod(PaymentMethod paymentMethod) {
+        this.paymentMethods.remove(paymentMethod);
+    }
+
+    /**
+     * @return radius in km as an Integer.
+     */
+    public Integer getDeliveryRadius() {
+        return this.deliveryRadius;
+    }
+
+    /**
+     * @param distanceInKM as an Integer.
+     */
+    public void setDeliveryRadius(Integer distanceInKM) {
+        this.deliveryRadius = distanceInKM;
+    }
+
+    /**
+     * Validates that the given manager is the same as the manager in charge of the Shop.
+     * @param manager to validate
+     */
+    public void validateManager(Manager manager) {
+        this.manager.validate(manager);
+    }
+}
