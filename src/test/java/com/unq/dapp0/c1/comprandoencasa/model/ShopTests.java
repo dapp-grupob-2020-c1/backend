@@ -305,6 +305,81 @@ public class ShopTests {
         assertDoesNotThrow(()-> shop.validateManager(manager));
         assertThrows(InvalidManagerException.class, ()-> shop.validateManager(anotherManager));
     }
+
+    @Test
+    public void aShopHasAListOfProducts(){
+        Product prodMock1 = mock(Product.class);
+        Product prodMock2 = mock(Product.class);
+
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(prodMock1);
+        products.add(prodMock2);
+
+        Shop shop = ShopFactory.aShop().withProducts(products).build();
+
+        assertTrue(shop.getProducts().contains(prodMock1));
+        assertTrue(shop.getProducts().contains(prodMock2));
+    }
+
+    @Test
+    public void aShopCanAddANewProduct(){
+        Product prodMock1 = mock(Product.class);
+        Product prodMock2 = mock(Product.class);
+
+        when(prodMock1.getID()).thenReturn(1L);
+        when(prodMock2.getID()).thenReturn(2L);
+
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(prodMock1);
+
+        Shop shop = ShopFactory.aShop().withProducts(products).build();
+
+        assertTrue(shop.getProducts().contains(prodMock1));
+        assertFalse(shop.getProducts().contains(prodMock2));
+
+        shop.addProduct(prodMock2);
+
+        assertTrue(shop.getProducts().contains(prodMock2));
+    }
+
+    @Test
+    public void aShopCanRemoveAProduct(){
+        Product prodMock1 = mock(Product.class);
+        Product prodMock2 = mock(Product.class);
+
+        when(prodMock1.getID()).thenReturn(1L);
+        when(prodMock2.getID()).thenReturn(2L);
+
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(prodMock1);
+        products.add(prodMock2);
+
+        Shop shop = ShopFactory.aShop().withProducts(products).build();
+
+        assertTrue(shop.getProducts().contains(prodMock1));
+        assertTrue(shop.getProducts().contains(prodMock2));
+
+        shop.removeProduct(prodMock2);
+
+        assertFalse(shop.getProducts().contains(prodMock2));
+    }
+
+    @Test
+    public void aShopCannotAddTheSameProductTwice(){
+        Product prodMock = mock(Product.class);
+        when(prodMock.getID()).thenReturn(1L);
+
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(prodMock);
+
+        Shop shop = ShopFactory.aShop().withProducts(products).build();
+
+        assertTrue(shop.getProducts().contains(prodMock));
+
+        Throwable exception = assertThrows(ProductAlreadyPresentException.class, ()->shop.addProduct(prodMock));
+        assertEquals("The product "+1L+" is already present in the list", exception.getMessage());
+        assertEquals(1, shop.getProducts().size());
+    }
 }
 
 class ShopFactory {
@@ -316,6 +391,7 @@ class ShopFactory {
     private ArrayList<PaymentMethod> paymentMethods;
     private Integer deliveryRadius;
     private Manager manager;
+    private ArrayList<Product> products;
 
     public static ShopFactory aShop(){
         return new ShopFactory();
@@ -330,6 +406,7 @@ class ShopFactory {
         this.paymentMethods = new ArrayList<>();
         this.deliveryRadius = 1;
         this.manager = new Manager();
+        this.products = new ArrayList<>();
     }
 
     public ShopFactory withCategories(ArrayList<ShopCategory> shopCategories){
@@ -364,8 +441,20 @@ class ShopFactory {
         this.manager = manager;
         return this;
     }
+    public ShopFactory withProducts(ArrayList<Product> products) {
+        this.products = products;
+        return this;
+    }
 
     public Shop build(){
-        return new Shop(shopCategories, domicile, days, openingHour, closingHour, paymentMethods, deliveryRadius, manager);
+        return new Shop(shopCategories,
+                domicile,
+                days,
+                openingHour,
+                closingHour,
+                paymentMethods,
+                deliveryRadius,
+                manager,
+                products);
     }
 }

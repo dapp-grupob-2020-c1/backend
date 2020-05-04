@@ -3,6 +3,8 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
 
 /**
  * Represents the internal administrative data of a shop and it's mecanics.
@@ -17,8 +19,9 @@ public class Shop {
     private ArrayList<PaymentMethod> paymentMethods;
     private Integer deliveryRadius;
     private final Manager manager;
+    private ArrayList<Product> products;
 
-    public Shop(ArrayList<ShopCategory> shopCategories, String domicile, ArrayList<DayOfWeek> days, LocalTime openingHour, LocalTime closingHour, ArrayList<PaymentMethod> paymentMethods, Integer deliveryRadius, Manager manager) {
+    public Shop(ArrayList<ShopCategory> shopCategories, String domicile, ArrayList<DayOfWeek> days, LocalTime openingHour, LocalTime closingHour, ArrayList<PaymentMethod> paymentMethods, Integer deliveryRadius, Manager manager, ArrayList<Product> products) {
         this.shopCategories = shopCategories;
         this.domicile = domicile;
         this.days = days;
@@ -27,6 +30,7 @@ public class Shop {
         this.paymentMethods = paymentMethods;
         this.deliveryRadius = deliveryRadius;
         this.manager = manager;
+        this.products = products;
     }
 
     public ArrayList<ShopCategory> getShopCategories() {
@@ -117,9 +121,28 @@ public class Shop {
 
     /**
      * Validates that the given manager is the same as the manager in charge of the Shop.
+     * Delegates the verification to his own manager.
      * @param manager to validate
      */
     public void validateManager(Manager manager) {
         this.manager.validate(manager);
+    }
+
+    public ArrayList<Product> getProducts() {
+        return this.products;
+    }
+
+    public void addProduct(Product product) {
+        Optional<Product> foundProduct = this.products.stream().filter(p-> p.getID().equals(product.getID())).findFirst();
+        if (!foundProduct.isPresent()){
+            this.products.add(product);
+        } else {
+            throw new ProductAlreadyPresentException(product);
+        }
+    }
+
+    public void removeProduct(Product product) {
+        Optional<Product> foundProduct = this.products.stream().filter(p-> p.getID().equals(product.getID())).findFirst();
+        foundProduct.ifPresent(value -> this.products.remove(value));
     }
 }
