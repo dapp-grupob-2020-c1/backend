@@ -6,15 +6,13 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class ComercioTests {
 
     @Test
-    public void comercioPoseeLosRubrosDeAlimentosYBebidasYLibreria(){
+    public void unComercioPoseeLosRubrosDeAlimentosYBebidasYLibreria(){
         ArrayList<Rubro> rubros = new ArrayList<>();
         rubros.add(Rubro.AlimentosYBebidas);
         rubros.add(Rubro.Libreria);
@@ -35,7 +33,7 @@ public class ComercioTests {
     }
 
     @Test
-    public void comercioPuedeAgregarUnRubroASuListaDeRubros(){
+    public void unComercioPuedeAgregarUnRubroASuListaDeRubros(){
         ArrayList<Rubro> rubros = new ArrayList<>();
         rubros.add(Rubro.AlimentosYBebidas);
 
@@ -49,7 +47,7 @@ public class ComercioTests {
     }
 
     @Test
-    public void comercioPuedeQuitarUnRubroDeSuListaDeRubros(){
+    public void unComercioPuedeQuitarUnRubroDeSuListaDeRubros(){
         ArrayList<Rubro> rubros = new ArrayList<>();
         rubros.add(Rubro.AlimentosYBebidas);
         rubros.add(Rubro.Libreria);
@@ -64,7 +62,7 @@ public class ComercioTests {
     }
 
     @Test
-    public void comercioPoseeUnDomicilio(){
+    public void unComercioPoseeUnDomicilio(){
         String domicilio = "Calle Test 123";
 
         Comercio comercio = ComercioFactory.unComercio().conDomicilio(domicilio).build();
@@ -73,7 +71,7 @@ public class ComercioTests {
     }
 
     @Test
-    public void comercioPoseeDiasDeAtencion(){
+    public void unComercioPoseeDiasDeAtencion(){
         ArrayList<DayOfWeek> dias = new ArrayList<>();
         dias.add(DayOfWeek.MONDAY);
         dias.add(DayOfWeek.TUESDAY);
@@ -91,7 +89,7 @@ public class ComercioTests {
     }
 
     @Test
-    public void comercioPuedeQuitarUnDiaDeAtencion(){
+    public void unComercioPuedeQuitarUnDiaDeAtencion(){
         ArrayList<DayOfWeek> dias = new ArrayList<>();
         dias.add(DayOfWeek.MONDAY);
         dias.add(DayOfWeek.TUESDAY);
@@ -107,7 +105,7 @@ public class ComercioTests {
     }
 
     @Test
-    public void comercioPuedeAgregarUnDiaDeAtencion(){
+    public void unComercioPuedeAgregarUnDiaDeAtencion(){
         ArrayList<DayOfWeek> dias = new ArrayList<>();
         dias.add(DayOfWeek.MONDAY);
 
@@ -122,7 +120,7 @@ public class ComercioTests {
     }
 
     @Test
-    public void comercioNoPuedeAgregarUnDiaDeAtencionQueYaPosee(){
+    public void unComercioNoPuedeAgregarUnDiaDeAtencionQueYaPosee(){
         ArrayList<DayOfWeek> dias = new ArrayList<>();
         dias.add(DayOfWeek.MONDAY);
         dias.add(DayOfWeek.TUESDAY);
@@ -139,7 +137,7 @@ public class ComercioTests {
     }
 
     @Test
-    public void comercioPoseeHorariosDeAperturaYCierre(){
+    public void unComercioPoseeHorariosDeAperturaYCierre(){
         LocalTime horarioApertura = LocalTime.of(8,0);
         LocalTime horarioCierre = LocalTime.of(16, 0);
 
@@ -153,7 +151,7 @@ public class ComercioTests {
     }
 
     @Test
-    public void comercioPuedeCambiarSuHorarioDeApertura(){
+    public void unComercioPuedeCambiarSuHorarioDeApertura(){
         LocalTime horarioApertura = LocalTime.of(8,0);
 
         Comercio comercio = ComercioFactory.unComercio()
@@ -168,7 +166,7 @@ public class ComercioTests {
     }
 
     @Test
-    public void comercioPuedeCambiarSuHorarioDeCierre(){
+    public void unComercioPuedeCambiarSuHorarioDeCierre(){
         LocalTime horarioCierre = LocalTime.of(16, 0);
 
         Comercio comercio = ComercioFactory.unComercio()
@@ -183,7 +181,7 @@ public class ComercioTests {
     }
 
     @Test
-    public void comercioPoseeMediosDePago(){
+    public void unComercioPoseeMediosDePago(){
         ArrayList<MedioDePago> mediosDePago = new ArrayList<>();
         mediosDePago.add(MedioDePago.EFECTIVO);
         mediosDePago.add(MedioDePago.DEBITO);
@@ -199,7 +197,7 @@ public class ComercioTests {
     }
 
     @Test
-    public void comercioPuedeAgregarUnNuevoMedioDePago(){
+    public void unComercioPuedeAgregarUnNuevoMedioDePago(){
         ArrayList<MedioDePago> mediosDePago = new ArrayList<>();
         mediosDePago.add(MedioDePago.EFECTIVO);
 
@@ -216,7 +214,7 @@ public class ComercioTests {
     }
 
     @Test
-    public void comercioPuedeQuitarUnMedioDePago(){
+    public void unComercioPuedeQuitarUnMedioDePago(){
         ArrayList<MedioDePago> mediosDePago = new ArrayList<>();
         mediosDePago.add(MedioDePago.EFECTIVO);
         mediosDePago.add(MedioDePago.DEBITO);
@@ -234,7 +232,7 @@ public class ComercioTests {
     }
 
     @Test
-    public void comercioNoPuedeAgregarUnMedioDePagoYaExistente(){
+    public void unComercioNoPuedeAgregarUnMedioDePagoYaExistente(){
         ArrayList<MedioDePago> mediosDePago = new ArrayList<>();
         mediosDePago.add(MedioDePago.EFECTIVO);
         mediosDePago.add(MedioDePago.DEBITO);
@@ -251,6 +249,47 @@ public class ComercioTests {
         assertEquals("El medio de pago "+MedioDePago.DEBITO.name()+" ya existe", exception.getMessage());
         assertEquals(2, comercio.getMediosDePago().size());
     }
+
+    @Test
+    public void unComercioPoseeUnaDistanciaMaximaDeEnvio(){
+        Integer distanciaEnKM = 2;
+
+        Comercio comercio = ComercioFactory.unComercio()
+                .conDistanciaDeEnvioEnKM(distanciaEnKM)
+                .build();
+
+        assertEquals(2, comercio.getDistanciaDeEnvioEnKM());
+    }
+
+    @Test
+    public void unComercioPuedeCambiarSuDistanciaMaximaDeEnvio(){
+        Integer distanciaEnKM = 2;
+
+        Comercio comercio = ComercioFactory.unComercio()
+                .conDistanciaDeEnvioEnKM(distanciaEnKM)
+                .build();
+
+        assertEquals(2, comercio.getDistanciaDeEnvioEnKM());
+
+        comercio.setDistanciaDeEnvioEnKM(3);
+
+        assertEquals(3, comercio.getDistanciaDeEnvioEnKM());
+    }
+
+    @Test
+    public void unComercioPoseeUnEncargadoAlQuePuedeValidar(){
+        Encargado encargado = mock(Encargado.class);
+        Encargado otroEncargado = mock(Encargado.class);
+
+        doThrow(EncargadoNoValidoException.class).when(encargado).validar(otroEncargado);
+
+        Comercio comercio = ComercioFactory.unComercio()
+                .conEncargado(encargado)
+                .build();
+
+        assertDoesNotThrow(()->comercio.validarEncargado(encargado));
+        assertThrows(EncargadoNoValidoException.class, ()->comercio.validarEncargado(otroEncargado));
+    }
 }
 
 class ComercioFactory{
@@ -264,6 +303,8 @@ class ComercioFactory{
     private LocalTime horarioApertura;
     private LocalTime horarioCierre;
     private ArrayList<MedioDePago> mediosDePago;
+    private Integer distanciaDeEnvioEnKM;
+    private Encargado encargado;
 
     public ComercioFactory(){
         this.rubros = new ArrayList<>();
@@ -272,6 +313,8 @@ class ComercioFactory{
         this.horarioApertura = LocalTime.of(8,0);
         this.horarioCierre = LocalTime.of(17,0);
         this.mediosDePago = new ArrayList<>();
+        this.distanciaDeEnvioEnKM = 1;
+        this.encargado = new Encargado();
     }
 
     public ComercioFactory conRubros(ArrayList<Rubro> rubros){
@@ -298,8 +341,16 @@ class ComercioFactory{
         this.mediosDePago = mediosDePago;
         return this;
     }
+    public ComercioFactory conDistanciaDeEnvioEnKM(Integer distanciaEnKM) {
+        this.distanciaDeEnvioEnKM = distanciaEnKM;
+        return this;
+    }
+    public ComercioFactory conEncargado(Encargado encargado) {
+        this.encargado = encargado;
+        return this;
+    }
 
     public Comercio build(){
-        return new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
+        return new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago, distanciaDeEnvioEnKM, encargado);
     }
 }
