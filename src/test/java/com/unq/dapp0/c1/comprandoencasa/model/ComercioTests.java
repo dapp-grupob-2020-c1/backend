@@ -6,22 +6,20 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ComercioTests {
 
     @Test
-    public void comercioPoseeElRubroDeAlimentosY(){
+    public void comercioPoseeLosRubrosDeAlimentosYBebidasYLibreria(){
         ArrayList<Rubro> rubros = new ArrayList<>();
         rubros.add(Rubro.AlimentosYBebidas);
         rubros.add(Rubro.Libreria);
-        String domicilio = "Calle Test 123";
-        ArrayList<DayOfWeek> dias = new ArrayList<>();
-        LocalTime horarioApertura = LocalTime.of(8,0);
-        LocalTime horarioCierre = LocalTime.of(16, 0);
-        ArrayList<MedioDePago> mediosDePago = new ArrayList<MedioDePago>();
 
-        Comercio comercio = new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
+        Comercio comercio = ComercioFactory.unComercio().conRubros(rubros).build();
 
         assertTrue(comercio.getRubros().contains(Rubro.AlimentosYBebidas));
         assertTrue(comercio.getRubros().contains(Rubro.Libreria));
@@ -40,13 +38,8 @@ public class ComercioTests {
     public void comercioPuedeAgregarUnRubroASuListaDeRubros(){
         ArrayList<Rubro> rubros = new ArrayList<>();
         rubros.add(Rubro.AlimentosYBebidas);
-        String domicilio = "Calle Test 123";
-        ArrayList<DayOfWeek> dias = new ArrayList<>();
-        LocalTime horarioApertura = LocalTime.of(8,0);
-        LocalTime horarioCierre = LocalTime.of(16, 0);
-        ArrayList<MedioDePago> mediosDePago = new ArrayList<MedioDePago>();
 
-        Comercio comercio = new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
+        Comercio comercio = ComercioFactory.unComercio().conRubros(rubros).build();
 
         assertTrue(comercio.getRubros().contains(Rubro.AlimentosYBebidas));
         assertFalse(comercio.getRubros().contains(Rubro.Libreria));
@@ -60,13 +53,8 @@ public class ComercioTests {
         ArrayList<Rubro> rubros = new ArrayList<>();
         rubros.add(Rubro.AlimentosYBebidas);
         rubros.add(Rubro.Libreria);
-        String domicilio = "Calle Test 123";
-        ArrayList<DayOfWeek> dias = new ArrayList<>();
-        LocalTime horarioApertura = LocalTime.of(8,0);
-        LocalTime horarioCierre = LocalTime.of(16, 0);
-        ArrayList<MedioDePago> mediosDePago = new ArrayList<MedioDePago>();
 
-        Comercio comercio = new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
+        Comercio comercio = ComercioFactory.unComercio().conRubros(rubros).build();
 
         assertTrue(comercio.getRubros().contains(Rubro.AlimentosYBebidas));
         assertTrue(comercio.getRubros().contains(Rubro.Libreria));
@@ -77,32 +65,21 @@ public class ComercioTests {
 
     @Test
     public void comercioPoseeUnDomicilio(){
-        ArrayList<Rubro> rubros = new ArrayList<>();
         String domicilio = "Calle Test 123";
-        ArrayList<DayOfWeek> dias = new ArrayList<>();
-        LocalTime horarioApertura = LocalTime.of(8,0);
-        LocalTime horarioCierre = LocalTime.of(16, 0);
-        ArrayList<MedioDePago> mediosDePago = new ArrayList<MedioDePago>();
 
-        Comercio comercio = new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
+        Comercio comercio = ComercioFactory.unComercio().conDomicilio(domicilio).build();
 
         assertEquals(comercio.getDomicilio(), "Calle Test 123");
     }
 
     @Test
     public void comercioPoseeDiasDeAtencion(){
-        ArrayList<Rubro> rubros = new ArrayList<>();
-        String domicilio = "Calle Test 123";
-
         ArrayList<DayOfWeek> dias = new ArrayList<>();
         dias.add(DayOfWeek.MONDAY);
         dias.add(DayOfWeek.TUESDAY);
         dias.add(DayOfWeek.WEDNESDAY);
-        LocalTime horarioApertura = LocalTime.of(8,0);
-        LocalTime horarioCierre = LocalTime.of(16, 0);
-        ArrayList<MedioDePago> mediosDePago = new ArrayList<MedioDePago>();
 
-        Comercio comercio = new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
+        Comercio comercio = ComercioFactory.unComercio().conDias(dias).build();
 
         assertTrue(comercio.getDias().contains(DayOfWeek.MONDAY));
         assertTrue(comercio.getDias().contains(DayOfWeek.TUESDAY));
@@ -115,17 +92,11 @@ public class ComercioTests {
 
     @Test
     public void comercioPuedeQuitarUnDiaDeAtencion(){
-        ArrayList<Rubro> rubros = new ArrayList<>();
-        String domicilio = "Calle Test 123";
-
         ArrayList<DayOfWeek> dias = new ArrayList<>();
         dias.add(DayOfWeek.MONDAY);
         dias.add(DayOfWeek.TUESDAY);
-        LocalTime horarioApertura = LocalTime.of(8,0);
-        LocalTime horarioCierre = LocalTime.of(16, 0);
-        ArrayList<MedioDePago> mediosDePago = new ArrayList<MedioDePago>();
 
-        Comercio comercio = new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
+        Comercio comercio = ComercioFactory.unComercio().conDias(dias).build();
 
         assertTrue(comercio.getDias().contains(DayOfWeek.MONDAY));
         assertTrue(comercio.getDias().contains(DayOfWeek.TUESDAY));
@@ -137,16 +108,10 @@ public class ComercioTests {
 
     @Test
     public void comercioPuedeAgregarUnDiaDeAtencion(){
-        ArrayList<Rubro> rubros = new ArrayList<>();
-        String domicilio = "Calle Test 123";
-
         ArrayList<DayOfWeek> dias = new ArrayList<>();
         dias.add(DayOfWeek.MONDAY);
-        LocalTime horarioApertura = LocalTime.of(8,0);
-        LocalTime horarioCierre = LocalTime.of(16, 0);
-        ArrayList<MedioDePago> mediosDePago = new ArrayList<MedioDePago>();
 
-        Comercio comercio = new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
+        Comercio comercio = ComercioFactory.unComercio().conDias(dias).build();
 
         assertTrue(comercio.getDias().contains(DayOfWeek.MONDAY));
         assertFalse(comercio.getDias().contains(DayOfWeek.TUESDAY));
@@ -158,17 +123,11 @@ public class ComercioTests {
 
     @Test
     public void comercioNoPuedeAgregarUnDiaDeAtencionQueYaPosee(){
-        ArrayList<Rubro> rubros = new ArrayList<>();
-        String domicilio = "Calle Test 123";
-
         ArrayList<DayOfWeek> dias = new ArrayList<>();
         dias.add(DayOfWeek.MONDAY);
         dias.add(DayOfWeek.TUESDAY);
-        LocalTime horarioApertura = LocalTime.of(8,0);
-        LocalTime horarioCierre = LocalTime.of(16, 0);
-        ArrayList<MedioDePago> mediosDePago = new ArrayList<MedioDePago>();
 
-        Comercio comercio = new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
+        Comercio comercio = ComercioFactory.unComercio().conDias(dias).build();
 
         assertTrue(comercio.getDias().contains(DayOfWeek.MONDAY));
         assertTrue(comercio.getDias().contains(DayOfWeek.TUESDAY));
@@ -181,15 +140,13 @@ public class ComercioTests {
 
     @Test
     public void comercioPoseeHorariosDeAperturaYCierre(){
-        ArrayList<Rubro> rubros = new ArrayList<>();
-        String domicilio = "Calle Test 123";
-
-        ArrayList<DayOfWeek> dias = new ArrayList<>();
         LocalTime horarioApertura = LocalTime.of(8,0);
         LocalTime horarioCierre = LocalTime.of(16, 0);
-        ArrayList<MedioDePago> mediosDePago = new ArrayList<MedioDePago>();
 
-        Comercio comercio = new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
+        Comercio comercio = ComercioFactory.unComercio()
+                .conHorarioApertura(horarioApertura)
+                .conHorarioCierre(horarioCierre)
+                .build();
 
         assertEquals(comercio.getHorarioApertura(), LocalTime.of(8, 0));
         assertEquals(comercio.getHorarioCierre(), LocalTime.of(16, 0));
@@ -197,15 +154,11 @@ public class ComercioTests {
 
     @Test
     public void comercioPuedeCambiarSuHorarioDeApertura(){
-        ArrayList<Rubro> rubros = new ArrayList<>();
-        String domicilio = "Calle Test 123";
-
-        ArrayList<DayOfWeek> dias = new ArrayList<>();
         LocalTime horarioApertura = LocalTime.of(8,0);
-        LocalTime horarioCierre = LocalTime.of(16, 0);
-        ArrayList<MedioDePago> mediosDePago = new ArrayList<MedioDePago>();
 
-        Comercio comercio = new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
+        Comercio comercio = ComercioFactory.unComercio()
+                .conHorarioApertura(horarioApertura)
+                .build();
 
         assertEquals(comercio.getHorarioApertura(), LocalTime.of(8, 0));
 
@@ -216,15 +169,11 @@ public class ComercioTests {
 
     @Test
     public void comercioPuedeCambiarSuHorarioDeCierre(){
-        ArrayList<Rubro> rubros = new ArrayList<>();
-        String domicilio = "Calle Test 123";
-
-        ArrayList<DayOfWeek> dias = new ArrayList<>();
-        LocalTime horarioApertura = LocalTime.of(8,0);
         LocalTime horarioCierre = LocalTime.of(16, 0);
-        ArrayList<MedioDePago> mediosDePago = new ArrayList<MedioDePago>();
 
-        Comercio comercio = new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
+        Comercio comercio = ComercioFactory.unComercio()
+                .conHorarioCierre(horarioCierre)
+                .build();
 
         assertEquals(comercio.getHorarioCierre(), LocalTime.of(16, 0));
 
@@ -235,18 +184,13 @@ public class ComercioTests {
 
     @Test
     public void comercioPoseeMediosDePago(){
-        ArrayList<Rubro> rubros = new ArrayList<>();
-        String domicilio = "Calle Test 123";
-
-        ArrayList<DayOfWeek> dias = new ArrayList<>();
-        LocalTime horarioApertura = LocalTime.of(8,0);
-        LocalTime horarioCierre = LocalTime.of(16, 0);
-
-        ArrayList<MedioDePago> mediosDePago = new ArrayList<MedioDePago>();
+        ArrayList<MedioDePago> mediosDePago = new ArrayList<>();
         mediosDePago.add(MedioDePago.EFECTIVO);
         mediosDePago.add(MedioDePago.DEBITO);
 
-        Comercio comercio = new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
+        Comercio comercio = ComercioFactory.unComercio()
+                .conMediosDePago(mediosDePago)
+                .build();
 
         assertTrue(comercio.getMediosDePago().contains(MedioDePago.EFECTIVO));
         assertTrue(comercio.getMediosDePago().contains(MedioDePago.DEBITO));
@@ -256,17 +200,12 @@ public class ComercioTests {
 
     @Test
     public void comercioPuedeAgregarUnNuevoMedioDePago(){
-        ArrayList<Rubro> rubros = new ArrayList<>();
-        String domicilio = "Calle Test 123";
-
-        ArrayList<DayOfWeek> dias = new ArrayList<>();
-        LocalTime horarioApertura = LocalTime.of(8,0);
-        LocalTime horarioCierre = LocalTime.of(16, 0);
-
-        ArrayList<MedioDePago> mediosDePago = new ArrayList<MedioDePago>();
+        ArrayList<MedioDePago> mediosDePago = new ArrayList<>();
         mediosDePago.add(MedioDePago.EFECTIVO);
 
-        Comercio comercio = new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
+        Comercio comercio = ComercioFactory.unComercio()
+                .conMediosDePago(mediosDePago)
+                .build();
 
         assertTrue(comercio.getMediosDePago().contains(MedioDePago.EFECTIVO));
         assertFalse(comercio.getMediosDePago().contains(MedioDePago.DEBITO));
@@ -278,18 +217,13 @@ public class ComercioTests {
 
     @Test
     public void comercioPuedeQuitarUnMedioDePago(){
-        ArrayList<Rubro> rubros = new ArrayList<>();
-        String domicilio = "Calle Test 123";
-
-        ArrayList<DayOfWeek> dias = new ArrayList<>();
-        LocalTime horarioApertura = LocalTime.of(8,0);
-        LocalTime horarioCierre = LocalTime.of(16, 0);
-
-        ArrayList<MedioDePago> mediosDePago = new ArrayList<MedioDePago>();
+        ArrayList<MedioDePago> mediosDePago = new ArrayList<>();
         mediosDePago.add(MedioDePago.EFECTIVO);
         mediosDePago.add(MedioDePago.DEBITO);
 
-        Comercio comercio = new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
+        Comercio comercio = ComercioFactory.unComercio()
+                .conMediosDePago(mediosDePago)
+                .build();
 
         assertTrue(comercio.getMediosDePago().contains(MedioDePago.EFECTIVO));
         assertTrue(comercio.getMediosDePago().contains(MedioDePago.DEBITO));
@@ -301,18 +235,13 @@ public class ComercioTests {
 
     @Test
     public void comercioNoPuedeAgregarUnMedioDePagoYaExistente(){
-        ArrayList<Rubro> rubros = new ArrayList<>();
-        String domicilio = "Calle Test 123";
-
-        ArrayList<DayOfWeek> dias = new ArrayList<>();
-        LocalTime horarioApertura = LocalTime.of(8,0);
-        LocalTime horarioCierre = LocalTime.of(16, 0);
-
-        ArrayList<MedioDePago> mediosDePago = new ArrayList<MedioDePago>();
+        ArrayList<MedioDePago> mediosDePago = new ArrayList<>();
         mediosDePago.add(MedioDePago.EFECTIVO);
         mediosDePago.add(MedioDePago.DEBITO);
 
-        Comercio comercio = new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
+        Comercio comercio = ComercioFactory.unComercio()
+                .conMediosDePago(mediosDePago)
+                .build();
 
         assertTrue(comercio.getMediosDePago().contains(MedioDePago.EFECTIVO));
         assertTrue(comercio.getMediosDePago().contains(MedioDePago.DEBITO));
@@ -321,5 +250,56 @@ public class ComercioTests {
 
         assertEquals("El medio de pago "+MedioDePago.DEBITO.name()+" ya existe", exception.getMessage());
         assertEquals(2, comercio.getMediosDePago().size());
+    }
+}
+
+class ComercioFactory{
+    public static ComercioFactory unComercio(){
+        return new ComercioFactory();
+    }
+
+    private ArrayList<Rubro> rubros;
+    private String domicilio;
+    private ArrayList<DayOfWeek> dias;
+    private LocalTime horarioApertura;
+    private LocalTime horarioCierre;
+    private ArrayList<MedioDePago> mediosDePago;
+
+    public ComercioFactory(){
+        this.rubros = new ArrayList<>();
+        this.domicilio = "";
+        this.dias = new ArrayList<>();
+        this.horarioApertura = LocalTime.of(8,0);
+        this.horarioCierre = LocalTime.of(17,0);
+        this.mediosDePago = new ArrayList<>();
+    }
+
+    public ComercioFactory conRubros(ArrayList<Rubro> rubros){
+        this.rubros = rubros;
+        return this;
+    }
+    public ComercioFactory conDomicilio(String domicilio){
+        this.domicilio = domicilio;
+        return this;
+    }
+    public ComercioFactory conDias(ArrayList<DayOfWeek> dias){
+        this.dias = dias;
+        return this;
+    }
+    public ComercioFactory conHorarioApertura(LocalTime horarioApertura){
+        this.horarioApertura = horarioApertura;
+        return this;
+    }
+    public ComercioFactory conHorarioCierre(LocalTime horarioCierre){
+        this.horarioCierre = horarioCierre;
+        return this;
+    }
+    public ComercioFactory conMediosDePago(ArrayList<MedioDePago> mediosDePago){
+        this.mediosDePago = mediosDePago;
+        return this;
+    }
+
+    public Comercio build(){
+        return new Comercio(rubros, domicilio, dias, horarioApertura, horarioCierre, mediosDePago);
     }
 }
