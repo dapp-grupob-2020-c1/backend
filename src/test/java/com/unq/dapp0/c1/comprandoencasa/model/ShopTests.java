@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import static org.mockito.Mockito.when;
@@ -69,25 +70,28 @@ public class ShopTests {
     }
 
     @Test
-    public void aShopHasADomicile(){
-        String domicile = "Test 123";
+    public void aShopHasALocation(){
+        Location location = mock(Location.class);
 
-        Shop shop = ShopFactory.aShop().withDomicile(domicile).build();
+        Shop shop = ShopFactory.aShop().withLocation(location).build();
 
-        assertEquals(shop.getDomicile(), "Test 123");
+        assertEquals(location, shop.getLocation());
     }
 
     @Test
-    public void aShopCanChangeHisDomicile(){
-        String domicile = "Test 123";
+    public void aShopCanChangeHisLocation(){
+        Location location = mock(Location.class);
+        Location newLocation = mock(Location.class);
 
-        Shop shop = ShopFactory.aShop().withDomicile(domicile).build();
+        Shop shop = ShopFactory.aShop().withLocation(location).build();
 
-        assertEquals("Test 123", shop.getDomicile());
+        assertEquals(location, shop.getLocation());
+        assertNotEquals(newLocation, shop.getLocation());
 
-        shop.setDomicile("False 123");
+        shop.setLocation(newLocation);
 
-        assertEquals("False 123", shop.getDomicile());
+        assertEquals(newLocation, shop.getLocation());
+        assertNotEquals(location, shop.getLocation());
     }
 
     @Test
@@ -391,7 +395,7 @@ public class ShopTests {
 
 class ShopFactory {
     private ArrayList<ShopCategory> shopCategories;
-    private String domicile;
+    private Location location;
     private ArrayList<DayOfWeek> days;
     private LocalTime openingHour;
     private LocalTime closingHour;
@@ -406,7 +410,7 @@ class ShopFactory {
 
     public ShopFactory(){
         this.shopCategories = new ArrayList<>();
-        this.domicile = "";
+        this.location = new Location();
         this.days = new ArrayList<>();
         this.openingHour = LocalTime.of(8,0);
         this.closingHour = LocalTime.of(17,0);
@@ -420,8 +424,8 @@ class ShopFactory {
         this.shopCategories = shopCategories;
         return this;
     }
-    public ShopFactory withDomicile(String domicile){
-        this.domicile = domicile;
+    public ShopFactory withLocation(Location location){
+        this.location = location;
         return this;
     }
     public ShopFactory withDays(ArrayList<DayOfWeek> days){
@@ -455,7 +459,7 @@ class ShopFactory {
 
     public Shop build(){
         return new Shop(shopCategories,
-                domicile,
+                location,
                 days,
                 openingHour,
                 closingHour,

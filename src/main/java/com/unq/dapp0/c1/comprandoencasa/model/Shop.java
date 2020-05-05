@@ -11,7 +11,7 @@ import java.util.Optional;
 public class Shop {
 
     private ArrayList<ShopCategory> shopCategories;
-    private String domicile;
+    private Location location;
     private ArrayList<DayOfWeek> days;
     private LocalTime openingHour;
     private LocalTime closingHour;
@@ -20,9 +20,9 @@ public class Shop {
     private final Manager manager;
     private ArrayList<Product> products;
 
-    public Shop(ArrayList<ShopCategory> shopCategories, String domicile, ArrayList<DayOfWeek> days, LocalTime openingHour, LocalTime closingHour, ArrayList<PaymentMethod> paymentMethods, Integer deliveryRadius, Manager manager, ArrayList<Product> products) {
+    public Shop(ArrayList<ShopCategory> shopCategories, Location location, ArrayList<DayOfWeek> days, LocalTime openingHour, LocalTime closingHour, ArrayList<PaymentMethod> paymentMethods, Integer deliveryRadius, Manager manager, ArrayList<Product> products) {
         this.shopCategories = shopCategories;
-        this.domicile = domicile;
+        this.location = location;
         this.days = days;
         this.openingHour = openingHour;
         this.closingHour = closingHour;
@@ -44,12 +44,12 @@ public class Shop {
         this.shopCategories.remove(shopCategory);
     }
 
-    public String getDomicile() {
-        return this.domicile;
+    public Location getLocation() {
+        return this.location;
     }
 
-    public void setDomicile(String newDomicile) {
-        this.domicile = newDomicile;
+    public void setLocation(Location newLocation) {
+        this.location = newLocation;
     }
 
     public ArrayList<DayOfWeek> getDays() {
