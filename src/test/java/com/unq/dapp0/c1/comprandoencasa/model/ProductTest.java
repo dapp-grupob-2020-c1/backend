@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 
 import static com.unq.dapp0.c1.comprandoencasa.model.ProductBuilder.aProduct;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 class ProductTest {
