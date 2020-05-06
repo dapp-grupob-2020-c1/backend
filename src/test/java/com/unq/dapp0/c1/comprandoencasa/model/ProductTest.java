@@ -2,15 +2,23 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.unq.dapp0.c1.comprandoencasa.model.ProductBuilder.aProduct;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 class ProductTest {
 
     @Test
+    public void aProductCanBeCreatedWithItsAtributes(){
+
+        Product aProduct = new Product("ProductName", "ProductBrand");
+        assertEquals("ProductName", aProduct.getName());
+        assertEquals("ProductBrand", aProduct.getBrand());
+    }
+
+    @Test
     public void aProductCanBeOfAType(){
-        Product aProduct = new Product();
+        Product aProduct = aProduct().build();
         ProductType aProductType = mock(ProductType.class);
 
         aProduct.addType(aProductType);
@@ -20,7 +28,7 @@ class ProductTest {
 
     @Test
     public void aProductCanBeOfMultipleTypes(){
-        Product aProduct = new Product();
+        Product aProduct = aProduct().build();
         ProductType aProductType = mock(ProductType.class);
         ProductType anotherProductType = mock(ProductType.class);
 
@@ -33,7 +41,7 @@ class ProductTest {
 
     @Test
     public void aProductCanRemoveAType(){
-        Product aProduct = new Product();
+        Product aProduct = aProduct().build();
         ProductType aProductType = mock(ProductType.class);
 
         aProduct.addType(aProductType);
@@ -43,3 +51,4 @@ class ProductTest {
         assertFalse(aProduct.isType(aProductType));
     }
 }
+

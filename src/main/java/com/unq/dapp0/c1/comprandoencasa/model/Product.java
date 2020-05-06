@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class Product {
+    private final String name;
+    private final String brand;
     private Collection<ProductType> types;
 
-    Product() {
-        types = new ArrayList<ProductType>();
+    public Product(String name, String brand) {
+        this.name = name;
+        this.brand = brand;
+        this.types = new ArrayList<ProductType>();
     }
 
     /**
@@ -27,5 +31,13 @@ public class Product {
 
     public void removeType(ProductType type) {
         this.types.remove(type);
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getBrand() {
+        return this.brand;
     }
 }
