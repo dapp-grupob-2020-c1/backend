@@ -1,8 +1,8 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
-public enum MedioDePago {
-    EFECTIVO,
+public enum PaymentMethod {
+    CASH,
     MERCADOPAGO,
-    DEBITO,
-    CREDITO
+    DEBIT,
+    CREDIT
 }
