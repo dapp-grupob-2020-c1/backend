@@ -3,40 +3,42 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 class ProductTest {
 
     @Test
     public void aProductCanBeOfAType(){
-        Product prod = new Product();
-        ProductType type = new ProductType();
-        prod.addType(type);
+        Product aProduct = new Product();
+        ProductType aProductType = mock(ProductType.class);
 
-        assertTrue(prod.isType(type));
+        aProduct.addType(aProductType);
+
+        assertTrue(aProduct.isType(aProductType));
     }
 
     @Test
     public void aProductCanBeOfMultipleTypes(){
-        Product prod = new Product();
-        ProductType type1 = new ProductType();
-        ProductType type2 = new ProductType();
+        Product aProduct = new Product();
+        ProductType aProductType = mock(ProductType.class);
+        ProductType anotherProductType = mock(ProductType.class);
 
-        prod.addType(type1);
-        prod.addType(type2);
+        aProduct.addType(aProductType);
+        aProduct.addType(anotherProductType);
 
-        assertTrue(prod.isType(type1));
-        assertTrue(prod.isType(type2));
+        assertTrue(aProduct.isType(aProductType));
+        assertTrue(aProduct.isType(anotherProductType));
     }
 
     @Test
     public void aProductCanRemoveAType(){
-        Product prod = new Product();
-        ProductType type = new ProductType();
+        Product aProduct = new Product();
+        ProductType aProductType = mock(ProductType.class);
 
-        prod.addType(type);
-        assertTrue(prod.isType(type));
+        aProduct.addType(aProductType);
+        assertTrue(aProduct.isType(aProductType));
 
-        prod.removeType(type);
-        assertFalse(prod.isType(type));
+        aProduct.removeType(aProductType);
+        assertFalse(aProduct.isType(aProductType));
     }
 }
