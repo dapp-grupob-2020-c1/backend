@@ -1,17 +1,20 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class Product {
-    private final String name;
-    private final String brand;
+    private String name;
+    private String brand;
+    private BigDecimal price;
     private Collection<ProductType> types;
 
-    public Product(String name, String brand) {
+    public Product(String name, String brand, BigDecimal price) {
         this.name = name;
         this.brand = brand;
-        this.types = new ArrayList<ProductType>();
+        this.price = price;
+        this.types = new ArrayList<>();
     }
 
     /**
@@ -39,5 +42,9 @@ public class Product {
 
     public String getBrand() {
         return this.brand;
+    }
+
+    public BigDecimal getPrice() {
+        return this.price;
     }
 }

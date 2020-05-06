@@ -2,6 +2,8 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static com.unq.dapp0.c1.comprandoencasa.model.ProductBuilder.aProduct;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -11,9 +13,10 @@ class ProductTest {
     @Test
     public void aProductCanBeCreatedWithItsAtributes(){
 
-        Product aProduct = new Product("ProductName", "ProductBrand");
+        Product aProduct = new Product("ProductName", "ProductBrand", new BigDecimal(999));
         assertEquals("ProductName", aProduct.getName());
         assertEquals("ProductBrand", aProduct.getBrand());
+        assertEquals(new BigDecimal(999), aProduct.getPrice());
     }
 
     @Test
@@ -50,5 +53,6 @@ class ProductTest {
         aProduct.removeType(aProductType);
         assertFalse(aProduct.isType(aProductType));
     }
+
 }
 
