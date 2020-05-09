@@ -58,16 +58,16 @@ public class Product {
         this.price = price;
     }
 
-    public void addType(ProductType type) {
-        this.types.add(type);
+    public void addType(ProductType aProductType) {
+        this.types.add(aProductType);
     }
 
-    public boolean isType(ProductType productType) {
-        return this.types.contains(productType);
+    public boolean isType(ProductType aProductType) {
+        return this.types.contains(aProductType);
     }
 
-    public void removeType(ProductType type) {
-        this.types.remove(type);
+    public void removeType(ProductType aProductType) {
+        this.types.remove(aProductType);
     }
 
 }
