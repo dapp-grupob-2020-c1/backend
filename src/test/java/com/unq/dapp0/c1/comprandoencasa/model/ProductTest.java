@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import static com.unq.dapp0.c1.comprandoencasa.model.ProductBuilder.aProduct;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
@@ -20,6 +21,15 @@ class ProductTest {
         assertEquals("ProductBrand", aProduct.getBrand());
         assertEquals("ProductImage", aProduct.getImage());
         assertEquals(new BigDecimal(999), aProduct.getPrice());
+    }
+
+    @Test
+    public void aProductCanChangeItsName(){
+        Product aProduct = aProduct().build();
+
+        assertNotEquals("Nombre de Producto", aProduct.getName());
+        aProduct.setName("Nombre de Producto");
+        assertEquals("Nombre de Producto", aProduct.getName());
     }
 
     @Test
