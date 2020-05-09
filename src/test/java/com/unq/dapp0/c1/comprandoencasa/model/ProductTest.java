@@ -52,6 +52,17 @@ class ProductTest {
     }
 
     @Test
+    public void aProductCanChangeItsPrice(){
+        Product aProduct = aProduct().build();
+
+        BigDecimal newPrice = new BigDecimal(500);
+
+        assertNotEquals(newPrice, aProduct.getPrice());
+        aProduct.setPrice(newPrice);
+        assertEquals(newPrice, aProduct.getPrice());
+    }
+
+    @Test
     public void aProductCanBeOfAType(){
         Product aProduct = aProduct().build();
         ProductType aProductType = mock(ProductType.class);
