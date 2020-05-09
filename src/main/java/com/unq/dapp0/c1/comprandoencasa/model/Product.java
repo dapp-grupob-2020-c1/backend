@@ -61,4 +61,8 @@ public class Product {
     public void setBrand(String brand) {
         this.brand = brand;
     }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 }
