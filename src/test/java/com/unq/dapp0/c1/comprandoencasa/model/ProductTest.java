@@ -33,6 +33,15 @@ class ProductTest {
     }
 
     @Test
+    public void aProductCanChangeItsBrand(){
+        Product aProduct = aProduct().build();
+
+        assertNotEquals("Marca de Producto", aProduct.getBrand());
+        aProduct.setBrand("Marca de Producto");
+        assertEquals("Marca de Producto", aProduct.getBrand());
+    }
+
+    @Test
     public void aProductCanBeOfAType(){
         Product aProduct = aProduct().build();
         ProductType aProductType = mock(ProductType.class);
