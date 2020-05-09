@@ -64,7 +64,7 @@ class ProductTest {
     @Test
     public void aProductCanBeOfAType(){
         Product aProduct = aProduct().build();
-        ProductType aProductType = mock(ProductType.class);
+        ProductType aProductType = ProductType.values()[0];
 
         aProduct.addType(aProductType);
 
@@ -74,8 +74,8 @@ class ProductTest {
     @Test
     public void aProductCanBeOfMultipleTypes(){
         Product aProduct = aProduct().build();
-        ProductType aProductType = mock(ProductType.class);
-        ProductType anotherProductType = mock(ProductType.class);
+        ProductType aProductType = ProductType.values()[0];
+        ProductType anotherProductType = ProductType.values()[1];
 
         aProduct.addType(aProductType);
         aProduct.addType(anotherProductType);
@@ -87,7 +87,7 @@ class ProductTest {
     @Test
     public void aProductCanRemoveAType(){
         Product aProduct = aProduct().build();
-        ProductType aProductType = mock(ProductType.class);
+        ProductType aProductType = ProductType.values()[0];
 
         aProduct.addType(aProductType);
         assertTrue(aProduct.isType(aProductType));
