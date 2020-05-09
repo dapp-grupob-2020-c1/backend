@@ -26,18 +26,6 @@ public class Product {
         return null;
     }
 
-    public void addType(ProductType type) {
-        this.types.add(type);
-    }
-
-    public boolean isType(ProductType productType) {
-        return this.types.contains(productType);
-    }
-
-    public void removeType(ProductType type) {
-        this.types.remove(type);
-    }
-
     public String getName() {
         return this.name;
     }
@@ -69,4 +57,17 @@ public class Product {
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
+
+    public void addType(ProductType type) {
+        this.types.add(type);
+    }
+
+    public boolean isType(ProductType productType) {
+        return this.types.contains(productType);
+    }
+
+    public void removeType(ProductType type) {
+        this.types.remove(type);
+    }
+
 }

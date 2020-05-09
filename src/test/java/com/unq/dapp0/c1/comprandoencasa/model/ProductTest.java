@@ -41,7 +41,6 @@ class ProductTest {
         assertEquals("Marca de Producto", aProduct.getBrand());
     }
 
-
     @Test
     public void aProductCanChangeItsImage(){
         Product aProduct = aProduct().build();
