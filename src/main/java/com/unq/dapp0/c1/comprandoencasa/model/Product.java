@@ -7,12 +7,14 @@ import java.util.Collection;
 public class Product {
     private String name;
     private String brand;
+    private String image;
     private BigDecimal price;
     private Collection<ProductType> types;
 
-    public Product(String name, String brand, BigDecimal price) {
+    public Product(String name, String brand, String image, BigDecimal price) {
         this.name = name;
         this.brand = brand;
+        this.image = image;
         this.price = price;
         this.types = new ArrayList<>();
     }
@@ -42,6 +44,10 @@ public class Product {
 
     public String getBrand() {
         return this.brand;
+    }
+
+    public String getImage() {
+        return this.image;
     }
 
     public BigDecimal getPrice() {

@@ -15,9 +15,10 @@ class ProductTest {
     @Test
     public void aProductCanBeCreatedWithItsAtributes(){
 
-        Product aProduct = new Product("ProductName", "ProductBrand", new BigDecimal(999));
+        Product aProduct = new Product("ProductName", "ProductBrand", "ProductImage", new BigDecimal(999));
         assertEquals("ProductName", aProduct.getName());
         assertEquals("ProductBrand", aProduct.getBrand());
+        assertEquals("ProductImage", aProduct.getImage());
         assertEquals(new BigDecimal(999), aProduct.getPrice());
     }
 

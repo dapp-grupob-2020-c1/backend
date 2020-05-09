@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 public class ProductBuilder {
     private String name = "no name";
     private String brand = "no brand";
+    private String image = "no image";
     private BigDecimal price = new BigDecimal(999);
 
     public static ProductBuilder aProduct() {
@@ -12,6 +13,6 @@ public class ProductBuilder {
     }
 
     public Product build() {
-        return new Product(name, brand, price);
+        return new Product(name, brand, image, price);
     }
 }
