@@ -1,6 +1,12 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
-import static java.lang.StrictMath.*;
+import static java.lang.StrictMath.pow;
+import static java.lang.StrictMath.sin;
+import static java.lang.StrictMath.cos;
+import static java.lang.StrictMath.atan2;
+import static java.lang.StrictMath.sqrt;
+import static java.lang.StrictMath.floor;
+import static java.lang.StrictMath.PI;
 
 public class Location {
     private final Double EARTH_RADIUS = 6371.0;
