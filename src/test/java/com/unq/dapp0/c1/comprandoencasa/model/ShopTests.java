@@ -485,7 +485,7 @@ class ShopBuilder {
         this.closingHour = LocalTime.of(17,0);
         this.paymentMethods = new ArrayList<>();
         this.deliveryRadius = 1;
-        this.manager = new Manager();
+        this.manager = mock(Manager.class);
         this.products = new ArrayList<>();
     }
 
