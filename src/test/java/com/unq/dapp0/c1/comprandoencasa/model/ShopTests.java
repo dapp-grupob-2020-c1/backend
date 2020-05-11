@@ -479,7 +479,7 @@ class ShopBuilder {
 
     public ShopBuilder(){
         this.shopCategories = new ArrayList<>();
-        this.location = new Location();
+        this.location = mock(Location.class);
         this.days = new ArrayList<>();
         this.openingHour = LocalTime.of(8,0);
         this.closingHour = LocalTime.of(17,0);
