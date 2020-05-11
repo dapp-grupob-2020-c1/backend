@@ -331,6 +331,119 @@ public class DiscountTests {
         assertEquals("Removal of the product "+product2.getID()+" will cause the Discount to be composed of a single item. Use the class DiscountBySingle instead for the item that should remain",
                 exception.getMessage());
     }
+
+    @Test
+    public void aDiscountForProductTypeKnowsHowToCompareItselfToOtherDiscounts(){
+        Discount discount = DiscountBuilder.anyDiscount().build();
+
+        Discount discountOfSameTypeAndPercentage = DiscountBuilder.anyDiscount().build();
+
+        assertEquals(0, discount.compare(discountOfSameTypeAndPercentage));
+
+        Discount discountOfSameTypeAndSuperiorPercentage = DiscountBuilder.anyDiscount()
+                .withPercentage(2.0).build();
+
+        assertEquals(-1, discount.compare(discountOfSameTypeAndSuperiorPercentage));
+
+        Discount discountOfSameTypeAndInferiorPercentage = DiscountBuilder.anyDiscount()
+                .withPercentage(0.5).build();
+
+        assertEquals(1, discount.compare(discountOfSameTypeAndInferiorPercentage));
+
+        ArrayList<Product> productsForSingle = new ArrayList<>();
+        productsForSingle.add(mock(Product.class));
+        Discount discountOfSingleType = DiscountBuilder.anyDiscount()
+                .withProducts(productsForSingle).build();
+
+        assertEquals(-1, discount.compare(discountOfSingleType));
+
+        ArrayList<Product> productsForMultiple = new ArrayList<>();
+        productsForMultiple.add(mock(Product.class));
+        productsForMultiple.add(mock(Product.class));
+
+        Discount discountOfMultipleType = DiscountBuilder.anyDiscount()
+                .withProducts(productsForMultiple).build();
+
+        assertEquals(-1, discount.compare(discountOfMultipleType));
+    }
+
+    @Test
+    public void aDiscountForSingleProductKnowsHowToCompareItselfToOtherDiscounts(){
+        ArrayList<Product> productsForSingle = new ArrayList<>();
+        productsForSingle.add(mock(Product.class));
+
+        Discount discount = DiscountBuilder.anyDiscount()
+                .withProducts(productsForSingle).build();
+
+        Discount discountOfSameTypeAndPercentage = DiscountBuilder.anyDiscount()
+                .withProducts(productsForSingle).build();
+
+        assertEquals(0, discount.compare(discountOfSameTypeAndPercentage));
+
+        Discount discountOfSameTypeAndSuperiorPercentage = DiscountBuilder.anyDiscount()
+                .withProducts(productsForSingle)
+                .withPercentage(2.0).build();
+
+        assertEquals(-1, discount.compare(discountOfSameTypeAndSuperiorPercentage));
+
+        Discount discountOfSameTypeAndInferiorPercentage = DiscountBuilder.anyDiscount()
+                .withProducts(productsForSingle)
+                .withPercentage(0.5).build();
+
+        assertEquals(1, discount.compare(discountOfSameTypeAndInferiorPercentage));
+
+        Discount discountOfCategoryType = DiscountBuilder.anyDiscount().build();
+
+        assertEquals(1, discount.compare(discountOfCategoryType));
+
+        ArrayList<Product> productsForMultiple = new ArrayList<>();
+        productsForMultiple.add(mock(Product.class));
+        productsForMultiple.add(mock(Product.class));
+
+        Discount discountOfMultipleType = DiscountBuilder.anyDiscount()
+                .withProducts(productsForMultiple).build();
+
+        assertEquals(-1, discount.compare(discountOfMultipleType));
+    }
+
+    @Test
+    public void aDiscountForMultipleProductsKnowsHowToCompareItselfToOtherDiscounts(){
+        ArrayList<Product> productsForMultiple = new ArrayList<>();
+        productsForMultiple.add(mock(Product.class));
+        productsForMultiple.add(mock(Product.class));
+
+        Discount discount = DiscountBuilder.anyDiscount()
+                .withProducts(productsForMultiple).build();
+
+        Discount discountOfSameTypeAndPercentage = DiscountBuilder.anyDiscount()
+                .withProducts(productsForMultiple).build();
+
+        assertEquals(0, discount.compare(discountOfSameTypeAndPercentage));
+
+        Discount discountOfSameTypeAndSuperiorPercentage = DiscountBuilder.anyDiscount()
+                .withProducts(productsForMultiple)
+                .withPercentage(2.0).build();
+
+        assertEquals(-1, discount.compare(discountOfSameTypeAndSuperiorPercentage));
+
+        Discount discountOfSameTypeAndInferiorPercentage = DiscountBuilder.anyDiscount()
+                .withProducts(productsForMultiple)
+                .withPercentage(0.5).build();
+
+        assertEquals(1, discount.compare(discountOfSameTypeAndInferiorPercentage));
+
+        Discount discountOfCategoryType = DiscountBuilder.anyDiscount().build();
+
+        assertEquals(1, discount.compare(discountOfCategoryType));
+
+        ArrayList<Product> productsForSingle = new ArrayList<>();
+        productsForSingle.add(mock(Product.class));
+
+        Discount discountOfSingleType = DiscountBuilder.anyDiscount()
+                .withProducts(productsForSingle).build();
+
+        assertEquals(1, discount.compare(discountOfSingleType));
+    }
 }
 
 class DiscountBuilder{

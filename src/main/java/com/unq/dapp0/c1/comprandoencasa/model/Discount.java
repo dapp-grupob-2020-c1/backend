@@ -1,7 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 public abstract class Discount {
     protected final long id;
@@ -74,4 +73,6 @@ public abstract class Discount {
     public boolean isTypeMultiple(){
         return false;
     }
+
+    public abstract int compare(Discount discount);
 }

@@ -42,4 +42,15 @@ public class DiscountByMultiple extends Discount {
     private Optional<Product> findProduct(Product product){
         return this.products.stream().filter(p-> p.getID().equals(product.getID())).findFirst();
     }
+
+    @Override
+    public int compare(Discount discount) {
+        if (this.percentage < discount.percentage){
+            return -1;
+        } else if (discount.isTypeSingle() || discount.isTypeCategory() || this.percentage > discount.percentage){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }

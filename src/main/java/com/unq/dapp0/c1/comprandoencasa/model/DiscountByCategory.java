@@ -30,4 +30,15 @@ public class DiscountByCategory extends Discount {
     public boolean isTypeCategory() {
         return true;
     }
+
+    @Override
+    public int compare(Discount discount) {
+        if (discount.isTypeSingle() || discount.isTypeMultiple() || this.percentage < discount.percentage){
+            return -1;
+        } else if (this.percentage > discount.percentage){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }

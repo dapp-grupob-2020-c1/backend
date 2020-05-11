@@ -22,4 +22,15 @@ public class DiscountBySingle extends Discount {
     public void setProduct(Product product){
         this.product = product;
     }
+
+    @Override
+    public int compare(Discount discount) {
+        if (discount.isTypeMultiple() || this.percentage < discount.percentage){
+            return -1;
+        } else if (discount.isTypeCategory() || this.percentage > discount.percentage){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }
