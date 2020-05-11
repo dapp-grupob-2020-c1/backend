@@ -1,22 +1,24 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
-public class Discount {
-    private final long id;
-    private LocalDate startingDate;
-    private LocalDate endingDate;
-    private double percentage;
+public abstract class Discount {
+    protected final long id;
+    protected LocalDate startingDate;
+    protected LocalDate endingDate;
+    protected double percentage;
+    protected final Shop shop;
 
-    public Discount(long id, double percentage, LocalDate startingDate, LocalDate endingDate, ProductType target) {
+    protected Discount(long id, double percentage, LocalDate startingDate, LocalDate endingDate, Shop shop){
         this.checkDates(startingDate, endingDate);
 
         this.id = id;
         this.percentage = percentage;
         this.startingDate = startingDate;
         this.endingDate = endingDate;
+        this.shop = shop;
     }
-
 
     private void checkDates(LocalDate startingDate, LocalDate endingDate) {
         if (startingDate.isAfter(endingDate))
@@ -55,5 +57,21 @@ public class Discount {
     public void setEndingDate(LocalDate newEndingDate) {
         this.checkDates(this.startingDate, newEndingDate);
         this.endingDate = newEndingDate;
+    }
+
+    public Shop getShop() {
+        return this.shop;
+    }
+
+    public boolean isTypeCategory(){
+        return false;
+    }
+
+    public boolean isTypeSingle(){
+        return false;
+    }
+
+    public boolean isTypeMultiple(){
+        return false;
     }
 }

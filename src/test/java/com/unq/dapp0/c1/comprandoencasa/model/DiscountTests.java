@@ -3,9 +3,14 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class DiscountTests {
     @Test
@@ -112,22 +117,219 @@ public class DiscountTests {
     }
 
     @Test
-    public void aDiscountCanBeForAProductType(){
+    public void aDiscountKnowsToWhichShopItBelongs(){
+        Shop shop = mock(Shop.class);
+
         Discount discount = DiscountBuilder.anyDiscount()
+                .withShop(shop)
+                .build();
+
+        assertEquals(shop, discount.getShop());
+    }
+
+    @Test
+    public void aDiscountCanBeForAProductType(){
+        Product validProduct = mock(Product.class);
+        when(validProduct.isType(ProductType.Bazaar)).thenReturn(true);
+
+        Product invalidProduct = mock(Product.class);
+        when(invalidProduct.isType(ProductType.Bazaar)).thenReturn(false);
+
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(validProduct);
+
+        Shop shop = mock(Shop.class);
+        when(shop.getProducts()).thenReturn(products);
+
+        DiscountByCategory discount = (DiscountByCategory) DiscountBuilder.anyDiscount()
+                .withShop(shop)
                 .withTarget(ProductType.Bazaar)
                 .build();
 
-        assertEquals(ProductType.Bazaar, discount.getTarget());
+        assertTrue(discount.isTypeCategory());
+        assertFalse(discount.isTypeSingle());
+        assertFalse(discount.isTypeMultiple());
+        assertEquals(products, discount.getProducts());
+        assertEquals(validProduct, discount.getProducts().get(0));
+        assertEquals(ProductType.Bazaar, discount.getProductType());
+    }
+
+    @Test
+    public void aDiscountForProductTypeCanChangeItsProductType(){
+        DiscountByCategory discount = (DiscountByCategory) DiscountBuilder.anyDiscount().build();
+
+        assertEquals(ProductType.Bazaar, discount.getProductType());
+
+        discount.setProductType(ProductType.FoodsAndDrinks);
+
+        assertEquals(ProductType.FoodsAndDrinks, discount.getProductType());
     }
 
     @Test
     public void aDiscountCanBeForASpecificProduct(){
+        Product product = mock(Product.class);
 
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(product);
+
+        DiscountBySingle discount = (DiscountBySingle) DiscountBuilder.anyDiscount()
+                .withProducts(products)
+                .build();
+
+        assertEquals(product, discount.getProduct());
+    }
+
+    @Test
+    public void aDiscountForASpecificProductCanChangeTheTargetProduct(){
+        Product product = mock(Product.class);
+
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(product);
+
+        DiscountBySingle discount = (DiscountBySingle) DiscountBuilder.anyDiscount()
+                .withProducts(products)
+                .build();
+
+        assertEquals(product, discount.getProduct());
+
+        Product newProduct = mock(Product.class);
+
+        discount.setProduct(newProduct);
+
+        assertEquals(newProduct, discount.getProduct());
     }
 
     @Test
     public void aDiscountCanBeForMultipleProducts(){
+        Product product1 = mock(Product.class);
+        when(product1.getID()).thenReturn(1L);
 
+        Product product2 = mock(Product.class);
+        when(product2.getID()).thenReturn(2L);
+
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(product1);
+        products.add(product2);
+
+        DiscountByMultiple discount = (DiscountByMultiple) DiscountBuilder.anyDiscount()
+                .withProducts(products)
+                .build();
+
+        assertEquals(products, discount.getProducts());
+        assertTrue(discount.getProducts().contains(product1));
+        assertTrue(discount.getProducts().contains(product2));
+    }
+
+    @Test
+    public void aDiscountForMultipleProductsCanAddNewProductsToTheList(){
+        Product product1 = mock(Product.class);
+        when(product1.getID()).thenReturn(1L);
+
+        Product product2 = mock(Product.class);
+        when(product2.getID()).thenReturn(2L);
+
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(product1);
+        products.add(product2);
+
+        DiscountByMultiple discount = (DiscountByMultiple) DiscountBuilder.anyDiscount()
+                .withProducts(products)
+                .build();
+
+        assertEquals(products, discount.getProducts());
+        assertTrue(discount.getProducts().contains(product1));
+        assertTrue(discount.getProducts().contains(product2));
+
+        Product product3 = mock(Product.class);
+        when(product3.getID()).thenReturn(3L);
+
+        discount.addProduct(product3);
+
+        assertTrue(discount.getProducts().contains(product3));
+    }
+
+    @Test
+    public void aDiscountForMultipleProductsCannotAddAProductThatItAlreadyContains(){
+        Product product1 = mock(Product.class);
+        when(product1.getID()).thenReturn(1L);
+
+        Product product2 = mock(Product.class);
+        when(product2.getID()).thenReturn(2L);
+
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(product1);
+        products.add(product2);
+
+        DiscountByMultiple discount = (DiscountByMultiple) DiscountBuilder.anyDiscount()
+                .withProducts(products)
+                .build();
+
+        assertEquals(products, discount.getProducts());
+        assertTrue(discount.getProducts().contains(product1));
+        assertTrue(discount.getProducts().contains(product2));
+
+        Throwable exception = assertThrows(ProductAlreadyPresentException.class ,()->
+                discount.addProduct(product2));
+
+        assertEquals("The product "+product2.getID()+" is already present in the list",
+                exception.getMessage());
+    }
+
+    @Test
+    public void aDiscountForMultipleProductsCanRemoveADiscountFromItsList(){
+        Product product1 = mock(Product.class);
+        when(product1.getID()).thenReturn(1L);
+
+        Product product2 = mock(Product.class);
+        when(product2.getID()).thenReturn(2L);
+
+        Product product3 = mock(Product.class);
+        when(product3.getID()).thenReturn(3L);
+
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(product1);
+        products.add(product2);
+        products.add(product3);
+
+        DiscountByMultiple discount = (DiscountByMultiple) DiscountBuilder.anyDiscount()
+                .withProducts(products)
+                .build();
+
+        assertEquals(products, discount.getProducts());
+        assertTrue(discount.getProducts().contains(product1));
+        assertTrue(discount.getProducts().contains(product2));
+        assertTrue(discount.getProducts().contains(product3));
+
+        discount.removeProduct(product3);
+
+        assertFalse(discount.getProducts().contains(product3));
+    }
+
+    @Test
+    public void aDiscountForMultipleProductsCannotRemoveAProductIfItCausesTheListToHaveASingleItem(){
+        Product product1 = mock(Product.class);
+        when(product1.getID()).thenReturn(1L);
+
+        Product product2 = mock(Product.class);
+        when(product2.getID()).thenReturn(2L);
+
+        ArrayList<Product> products = new ArrayList<>();
+        products.add(product1);
+        products.add(product2);
+
+        DiscountByMultiple discount = (DiscountByMultiple) DiscountBuilder.anyDiscount()
+                .withProducts(products)
+                .build();
+
+        assertEquals(products, discount.getProducts());
+        assertTrue(discount.getProducts().contains(product1));
+        assertTrue(discount.getProducts().contains(product2));
+
+        Throwable exception = assertThrows(MultipleDiscountWithSingleItemException.class,()->
+                discount.removeProduct(product2));
+
+        assertEquals("Removal of the product "+product2.getID()+" will cause the Discount to be composed of a single item. Use the class DiscountBySingle instead for the item that should remain",
+                exception.getMessage());
     }
 }
 
@@ -136,7 +338,9 @@ class DiscountBuilder{
     private double percentage;
     private LocalDate startingDate;
     private LocalDate endingDate;
-    private ProductType prodTarget;
+    private ProductType targType;
+    private ArrayList<Product> targProd;
+    private Shop shop;
 
     public static DiscountBuilder anyDiscount(){
         return new DiscountBuilder();
@@ -147,11 +351,20 @@ class DiscountBuilder{
         this.percentage = 1.0;
         this.startingDate = LocalDate.now();
         this.endingDate = LocalDate.now();
-        this.prodTarget = ProductType.Bazaar;
+        this.targType = ProductType.Bazaar;
+        this.shop = mock(Shop.class);
     }
 
     public Discount build(){
-        return new Discount(id, percentage, startingDate, endingDate, prodTarget);
+        Discount discount = null;
+        if (targType != null){
+            discount = new DiscountByCategory(id, percentage, startingDate, endingDate, shop, targType);
+        } else if (targProd.size() == 1){
+            discount = new DiscountBySingle(id, percentage, startingDate, endingDate, shop, targProd.get(0));
+        } else if (targProd.size() > 1){
+            discount = new DiscountByMultiple(id, percentage, startingDate, endingDate, shop, targProd);
+        }
+        return discount;
     }
 
     public DiscountBuilder withID(long id) {
@@ -174,8 +387,20 @@ class DiscountBuilder{
         return this;
     }
 
+    public DiscountBuilder withShop(Shop shop) {
+        this.shop = shop;
+        return this;
+    }
+
     public DiscountBuilder withTarget(ProductType productType) {
-        this.prodTarget = productType;
+        this.targProd = null;
+        this.targType = productType;
+        return this;
+    }
+
+    public DiscountBuilder withProducts(ArrayList<Product> products) {
+        this.targType = null;
+        this.targProd = products;
         return this;
     }
 }
