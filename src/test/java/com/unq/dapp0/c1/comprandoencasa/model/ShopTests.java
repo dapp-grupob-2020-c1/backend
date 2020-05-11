@@ -472,7 +472,6 @@ class ShopBuilder {
     private Integer deliveryRadius;
     private Manager manager;
     private ArrayList<Product> products;
-    private ArrayList<Discount> discounts;
 
     public static ShopBuilder anyShop(){
         return new ShopBuilder();

@@ -8,7 +8,7 @@ public class Discount {
     private LocalDate endingDate;
     private double percentage;
 
-    public Discount(long id, double percentage, LocalDate startingDate, LocalDate endingDate) {
+    public Discount(long id, double percentage, LocalDate startingDate, LocalDate endingDate, ProductType target) {
         this.checkDates(startingDate, endingDate);
 
         this.id = id;
@@ -16,6 +16,7 @@ public class Discount {
         this.startingDate = startingDate;
         this.endingDate = endingDate;
     }
+
 
     private void checkDates(LocalDate startingDate, LocalDate endingDate) {
         if (startingDate.isAfter(endingDate))

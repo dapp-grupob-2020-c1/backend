@@ -113,7 +113,11 @@ public class DiscountTests {
 
     @Test
     public void aDiscountCanBeForAProductType(){
+        Discount discount = DiscountBuilder.anyDiscount()
+                .withTarget(ProductType.Bazaar)
+                .build();
 
+        assertEquals(ProductType.Bazaar, discount.getTarget());
     }
 
     @Test
@@ -132,6 +136,7 @@ class DiscountBuilder{
     private double percentage;
     private LocalDate startingDate;
     private LocalDate endingDate;
+    private ProductType prodTarget;
 
     public static DiscountBuilder anyDiscount(){
         return new DiscountBuilder();
@@ -142,10 +147,11 @@ class DiscountBuilder{
         this.percentage = 1.0;
         this.startingDate = LocalDate.now();
         this.endingDate = LocalDate.now();
+        this.prodTarget = ProductType.Bazaar;
     }
 
     public Discount build(){
-        return new Discount(id, percentage, startingDate, endingDate);
+        return new Discount(id, percentage, startingDate, endingDate, prodTarget);
     }
 
     public DiscountBuilder withID(long id) {
@@ -165,6 +171,11 @@ class DiscountBuilder{
 
     public DiscountBuilder setEndingDate(LocalDate endingDate) {
         this.endingDate = endingDate;
+        return this;
+    }
+
+    public DiscountBuilder withTarget(ProductType productType) {
+        this.prodTarget = productType;
         return this;
     }
 }
