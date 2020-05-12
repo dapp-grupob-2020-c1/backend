@@ -1,0 +1,14 @@
+---------------------------------------------------------------------
+TAG PRIMERA-ENTREGA-1.0
+---------------------------------------------------------------------
+NEW FEATURES:
+* OOP Backend Model of the application running on Java.
+* Model has current support for service and database expansion, offering a sensible set of rules for data handling and modeling.
+* Web application running with Home and About pages only.
+
+NOTES:
+* Database handling (via Hibernate) and webservice support not implemented.
+* Web application lacks most functionality beyond displaying both Home and About pages.
+
+KNOWN ISSUES:
+* Backend deployment lacks any user interface for communication, rendering it totally unresponsive.
