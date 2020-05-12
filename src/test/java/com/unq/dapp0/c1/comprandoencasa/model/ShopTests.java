@@ -460,6 +460,33 @@ public class ShopTests {
 
         assertEquals(activeDiscount, shop.getActiveDiscounts().get(0));
     }
+
+    @Test
+    public void aShopCanReceiveADeliveryAtHomeRequest(){
+        Shop shop = ShopBuilder.anyShop().build();
+
+        DeliveryAtHome delivery = mock(DeliveryAtHome.class);
+
+        shop.addDelivery(delivery);
+
+        assertTrue(shop.getActiveDeliveries().contains(delivery));
+    }
+
+    @Test
+    public void aShopCanReceiveADeliveryAtShopRequestAndKnowsWichTurnsItTakes(){
+        Shop shop = ShopBuilder.anyShop().build();
+
+        DeliveryAtShop delivery = mock(DeliveryAtShop.class);
+        Turn turn = mock(Turn.class);
+
+        when(delivery.getTurn()).thenReturn(turn);
+
+        shop.addDelivery(delivery);
+
+        assertTrue(shop.getActiveDeliveries().contains(delivery));
+
+        assertTrue(shop.getActiveTurns().contains(turn));
+    }
 }
 
 class ShopBuilder {

@@ -3,6 +3,7 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ public class Shop {
     private final Manager manager;
     private ArrayList<Product> products;
     private ArrayList<Discount> discounts;
+    private ArrayList<ShopDelivery> activeDeliveries;
 
     public Shop(ArrayList<ShopCategory> shopCategories, Location location, ArrayList<DayOfWeek> days, LocalTime openingHour, LocalTime closingHour, ArrayList<PaymentMethod> paymentMethods, Integer deliveryRadius, Manager manager, ArrayList<Product> products) {
         this.shopCategories = shopCategories;
@@ -33,6 +35,7 @@ public class Shop {
         this.manager = manager;
         this.products = products;
         this.discounts = new ArrayList<>();
+        this.activeDeliveries = new ArrayList<>();
     }
 
     public ArrayList<ShopCategory> getShopCategories() {
@@ -178,5 +181,23 @@ public class Shop {
 
     public ArrayList<Discount> getActiveDiscounts() {
         return this.discounts.stream().filter(Discount::isActive).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    public void addDelivery(ShopDelivery delivery) {
+        this.activeDeliveries.add(delivery);
+    }
+
+    public ArrayList<ShopDelivery> getActiveDeliveries() {
+        return this.activeDeliveries;
+    }
+
+    public ArrayList<Turn> getActiveTurns() {
+        ArrayList<ShopDelivery> deliveries = this.activeDeliveries.stream()
+                .filter(delivery -> delivery instanceof DeliveryAtShop).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Turn> turns = new ArrayList<>();
+        for (ShopDelivery delivery : deliveries){
+            turns.add(((DeliveryAtShop) delivery).getTurn());
+        }
+        return turns;
     }
 }
