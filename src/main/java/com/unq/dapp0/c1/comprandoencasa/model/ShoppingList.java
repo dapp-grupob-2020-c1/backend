@@ -10,7 +10,7 @@ public class ShoppingList {
 
     // Map.Entry<Product, Integer> es un producto y su cantidad, dentro de una lista de compras
     // yo quería una tupla, pero... JAVA.
-    List<Map.Entry<Product, Integer>> products;
+    private List<Map.Entry<Product, Integer>> products;
 
     public ShoppingList() {
         this.products = new ArrayList<>();
@@ -31,7 +31,7 @@ public class ShoppingList {
     public int countItems() {
         int sum = 0;
         for (Map.Entry<Product, Integer> shoppingListEntry : products) {
-            sum += shoppingListEntry.getValue();;
+            sum += shoppingListEntry.getValue();
         }
         return sum;
     }
