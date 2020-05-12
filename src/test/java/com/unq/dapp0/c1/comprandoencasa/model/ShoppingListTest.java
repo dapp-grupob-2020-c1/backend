@@ -58,6 +58,15 @@ class ShoppingListTest {
         aShoppingList.add(aProduct, 2);
         assertEquals(new BigDecimal(100), aShoppingList.totalValue());
     }
+
+    @Test
+    public void aShoppingListHasALocation(){
+        Location aLocation = mock(Location.class);
+        ShoppingList aShoppingList = ShoppingListBuilder.anyShoppingList().withLocation(aLocation).build();
+
+        assertEquals(aLocation, aShoppingList.getLocation());
+    }
+
 }
 
 class ShoppingListBuilder {

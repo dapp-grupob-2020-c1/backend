@@ -12,8 +12,12 @@ public class ShoppingList {
     // yo quería una tupla, pero... JAVA.
     private List<Map.Entry<Product, Integer>> entries;
 
-    public ShoppingList() {
+    // ubicación hacia donde se debe hacer el envio, domicilio de comprador
+    private Location location;
+
+    public ShoppingList(Location location) {
         this.entries = new ArrayList<>();
+        this.location = location;
     }
 
     public void add(Product aProduct, int aQuantity) {
@@ -47,5 +51,9 @@ public class ShoppingList {
 
     public List<Map.Entry<Product, Integer>> getEntries() {
         return this.entries;
+    }
+
+    public Location getLocation() {
+        return this.location;
     }
 }
