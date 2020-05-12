@@ -3,8 +3,6 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 public class Product {
     private String name;

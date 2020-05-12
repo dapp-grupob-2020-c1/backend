@@ -68,7 +68,7 @@ public class DiscountByMultiple extends Discount {
                     } else {
                         products.remove(productIntegerEntry);
                     }
-                };
+                }
             }
         }
         return total;
