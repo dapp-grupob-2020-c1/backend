@@ -5,6 +5,7 @@ import java.util.*;
 
 public class ShoppingList {
 
+    private final Customer customer;
     // Map.Entry<Product, Integer> es un producto y su cantidad, dentro de una lista de compras
     // yo quería una tupla, pero... JAVA.
     private List<Map.Entry<Product, Integer>> entries;
@@ -12,9 +13,10 @@ public class ShoppingList {
     // ubicación hacia donde se debe hacer el envio, domicilio de comprador
     private Location location;
 
-    public ShoppingList(Location location) {
+    public ShoppingList(Location location, Customer customer) {
         this.entries = new ArrayList<>();
         this.location = location;
+        this.customer = customer;
     }
 
     public void add(Product aProduct, int aQuantity) {
@@ -73,5 +75,21 @@ public class ShoppingList {
 
     public void setLocation(Location aLocation) {
         this.location = aLocation;
+    }
+
+    public Customer getCustomer() {
+        return this.customer;
+    }
+
+    public BigDecimal evaluateTotalFor(ProductType productType) {
+        BigDecimal total = new BigDecimal(0);
+        for (Map.Entry<Product, Integer> productIntegerEntry : this.entries){
+            Product product = productIntegerEntry.getKey();
+            if (product.isType(productType)){
+                Integer amount = productIntegerEntry.getValue();
+                total = total.add(product.getPrice().multiply(BigDecimal.valueOf(amount)));
+            }
+        }
+        return total;
     }
 }
