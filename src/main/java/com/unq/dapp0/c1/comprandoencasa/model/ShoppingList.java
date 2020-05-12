@@ -16,16 +16,16 @@ public class ShoppingList {
         this.products = new ArrayList<>();
     }
 
-    public int countProducts() {
-        return this.products.size();
-    }
-
     public void add(Product aProduct, int aQuantity) {
         // TODO: chequeo errores, tiro exceptions
 
-        // creo una nueva instancia para agregar a la lista
+        // creo una nueva shoppingListEntry para agregar al listado products
         Map.Entry<Product, Integer> newShoppingListEntry = new AbstractMap.SimpleEntry<>(aProduct, aQuantity);
         products.add(newShoppingListEntry);
+    }
+
+    public int countProducts() {
+        return this.products.size();
     }
 
     public int countItems() {
