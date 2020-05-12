@@ -10,13 +10,15 @@ public class Product {
     private String image;
     private BigDecimal price;
     private Collection<ProductType> types;
+    private Shop shop;
 
-    public Product(String name, String brand, String image, BigDecimal price) {
+    public Product(String name, String brand, String image, BigDecimal price, Shop shop) {
         this.name = name;
         this.brand = brand;
         this.image = image;
         this.price = price;
         this.types = new ArrayList<>();
+        this.shop = shop;
     }
 
     /**
@@ -68,6 +70,10 @@ public class Product {
 
     public void removeType(ProductType aProductType) {
         this.types.remove(aProductType);
+    }
+
+    public Shop getShop() {
+        return this.shop;
     }
 
 }

@@ -9,17 +9,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 class ProductTest {
 
     @Test
     public void aProductCanBeCreatedWithItsAtributes(){
-
-        Product aProduct = new Product("ProductName", "ProductBrand", "ProductImage", new BigDecimal(999));
+        Shop shop = mock(Shop.class);
+        Product aProduct = new Product("ProductName", "ProductBrand", "ProductImage", new BigDecimal(999), shop);
         assertEquals("ProductName", aProduct.getName());
         assertEquals("ProductBrand", aProduct.getBrand());
         assertEquals("ProductImage", aProduct.getImage());
         assertEquals(new BigDecimal(999), aProduct.getPrice());
+        assertEquals(shop, aProduct.getShop());
     }
 
     @Test
