@@ -44,4 +44,8 @@ public class ShoppingList {
         }
         return total;
     }
+
+    public List<Map.Entry<Product, Integer>> getEntries() {
+        return this.entries;
+    }
 }

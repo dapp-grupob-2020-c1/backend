@@ -3,6 +3,9 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -15,6 +18,14 @@ class ShoppingListTest {
     public void aShoppingListStartsEmpty(){
         ShoppingList aShoppingList = new ShoppingList();
         assertEquals(0, aShoppingList.countProducts());
+    }
+
+    @Test
+    public void aShoppingListHasAnEntriesList(){
+        ShoppingList aShoppingList = new ShoppingList();
+        List<Map.Entry<Product, Integer>> emptyEntriesList = new ArrayList<>();
+
+        assertEquals(emptyEntriesList, aShoppingList.getEntries());
     }
 
     @Test
