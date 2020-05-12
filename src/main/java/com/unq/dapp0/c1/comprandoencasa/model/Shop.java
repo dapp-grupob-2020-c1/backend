@@ -3,7 +3,6 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
