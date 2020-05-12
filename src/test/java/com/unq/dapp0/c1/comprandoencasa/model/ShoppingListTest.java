@@ -67,6 +67,18 @@ class ShoppingListTest {
         assertEquals(aLocation, aShoppingList.getLocation());
     }
 
+    @Test
+    public void aShoppingListCanChangeItsLocation(){
+        Location aLocation = mock(Location.class);
+        Location anotherLocation = mock(Location.class);
+
+        ShoppingList aShoppingList = ShoppingListBuilder.anyShoppingList().withLocation(aLocation).build();
+        assertEquals(aLocation, aShoppingList.getLocation());
+
+        aShoppingList.setLocation(anotherLocation);
+        assertEquals(anotherLocation, aShoppingList.getLocation());
+    }
+
 }
 
 class ShoppingListBuilder {

@@ -56,4 +56,8 @@ public class ShoppingList {
     public Location getLocation() {
         return this.location;
     }
+
+    public void setLocation(Location aLocation) {
+        this.location = aLocation;
+    }
 }
