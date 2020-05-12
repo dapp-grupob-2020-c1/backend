@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Represents the internal administrative data of a shop and it's mecanics.
@@ -19,6 +20,7 @@ public class Shop {
     private Integer deliveryRadius;
     private final Manager manager;
     private ArrayList<Product> products;
+    private ArrayList<Discount> discounts;
 
     public Shop(ArrayList<ShopCategory> shopCategories, Location location, ArrayList<DayOfWeek> days, LocalTime openingHour, LocalTime closingHour, ArrayList<PaymentMethod> paymentMethods, Integer deliveryRadius, Manager manager, ArrayList<Product> products) {
         this.shopCategories = shopCategories;
@@ -30,6 +32,7 @@ public class Shop {
         this.deliveryRadius = deliveryRadius;
         this.manager = manager;
         this.products = products;
+        this.discounts = new ArrayList<>();
     }
 
     public ArrayList<ShopCategory> getShopCategories() {
@@ -123,7 +126,7 @@ public class Shop {
      * Delegates the verification to his own manager.
      * @param manager to validate
      */
-    public void validateManager(Manager manager) {
+    public void validateManager(Manager manager) throws Exception {
         this.manager.validate(manager);
     }
 
@@ -131,9 +134,11 @@ public class Shop {
         return this.products;
     }
 
+    /**
+     * @throws ProductAlreadyPresentException if the product is already present.
+     */
     public void addProduct(Product product) {
-        Optional<Product> foundProduct = this.products.stream().filter(p-> p.getID().equals(product.getID())).findFirst();
-        if (!foundProduct.isPresent()){
+        if (!this.findProduct(product).isPresent()){
             this.products.add(product);
         } else {
             throw new ProductAlreadyPresentException(product);
@@ -141,7 +146,37 @@ public class Shop {
     }
 
     public void removeProduct(Product product) {
-        Optional<Product> foundProduct = this.products.stream().filter(p-> p.getID().equals(product.getID())).findFirst();
-        foundProduct.ifPresent(value -> this.products.remove(value));
+        this.findProduct(product).ifPresent(value -> this.products.remove(value));
+    }
+
+    private Optional<Product> findProduct(Product product){
+        return this.products.stream().filter(p-> p.getID().equals(product.getID())).findFirst();
+    }
+
+    public ArrayList<Discount> getDiscounts() {
+        return this.discounts;
+    }
+
+    /**
+     * @throws DiscountAlreadyExistsException if the discount is already present.
+     */
+    public void addDiscount(Discount discount) {
+        if (!this.findDiscount(discount).isPresent()){
+            this.discounts.add(discount);
+        } else {
+            throw new DiscountAlreadyExistsException(discount);
+        }
+    }
+
+    public void removeDiscount(Discount discount) {
+        this.findDiscount(discount).ifPresent(value -> this.discounts.remove(value));
+    }
+
+    private Optional<Discount> findDiscount(Discount discount) {
+        return this.discounts.stream().filter(d-> d.getID().equals(discount.getID())).findFirst();
+    }
+
+    public ArrayList<Discount> getActiveDiscounts() {
+        return this.discounts.stream().filter(Discount::isActive).collect(Collectors.toCollection(ArrayList::new));
     }
 }
