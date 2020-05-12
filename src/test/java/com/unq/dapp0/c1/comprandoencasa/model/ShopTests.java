@@ -25,7 +25,7 @@ public class ShopTests {
         shopCategories.add(ShopCategory.FoodsAndDrinks);
         shopCategories.add(ShopCategory.OfficeSupplies);
 
-        Shop shop = ShopFactory.aShop().withCategories(shopCategories).build();
+        Shop shop = ShopBuilder.anyShop().withCategories(shopCategories).build();
 
         assertTrue(shop.getShopCategories().contains(ShopCategory.FoodsAndDrinks));
         assertTrue(shop.getShopCategories().contains(ShopCategory.OfficeSupplies));
@@ -45,7 +45,7 @@ public class ShopTests {
         ArrayList<ShopCategory> shopCategories = new ArrayList<>();
         shopCategories.add(ShopCategory.FoodsAndDrinks);
 
-        Shop shop = ShopFactory.aShop().withCategories(shopCategories).build();
+        Shop shop = ShopBuilder.anyShop().withCategories(shopCategories).build();
 
         assertTrue(shop.getShopCategories().contains(ShopCategory.FoodsAndDrinks));
         assertFalse(shop.getShopCategories().contains(ShopCategory.OfficeSupplies));
@@ -60,7 +60,7 @@ public class ShopTests {
         shopCategories.add(ShopCategory.FoodsAndDrinks);
         shopCategories.add(ShopCategory.OfficeSupplies);
 
-        Shop shop = ShopFactory.aShop().withCategories(shopCategories).build();
+        Shop shop = ShopBuilder.anyShop().withCategories(shopCategories).build();
 
         assertTrue(shop.getShopCategories().contains(ShopCategory.FoodsAndDrinks));
         assertTrue(shop.getShopCategories().contains(ShopCategory.OfficeSupplies));
@@ -73,7 +73,7 @@ public class ShopTests {
     public void aShopHasALocation(){
         Location location = mock(Location.class);
 
-        Shop shop = ShopFactory.aShop().withLocation(location).build();
+        Shop shop = ShopBuilder.anyShop().withLocation(location).build();
 
         assertEquals(location, shop.getLocation());
     }
@@ -83,7 +83,7 @@ public class ShopTests {
         Location location = mock(Location.class);
         Location newLocation = mock(Location.class);
 
-        Shop shop = ShopFactory.aShop().withLocation(location).build();
+        Shop shop = ShopBuilder.anyShop().withLocation(location).build();
 
         assertEquals(location, shop.getLocation());
         assertNotEquals(newLocation, shop.getLocation());
@@ -101,7 +101,7 @@ public class ShopTests {
         days.add(DayOfWeek.TUESDAY);
         days.add(DayOfWeek.WEDNESDAY);
 
-        Shop shop = ShopFactory.aShop().withDays(days).build();
+        Shop shop = ShopBuilder.anyShop().withDays(days).build();
 
         assertTrue(shop.getDays().contains(DayOfWeek.MONDAY));
         assertTrue(shop.getDays().contains(DayOfWeek.TUESDAY));
@@ -118,7 +118,7 @@ public class ShopTests {
         days.add(DayOfWeek.MONDAY);
         days.add(DayOfWeek.TUESDAY);
 
-        Shop shop = ShopFactory.aShop().withDays(days).build();
+        Shop shop = ShopBuilder.anyShop().withDays(days).build();
 
         assertTrue(shop.getDays().contains(DayOfWeek.MONDAY));
         assertTrue(shop.getDays().contains(DayOfWeek.TUESDAY));
@@ -133,7 +133,7 @@ public class ShopTests {
         ArrayList<DayOfWeek> days = new ArrayList<>();
         days.add(DayOfWeek.MONDAY);
 
-        Shop shop = ShopFactory.aShop().withDays(days).build();
+        Shop shop = ShopBuilder.anyShop().withDays(days).build();
 
         assertTrue(shop.getDays().contains(DayOfWeek.MONDAY));
         assertFalse(shop.getDays().contains(DayOfWeek.TUESDAY));
@@ -149,7 +149,7 @@ public class ShopTests {
         days.add(DayOfWeek.MONDAY);
         days.add(DayOfWeek.TUESDAY);
 
-        Shop shop = ShopFactory.aShop().withDays(days).build();
+        Shop shop = ShopBuilder.anyShop().withDays(days).build();
 
         assertTrue(shop.getDays().contains(DayOfWeek.MONDAY));
         assertTrue(shop.getDays().contains(DayOfWeek.TUESDAY));
@@ -165,7 +165,7 @@ public class ShopTests {
         LocalTime openingHour = LocalTime.of(8,0);
         LocalTime closingHour = LocalTime.of(16, 0);
 
-        Shop shop = ShopFactory.aShop()
+        Shop shop = ShopBuilder.anyShop()
                 .withOpeningHour(openingHour)
                 .withClosingHour(closingHour)
                 .build();
@@ -178,7 +178,7 @@ public class ShopTests {
     public void aShopCanChangeHisOpeningHour(){
         LocalTime openingHour = LocalTime.of(8,0);
 
-        Shop shop = ShopFactory.aShop()
+        Shop shop = ShopBuilder.anyShop()
                 .withOpeningHour(openingHour)
                 .build();
 
@@ -193,7 +193,7 @@ public class ShopTests {
     public void aShopCanChangeHisClosingHour(){
         LocalTime closingHour = LocalTime.of(16, 0);
 
-        Shop shop = ShopFactory.aShop()
+        Shop shop = ShopBuilder.anyShop()
                 .withClosingHour(closingHour)
                 .build();
 
@@ -210,7 +210,7 @@ public class ShopTests {
         paymentMethods.add(PaymentMethod.CASH);
         paymentMethods.add(PaymentMethod.DEBIT);
 
-        Shop shop = ShopFactory.aShop()
+        Shop shop = ShopBuilder.anyShop()
                 .withPaymentMethods(paymentMethods)
                 .build();
 
@@ -225,7 +225,7 @@ public class ShopTests {
         ArrayList<PaymentMethod> paymentMethods = new ArrayList<>();
         paymentMethods.add(PaymentMethod.CASH);
 
-        Shop shop = ShopFactory.aShop()
+        Shop shop = ShopBuilder.anyShop()
                 .withPaymentMethods(paymentMethods)
                 .build();
 
@@ -243,7 +243,7 @@ public class ShopTests {
         paymentMethods.add(PaymentMethod.CASH);
         paymentMethods.add(PaymentMethod.DEBIT);
 
-        Shop shop = ShopFactory.aShop()
+        Shop shop = ShopBuilder.anyShop()
                 .withPaymentMethods(paymentMethods)
                 .build();
 
@@ -261,7 +261,7 @@ public class ShopTests {
         paymentMethods.add(PaymentMethod.CASH);
         paymentMethods.add(PaymentMethod.DEBIT);
 
-        Shop shop = ShopFactory.aShop()
+        Shop shop = ShopBuilder.anyShop()
                 .withPaymentMethods(paymentMethods)
                 .build();
 
@@ -280,7 +280,7 @@ public class ShopTests {
     public void aShopHasADeliveryRadius(){
         Integer distanceInKM = 2;
 
-        Shop shop = ShopFactory.aShop()
+        Shop shop = ShopBuilder.anyShop()
                 .withDeliveryRadius(distanceInKM)
                 .build();
 
@@ -291,7 +291,7 @@ public class ShopTests {
     public void aShopCanChangeHisDeliveryRadius(){
         Integer distanceInKM = 2;
 
-        Shop shop = ShopFactory.aShop()
+        Shop shop = ShopBuilder.anyShop()
                 .withDeliveryRadius(distanceInKM)
                 .build();
 
@@ -303,13 +303,13 @@ public class ShopTests {
     }
 
     @Test
-    public void aShopHasAManagerWithWichToValidate(){
+    public void aShopHasAManagerWithWichToValidate() throws Exception {
         Manager manager = mock(Manager.class);
         Manager anotherManager = mock(Manager.class);
 
         doThrow(InvalidManagerException.class).when(manager).validate(anotherManager);
 
-        Shop shop = ShopFactory.aShop()
+        Shop shop = ShopBuilder.anyShop()
                 .withManager(manager)
                 .build();
 
@@ -326,7 +326,7 @@ public class ShopTests {
         products.add(prodMock1);
         products.add(prodMock2);
 
-        Shop shop = ShopFactory.aShop().withProducts(products).build();
+        Shop shop = ShopBuilder.anyShop().withProducts(products).build();
 
         assertTrue(shop.getProducts().contains(prodMock1));
         assertTrue(shop.getProducts().contains(prodMock2));
@@ -343,7 +343,7 @@ public class ShopTests {
         ArrayList<Product> products = new ArrayList<>();
         products.add(prodMock1);
 
-        Shop shop = ShopFactory.aShop().withProducts(products).build();
+        Shop shop = ShopBuilder.anyShop().withProducts(products).build();
 
         assertTrue(shop.getProducts().contains(prodMock1));
         assertFalse(shop.getProducts().contains(prodMock2));
@@ -365,7 +365,7 @@ public class ShopTests {
         products.add(prodMock1);
         products.add(prodMock2);
 
-        Shop shop = ShopFactory.aShop().withProducts(products).build();
+        Shop shop = ShopBuilder.anyShop().withProducts(products).build();
 
         assertTrue(shop.getProducts().contains(prodMock1));
         assertTrue(shop.getProducts().contains(prodMock2));
@@ -383,7 +383,7 @@ public class ShopTests {
         ArrayList<Product> products = new ArrayList<>();
         products.add(prodMock);
 
-        Shop shop = ShopFactory.aShop().withProducts(products).build();
+        Shop shop = ShopBuilder.anyShop().withProducts(products).build();
 
         assertTrue(shop.getProducts().contains(prodMock));
 
@@ -391,9 +391,78 @@ public class ShopTests {
         assertEquals("The product "+1L+" is already present in the list", exception.getMessage());
         assertEquals(1, shop.getProducts().size());
     }
+
+    @Test
+    public void aShopCanHaveDiscounts(){
+        Shop shop = ShopBuilder.anyShop().build();
+
+        assertEquals(0, shop.getDiscounts().size());
+    }
+
+    @Test
+    public void aShopCanAddDiscounts(){
+        Shop shop = ShopBuilder.anyShop().build();
+
+        assertEquals(0, shop.getDiscounts().size());
+
+        Discount discount = mock(Discount.class);
+        when(discount.getID()).thenReturn(1L);
+
+        shop.addDiscount(discount);
+
+        assertEquals(1, shop.getDiscounts().size());
+        assertEquals(discount, shop.getDiscounts().get(0));
+    }
+
+    @Test
+    public void aShopCannotAddTheSameDiscountTwice(){
+        Shop shop = ShopBuilder.anyShop().build();
+
+        Discount discount = mock(Discount.class);
+        when(discount.getID()).thenReturn(1L);
+
+        shop.addDiscount(discount);
+
+        Throwable exception = assertThrows(DiscountAlreadyExistsException.class, ()->shop.addDiscount(discount));
+        assertEquals("The given discount "+discount.getID()+" already exists", exception.getMessage());
+    }
+
+    @Test
+    public void aShopCanRemoveDiscounts(){
+        Shop shop = ShopBuilder.anyShop().build();
+
+        Discount discount = mock(Discount.class);
+        when(discount.getID()).thenReturn(1L);
+        shop.addDiscount(discount);
+
+        assertEquals(discount, shop.getDiscounts().get(0));
+
+        shop.removeDiscount(discount);
+
+        assertEquals(0, shop.getDiscounts().size());
+    }
+
+    @Test
+    public void aShopCanReturnActiveDiscounts(){
+        Shop shop = ShopBuilder.anyShop().build();
+
+        Discount activeDiscount = mock(Discount.class);
+        when(activeDiscount.getID()).thenReturn(1L);
+        when(activeDiscount.isActive()).thenReturn(true);
+
+        shop.addDiscount(activeDiscount);
+
+        Discount inactiveDiscount = mock(Discount.class);
+        when(inactiveDiscount.getID()).thenReturn(2L);
+        when(inactiveDiscount.isActive()).thenReturn(false);
+
+        shop.addDiscount(inactiveDiscount);
+
+        assertEquals(activeDiscount, shop.getActiveDiscounts().get(0));
+    }
 }
 
-class ShopFactory {
+class ShopBuilder {
     private ArrayList<ShopCategory> shopCategories;
     private Location location;
     private ArrayList<DayOfWeek> days;
@@ -404,55 +473,55 @@ class ShopFactory {
     private Manager manager;
     private ArrayList<Product> products;
 
-    public static ShopFactory aShop(){
-        return new ShopFactory();
+    public static ShopBuilder anyShop(){
+        return new ShopBuilder();
     }
 
-    public ShopFactory(){
+    public ShopBuilder(){
         this.shopCategories = new ArrayList<>();
-        this.location = new Location();
+        this.location = mock(Location.class);
         this.days = new ArrayList<>();
         this.openingHour = LocalTime.of(8,0);
         this.closingHour = LocalTime.of(17,0);
         this.paymentMethods = new ArrayList<>();
         this.deliveryRadius = 1;
-        this.manager = new Manager();
+        this.manager = mock(Manager.class);
         this.products = new ArrayList<>();
     }
 
-    public ShopFactory withCategories(ArrayList<ShopCategory> shopCategories){
+    public ShopBuilder withCategories(ArrayList<ShopCategory> shopCategories){
         this.shopCategories = shopCategories;
         return this;
     }
-    public ShopFactory withLocation(Location location){
+    public ShopBuilder withLocation(Location location){
         this.location = location;
         return this;
     }
-    public ShopFactory withDays(ArrayList<DayOfWeek> days){
+    public ShopBuilder withDays(ArrayList<DayOfWeek> days){
         this.days = days;
         return this;
     }
-    public ShopFactory withOpeningHour(LocalTime openingHour){
+    public ShopBuilder withOpeningHour(LocalTime openingHour){
         this.openingHour = openingHour;
         return this;
     }
-    public ShopFactory withClosingHour(LocalTime closingHour){
+    public ShopBuilder withClosingHour(LocalTime closingHour){
         this.closingHour = closingHour;
         return this;
     }
-    public ShopFactory withPaymentMethods(ArrayList<PaymentMethod> paymentMethods){
+    public ShopBuilder withPaymentMethods(ArrayList<PaymentMethod> paymentMethods){
         this.paymentMethods = paymentMethods;
         return this;
     }
-    public ShopFactory withDeliveryRadius(Integer deliveryRadius) {
+    public ShopBuilder withDeliveryRadius(Integer deliveryRadius) {
         this.deliveryRadius = deliveryRadius;
         return this;
     }
-    public ShopFactory withManager(Manager manager) {
+    public ShopBuilder withManager(Manager manager) {
         this.manager = manager;
         return this;
     }
-    public ShopFactory withProducts(ArrayList<Product> products) {
+    public ShopBuilder withProducts(ArrayList<Product> products) {
         this.products = products;
         return this;
     }
