@@ -29,7 +29,9 @@ public abstract class Discount {
     }
 
     public Boolean isActive() {
-        return null;
+        LocalDate now = LocalDate.now();
+        return (this.startingDate.isBefore(now) || this.startingDate.isEqual(now)) &&
+                (this.endingDate.isAfter(now) || this.endingDate.isEqual(now));
     }
 
     public double getPercentage() {

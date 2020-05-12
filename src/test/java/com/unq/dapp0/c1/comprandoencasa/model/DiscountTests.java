@@ -128,6 +128,26 @@ public class DiscountTests {
     }
 
     @Test
+    public void aDiscountKnowsIfItsActiveBasedOnItsDatesAndTheCurrentDate(){
+        Discount activeDiscount = DiscountBuilder.anyDiscount()
+                .setStartingDate(LocalDate.now())
+                .setEndingDate(LocalDate.now())
+                .build();
+
+        assertTrue(activeDiscount.isActive());
+
+        LocalDate startingDate = LocalDate.of(2021, 5, 1);
+        LocalDate endingDate = LocalDate.of(2021, 5, 30);
+
+        Discount inactiveDiscount = DiscountBuilder.anyDiscount()
+                .setStartingDate(startingDate)
+                .setEndingDate(endingDate)
+                .build();
+
+        assertFalse(inactiveDiscount.isActive());
+    }
+
+    @Test
     public void aDiscountCanBeForAProductType(){
         Product validProduct = mock(Product.class);
         when(validProduct.isType(ProductType.Bazaar)).thenReturn(true);

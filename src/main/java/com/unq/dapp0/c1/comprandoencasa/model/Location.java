@@ -12,6 +12,7 @@ public class Location {
     private final Double EARTH_RADIUS = 6371.0;
     private final Double MINUTES_PER_KM = 2.0;
 
+    private Long id;
     private String address;
     private Double latitude;
     private Double longitude;
@@ -20,6 +21,10 @@ public class Location {
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public Long getID() {
+        return this.id;
     }
 
     public String getAddress() {
