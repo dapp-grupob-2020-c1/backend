@@ -78,9 +78,4 @@ public class Product {
         return this.shop;
     }
 
-    public BigDecimal getTotalPrice(List<Map.Entry<Product, Integer>> entries) {
-        // aca se encuentra a si mismo dentro de la shopping list, y calcula su precio
-        // teniendo en cuenta los posibles descuentos
-        return this.getPrice();
-    }
 }

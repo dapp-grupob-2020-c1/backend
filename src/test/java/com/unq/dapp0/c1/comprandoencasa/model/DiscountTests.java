@@ -2,8 +2,12 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -269,30 +273,24 @@ public class DiscountTests {
     }
 
     @Test
-    public void aDiscountForMultipleProductsCannotAddAProductThatItAlreadyContains(){
-        Product product1 = mock(Product.class);
-        when(product1.getID()).thenReturn(1L);
-
-        Product product2 = mock(Product.class);
-        when(product2.getID()).thenReturn(2L);
+    public void aDiscountForMultipleProductsCanAddAProductThatItAlreadyContains(){
+        Product product = mock(Product.class);
+        when(product.getID()).thenReturn(1L);
 
         ArrayList<Product> products = new ArrayList<>();
-        products.add(product1);
-        products.add(product2);
+        products.add(product);
+        products.add(product);
 
         DiscountByMultiple discount = (DiscountByMultiple) DiscountBuilder.anyDiscount()
                 .withProducts(products)
                 .build();
 
-        assertEquals(products, discount.getProducts());
-        assertTrue(discount.getProducts().contains(product1));
-        assertTrue(discount.getProducts().contains(product2));
+        assertTrue(discount.getProducts().contains(product));
+        assertEquals(2, discount.getProducts().size());
 
-        Throwable exception = assertThrows(ProductAlreadyPresentException.class ,()->
-                discount.addProduct(product2));
+        discount.addProduct(product);
 
-        assertEquals("The product "+product2.getID()+" is already present in the list",
-                exception.getMessage());
+        assertEquals(3, discount.getProducts().size());
     }
 
     @Test
@@ -463,6 +461,91 @@ public class DiscountTests {
                 .withProducts(productsForSingle).build();
 
         assertEquals(1, discount.compare(discountOfSingleType));
+    }
+
+    @Test
+    public void aDiscountForProductTypeCanCalculateTheTotalValueOfTheProductsItReceives(){
+        Shop shop = mock(Shop.class);
+
+        DiscountByCategory discount = (DiscountByCategory) DiscountBuilder.anyDiscount()
+                .withTarget(ProductType.Bazaar)
+                .withShop(shop)
+                .build();
+
+        List<Map.Entry<Product, Integer>> products = new ArrayList<>();
+        Product validProduct = mock(Product.class);
+        Product productOfAnotherShop = mock(Product.class);
+
+        when(validProduct.getShop()).thenReturn(shop);
+        when(productOfAnotherShop.getShop()).thenReturn(mock(Shop.class));
+        when(validProduct.isType(ProductType.Bazaar)).thenReturn(true);
+        when(validProduct.getPrice()).thenReturn(BigDecimal.valueOf(5));
+
+        products.add(new AbstractMap.SimpleEntry<>(validProduct, 2));
+        products.add(new AbstractMap.SimpleEntry<>(productOfAnotherShop, 1));
+
+        assertEquals(2, products.size());
+        assertEquals(new BigDecimal("9.900"), discount.calculateFor(products));
+        assertEquals(1, products.size());
+    }
+
+
+    @Test
+    public void aDiscountForSingleProductCanCalculateTheTotalValueOfTheProductsItReceives(){
+        Product validProduct = mock(Product.class);
+
+        ArrayList<Product> discountProducts = new ArrayList<>();
+        discountProducts.add(validProduct);
+
+        DiscountBySingle discount = (DiscountBySingle) DiscountBuilder.anyDiscount()
+                .withProducts(discountProducts)
+                .build();
+
+        List<Map.Entry<Product, Integer>> products = new ArrayList<>();
+        Product productOfAnotherShop = mock(Product.class);
+
+        when(validProduct.getID()).thenReturn(1L);
+        when(productOfAnotherShop.getID()).thenReturn(2L);
+        when(validProduct.getPrice()).thenReturn(BigDecimal.valueOf(5));
+
+        products.add(new AbstractMap.SimpleEntry<>(validProduct, 2));
+        products.add(new AbstractMap.SimpleEntry<>(productOfAnotherShop, 1));
+
+        assertEquals(2, products.size());
+        assertEquals(new BigDecimal("9.900"), discount.calculateFor(products));
+        assertEquals(1, products.size());
+    }
+
+
+    @Test
+    public void aDiscountForMultipleProductsCanCalculateTheTotalValueOfTheProductsItReceives(){
+        Product validProduct = mock(Product.class);
+        Product anotherValidProduct = mock(Product.class);
+
+        ArrayList<Product> discountProducts = new ArrayList<>();
+        discountProducts.add(validProduct);
+        discountProducts.add(anotherValidProduct);
+
+        DiscountByMultiple discount = (DiscountByMultiple) DiscountBuilder.anyDiscount()
+                .withProducts(discountProducts)
+                .build();
+
+        List<Map.Entry<Product, Integer>> products = new ArrayList<>();
+        Product productOfAnotherShop = mock(Product.class);
+
+        when(validProduct.getID()).thenReturn(1L);
+        when(productOfAnotherShop.getID()).thenReturn(2L);
+        when(anotherValidProduct.getID()).thenReturn(3L);
+        when(validProduct.getPrice()).thenReturn(BigDecimal.valueOf(5));
+        when(anotherValidProduct.getPrice()).thenReturn(BigDecimal.valueOf(2));
+
+        products.add(new AbstractMap.SimpleEntry<>(validProduct, 2));
+        products.add(new AbstractMap.SimpleEntry<>(anotherValidProduct, 1));
+        products.add(new AbstractMap.SimpleEntry<>(productOfAnotherShop, 1));
+
+        assertEquals(3, products.size());
+        assertEquals(new BigDecimal("11.880"), discount.calculateFor(products));
+        assertEquals(2, products.size());
     }
 }
 

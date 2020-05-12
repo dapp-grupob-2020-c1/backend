@@ -1,10 +1,7 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
 import java.math.BigDecimal;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ShoppingList {
 
@@ -41,11 +38,28 @@ public class ShoppingList {
     }
 
     public BigDecimal totalValue() {
+        HashSet<Shop> shops = new HashSet<>();
+        this.entries.forEach(el -> shops.add(el.getKey().getShop()));
+
+        ArrayList<Discount> discounts = new ArrayList<>();
+        shops.forEach(shop -> discounts.addAll(shop.getActiveDiscounts()));
+
+        discounts.sort(Discount::compare);
+
         BigDecimal total = new BigDecimal(0);
-        for (Map.Entry<Product, Integer> shoppingListEntry : entries) {
-            BigDecimal productCalculatedPrice = shoppingListEntry.getKey().getTotalPrice(this.entries);
-            total = total.add(productCalculatedPrice);
+        List<Map.Entry<Product, Integer>> products =  new ArrayList<>(this.entries);
+
+        for (Discount discount : discounts){
+            total = discount.calculateFor(products);
         }
+
+        if (!products.isEmpty()){
+            for (Map.Entry<Product, Integer> shoppingListEntry : products) {
+                BigDecimal productCalculatedPrice = shoppingListEntry.getKey().getPrice();
+                total = total.add(productCalculatedPrice.multiply(BigDecimal.valueOf(shoppingListEntry.getValue())));
+            }
+        }
+
         return total;
     }
 

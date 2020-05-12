@@ -52,11 +52,21 @@ class ShoppingListTest {
     public void aShoppingListHasTotalValue(){
         ShoppingList aShoppingList = ShoppingListBuilder.anyShoppingList().build();
         Product aProduct = mock(Product.class);
-        when(aProduct.getTotalPrice(any())).thenReturn(new BigDecimal(100));
+        Shop shop = mock(Shop.class);
+        Discount discount = mock(Discount.class);
+
+        ArrayList<Discount> discounts = new ArrayList<>();
+        discounts.add(discount);
+
+        when(aProduct.getShop()).thenReturn(shop);
+        when(aProduct.getPrice()).thenReturn(BigDecimal.valueOf(10));
+        when(shop.getActiveDiscounts()).thenReturn(discounts);
+        when(discount.compare(discount)).thenReturn(0);
+        when(discount.calculateFor(any())).thenReturn(new BigDecimal(100));
 
         assertEquals(new BigDecimal(0), aShoppingList.totalValue());
         aShoppingList.add(aProduct, 2);
-        assertEquals(new BigDecimal(100), aShoppingList.totalValue());
+        assertEquals(new BigDecimal(120), aShoppingList.totalValue());
     }
 
     @Test
