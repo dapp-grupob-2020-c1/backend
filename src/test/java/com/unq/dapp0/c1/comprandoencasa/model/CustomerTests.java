@@ -13,7 +13,7 @@ public class CustomerTests {
 
     @Test
     public void aCustomerCanCreateItsAccountWithANameAndAPasswordThatCanBeValidated(){
-        String name = "Testo";
+        String name = "Testeo";
         String email = "testo@test.com";
         String password = "1234";
 
