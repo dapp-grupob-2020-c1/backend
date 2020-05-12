@@ -10,10 +10,10 @@ public class ShoppingList {
 
     // Map.Entry<Product, Integer> es un producto y su cantidad, dentro de una lista de compras
     // yo quería una tupla, pero... JAVA.
-    private List<Map.Entry<Product, Integer>> products;
+    private List<Map.Entry<Product, Integer>> entries;
 
     public ShoppingList() {
-        this.products = new ArrayList<>();
+        this.entries = new ArrayList<>();
     }
 
     public void add(Product aProduct, int aQuantity) {
@@ -21,16 +21,16 @@ public class ShoppingList {
 
         // creo una nueva shoppingListEntry para agregar al listado products
         Map.Entry<Product, Integer> newShoppingListEntry = new AbstractMap.SimpleEntry<>(aProduct, aQuantity);
-        products.add(newShoppingListEntry);
+        entries.add(newShoppingListEntry);
     }
 
     public int countProducts() {
-        return this.products.size();
+        return this.entries.size();
     }
 
     public int countItems() {
         int sum = 0;
-        for (Map.Entry<Product, Integer> shoppingListEntry : products) {
+        for (Map.Entry<Product, Integer> shoppingListEntry : entries) {
             sum += shoppingListEntry.getValue();
         }
         return sum;
@@ -38,8 +38,8 @@ public class ShoppingList {
 
     public BigDecimal totalValue() {
         BigDecimal total = new BigDecimal(0);
-        for (Map.Entry<Product, Integer> shoppingListEntry : products) {
-            BigDecimal productCalculatedPrice = shoppingListEntry.getKey().getTotalPrice(this.products);
+        for (Map.Entry<Product, Integer> shoppingListEntry : entries) {
+            BigDecimal productCalculatedPrice = shoppingListEntry.getKey().getTotalPrice(this.entries);
             total = total.add(productCalculatedPrice);
         }
         return total;
