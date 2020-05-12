@@ -11,7 +11,7 @@ public class ManagerTests {
 
     @Test
     public void aManagerCanBeCreatedWithANameAndAPasswordThatItCanThenValidate(){
-        String name = "Testo";
+        String name = "Test";
         String email = "test@testo.com";
         String password = "1234";
 
