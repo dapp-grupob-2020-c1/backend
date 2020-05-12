@@ -126,7 +126,7 @@ public class Shop {
      * Delegates the verification to his own manager.
      * @param manager to validate
      */
-    public void validateManager(Manager manager) {
+    public void validateManager(Manager manager) throws Exception {
         this.manager.validate(manager);
     }
 

@@ -3,26 +3,12 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 /**
  * Representation of a Shop Manager. Holds validation methods for login and transactions.
  */
-public class Manager {
-    private final String name;
-    private final String password;
+public class Manager extends CECUser {
     private final Shop shop;
-    private final String email;
 
     public Manager(String name, String password, String email, Shop shop) {
-        this.checkEmailFormat(email);
-
-        this.name = name;
-        this.password = password;
-        this.email = email;
+        super(name, password, email);
         this.shop = shop;
-    }
-
-    private void checkEmailFormat(String email) {
-        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-        if (!email.matches(regex)) {
-            throw new InvalidEmailFormatException();
-        }
     }
 
     /**
@@ -30,7 +16,7 @@ public class Manager {
      * @throws InvalidManagerException when fails the validation
      * @param manager to validate.
      */
-    public void validate(Manager manager) {
+    public void validate(Manager manager) throws Exception {
         manager.validate(this.name, this.password, this.email);
     }
 
@@ -41,10 +27,8 @@ public class Manager {
      * @param password to validate.
      * @param email
      */
-    public void validate(String name, String password, String email) {
-        if (!(this.name.equals(name) && this.email.equals(email) && this.password.equals(password))){
-            throw new InvalidManagerException();
-        }
+    public void validate(String name, String password, String email) throws Exception {
+        this.validate(name, password, email, new InvalidManagerException());
     }
 
     public Shop getShop() {

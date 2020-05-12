@@ -303,7 +303,7 @@ public class ShopTests {
     }
 
     @Test
-    public void aShopHasAManagerWithWichToValidate(){
+    public void aShopHasAManagerWithWichToValidate() throws Exception {
         Manager manager = mock(Manager.class);
         Manager anotherManager = mock(Manager.class);
 

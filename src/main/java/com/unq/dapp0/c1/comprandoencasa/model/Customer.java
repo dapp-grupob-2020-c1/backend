@@ -3,32 +3,16 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class Customer {
-    private final String name;
-    private final String password;
-    private final String email;
+public class Customer extends CECUser {
     private ArrayList<Location> locations;
 
     public Customer(String name, String password, String email) {
-        this.checkEmailFormat(email);
-
-        this.name = name;
-        this.password = password;
-        this.email = email;
+        super(name, password, email);
         this.locations = new ArrayList<>();
     }
 
-    private void checkEmailFormat(String email) {
-        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
-        if (!email.matches(regex)) {
-            throw new InvalidEmailFormatException();
-        }
-    }
-
-    public void validate(String name, String password, String email) {
-        if (!this.name.equals(name) && !this.email.equals(email) && !this.password.equals(password)) {
-            throw new InvalidUserException();
-        }
+    public void validate(String name, String password, String email) throws Exception {
+        this.validate(name, password, email,new InvalidUserException() );
     }
 
     public ArrayList<Location> getLocations() {
