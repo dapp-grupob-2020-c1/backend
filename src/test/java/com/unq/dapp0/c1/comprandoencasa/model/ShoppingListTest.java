@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static com.unq.dapp0.c1.comprandoencasa.model.ProductBuilder.aProduct;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -41,10 +41,10 @@ class ShoppingListTest {
     public void aShoppingListHasTotalValue(){
         ShoppingList aShoppingList = new ShoppingList();
         Product aProduct = mock(Product.class);
-        when(aProduct.getPrice()).thenReturn(new BigDecimal(100));
+        when(aProduct.getTotalPrice(any())).thenReturn(new BigDecimal(100));
 
         assertEquals(new BigDecimal(0), aShoppingList.totalValue());
         aShoppingList.add(aProduct, 2);
-        assertEquals(new BigDecimal(200), aShoppingList.totalValue());
+        assertEquals(new BigDecimal(100), aShoppingList.totalValue());
     }
 }

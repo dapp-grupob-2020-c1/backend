@@ -3,6 +3,8 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class Product {
     private String name;
@@ -74,5 +76,11 @@ public class Product {
 
     public Shop getShop() {
         return this.shop;
+    }
+
+    public BigDecimal getTotalPrice(List<Map.Entry<Product, Integer>> products) {
+        // aca se encuentra a si mismo dentro de la shopping list, y calcula su precio
+        // teniendo en cuenta los posibles descuentos
+        return this.getPrice();
     }
 }

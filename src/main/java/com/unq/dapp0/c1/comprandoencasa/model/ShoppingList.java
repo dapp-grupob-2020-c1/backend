@@ -39,10 +39,8 @@ public class ShoppingList {
     public BigDecimal totalValue() {
         BigDecimal total = new BigDecimal(0);
         for (Map.Entry<Product, Integer> shoppingListEntry : products) {
-            BigDecimal productPrice = shoppingListEntry.getKey().getPrice();
-            BigDecimal productQuantity = new BigDecimal(shoppingListEntry.getValue());
-            BigDecimal entryTotalPrice = productPrice.multiply(productQuantity);
-            total = total.add(entryTotalPrice);
+            BigDecimal productCalculatedPrice = shoppingListEntry.getKey().getTotalPrice(this.products);
+            total = total.add(productCalculatedPrice);
         }
         return total;
     }
