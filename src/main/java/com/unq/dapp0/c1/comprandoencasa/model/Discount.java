@@ -1,6 +1,9 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 public abstract class Discount {
     protected final long id;
@@ -77,4 +80,8 @@ public abstract class Discount {
     }
 
     public abstract int compare(Discount discount);
+
+    public BigDecimal calculateFor(List<Map.Entry<Product, Integer>> products){
+        return null;
+    }
 }

@@ -75,4 +75,5 @@ public class Product {
     public Shop getShop() {
         return this.shop;
     }
+
 }
