@@ -89,22 +89,64 @@ class ShoppingListTest {
         assertEquals(anotherLocation, aShoppingList.getLocation());
     }
 
+    @Test
+    public void aShoppingListKnowsItBelongsToACustomer(){
+        Customer customer = mock(Customer.class);
+
+        ShoppingList shoppingList = ShoppingListBuilder.anyShoppingList()
+                .withCustomer(customer)
+                .build();
+
+        assertEquals(customer, shoppingList.getCustomer());
+    }
+
+    @Test
+    public void aShoppingListCanEvaluateTheTotalValueForAGivenProductType(){
+        ShoppingList shoppingList = ShoppingListBuilder.anyShoppingList().build();
+
+        Product product1 = mock(Product.class);
+        Product product2 = mock(Product.class);
+
+        when(product1.isType(any())).thenReturn(false);
+        when(product2.isType(any())).thenReturn(false);
+        when(product1.isType(ProductType.Bazaar)).thenReturn(true);
+        when(product2.isType(ProductType.Bazaar)).thenReturn(true);
+
+        when(product1.getPrice()).thenReturn(BigDecimal.valueOf(1));
+        when(product2.getPrice()).thenReturn(BigDecimal.valueOf(1));
+
+        shoppingList.add(product1, 1);
+        shoppingList.add(product2, 2);
+
+        assertEquals(BigDecimal.valueOf(3), shoppingList.evaluateTotalFor(ProductType.Bazaar));
+    }
+
 }
 
 class ShoppingListBuilder {
     private Location location;
+    private Customer customer;
+
     public static ShoppingListBuilder anyShoppingList(){
         return new ShoppingListBuilder();
     }
 
     public ShoppingListBuilder() {
         this.location = mock(Location.class);
+        this.customer = mock(Customer.class);
     }
+
+    public ShoppingList build() {
+        return new ShoppingList(this.location, this.customer);
+    }
+
     public ShoppingListBuilder withLocation(Location location){
         this.location = location;
         return this;
     }
-    public ShoppingList build() {
-        return new ShoppingList(this.location);
+
+    public ShoppingListBuilder withCustomer(Customer customer) {
+        this.customer = customer;
+        return this;
     }
 }

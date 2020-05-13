@@ -2,10 +2,15 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+import java.util.Dictionary;
+import java.util.Hashtable;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -114,6 +119,66 @@ public class CustomerTests {
 
         assertEquals("Location "+location1.getID()+" already exists",
                 exception.getMessage());
+    }
+
+    @Test
+    public void aCustomerCanAddAnActiveShoppingList(){
+        Customer customer = CustomerBuilder.anyCustomer().build();
+
+        ShoppingList shoppingList = mock(ShoppingList.class);
+
+        customer.addActiveShoppingList(shoppingList);
+
+        assertEquals(shoppingList, customer.getActiveShoppingList());
+    }
+
+    @Test
+    public void aCustomerCanAddHistoricShoppingLists(){
+        Customer customer = CustomerBuilder.anyCustomer().build();
+
+        ShoppingList shoppingList1 = mock(ShoppingList.class);
+
+        customer.addHistoricShoppingList(shoppingList1);
+
+        assertTrue(customer.getHistoricShoppingLists().contains(shoppingList1));
+    }
+
+    @Test
+    public void aCustomerCanSetProductTypeThresholdsAndTotalPurchaseThresholds(){
+        Customer customer = CustomerBuilder.anyCustomer().build();
+
+        customer.setTotalThreshold(BigDecimal.valueOf(200));
+
+        assertEquals(BigDecimal.valueOf(200), customer.getTotalThreshold());
+
+        Dictionary<ProductType, BigDecimal> typeList = new Hashtable<>();
+
+        for (ProductType productType : ProductType.values()){
+            typeList.put(productType, BigDecimal.valueOf(1));
+        }
+
+        customer.setTypesThreshold(typeList);
+
+        assertEquals(typeList, customer.getTypesThreshold());
+    }
+
+    @Test
+    public void aCustomerCanReturnTheHistoricTypesMedianThreshold(){
+        Customer customer = CustomerBuilder.anyCustomer().build();
+
+        ShoppingList shoppingList1 = mock(ShoppingList.class);
+        ShoppingList shoppingList2 = mock(ShoppingList.class);
+
+        customer.addHistoricShoppingList(shoppingList1);
+        customer.addHistoricShoppingList(shoppingList2);
+
+        when(shoppingList1.evaluateTotalFor(any())).thenReturn(BigDecimal.valueOf(0));
+        when(shoppingList2.evaluateTotalFor(any())).thenReturn(BigDecimal.valueOf(0));
+
+        when(shoppingList1.evaluateTotalFor(ProductType.Bazaar)).thenReturn(BigDecimal.valueOf(4));
+        when(shoppingList2.evaluateTotalFor(ProductType.Bazaar)).thenReturn(BigDecimal.valueOf(6));
+
+        assertEquals(BigDecimal.valueOf(5), customer.evaluateHistoricTypeThresholds().get(ProductType.Bazaar));
     }
 }
 
