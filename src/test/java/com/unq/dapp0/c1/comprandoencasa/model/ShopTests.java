@@ -1,5 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.*;
 import org.junit.jupiter.api.Test;
 
 import java.time.DayOfWeek;

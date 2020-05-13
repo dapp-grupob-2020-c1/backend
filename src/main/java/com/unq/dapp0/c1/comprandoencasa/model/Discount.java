@@ -1,5 +1,7 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidDiscountDatesException;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;

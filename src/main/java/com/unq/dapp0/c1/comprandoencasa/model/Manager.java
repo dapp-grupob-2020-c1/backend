@@ -1,5 +1,7 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidManagerException;
+
 /**
  * Representation of a Shop Manager. Holds validation methods for login and transactions.
  */

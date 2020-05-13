@@ -1,4 +1,6 @@
-package com.unq.dapp0.c1.comprandoencasa.model;
+package com.unq.dapp0.c1.comprandoencasa.model.exceptions;
+
+import com.unq.dapp0.c1.comprandoencasa.model.Discount;
 
 public class DiscountAlreadyExistsException extends RuntimeException {
     public DiscountAlreadyExistsException(Discount discount) {

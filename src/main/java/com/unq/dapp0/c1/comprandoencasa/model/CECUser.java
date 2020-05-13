@@ -1,5 +1,7 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
+
 public abstract class CECUser {
     protected final String name;
     protected final String password;
