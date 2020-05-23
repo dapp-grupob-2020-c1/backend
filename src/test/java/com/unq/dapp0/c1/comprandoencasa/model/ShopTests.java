@@ -1,6 +1,10 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
-import com.unq.dapp0.c1.comprandoencasa.model.exceptions.*;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.DayAlreadyExistsException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.DiscountAlreadyExistsException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidManagerException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.PaymentMethodAlreadyExistsException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.ProductAlreadyPresentException;
 import org.junit.jupiter.api.Test;
 
 import java.time.DayOfWeek;
