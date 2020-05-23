@@ -5,28 +5,56 @@ import com.unq.dapp0.c1.comprandoencasa.model.exceptions.DiscountAlreadyExistsEx
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.PaymentMethodAlreadyExistsException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.ProductAlreadyPresentException;
 
+import javax.persistence.*;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
  * Represents the internal administrative data of a shop and it's mecanics.
  */
+@Entity
+@Table
 public class Shop {
 
-    private ArrayList<ShopCategory> shopCategories;
+    @Id
+    private Long id;
+
+    @OneToMany
+    private List<ShopCategory> shopCategories;
+
+    @OneToOne
     private Location location;
-    private ArrayList<DayOfWeek> days;
+
+    @OneToMany
+    private List<DayOfWeek> days;
+
+    @OneToOne
     private LocalTime openingHour;
+
+    @OneToOne
     private LocalTime closingHour;
-    private ArrayList<PaymentMethod> paymentMethods;
+
+    @OneToMany
+    private List<PaymentMethod> paymentMethods;
+
+    @Column
     private Integer deliveryRadius;
+
+    @OneToOne
     private final Manager manager;
-    private ArrayList<Product> products;
-    private ArrayList<Discount> discounts;
-    private ArrayList<ShopDelivery> activeDeliveries;
+
+    @OneToMany
+    private List<Product> products;
+
+    @OneToMany
+    private List<Discount> discounts;
+
+    @OneToMany
+    private List<ShopDelivery> activeDeliveries;
 
     public Shop(ArrayList<ShopCategory> shopCategories, Location location, ArrayList<DayOfWeek> days, LocalTime openingHour, LocalTime closingHour, ArrayList<PaymentMethod> paymentMethods, Integer deliveryRadius, Manager manager, ArrayList<Product> products) {
         this.shopCategories = shopCategories;
@@ -42,7 +70,14 @@ public class Shop {
         this.activeDeliveries = new ArrayList<>();
     }
 
-    public ArrayList<ShopCategory> getShopCategories() {
+    public Long getId() {
+        return this.id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<ShopCategory> getShopCategories() {
         return this.shopCategories;
     }
 
@@ -62,7 +97,7 @@ public class Shop {
         this.location = newLocation;
     }
 
-    public ArrayList<DayOfWeek> getDays() {
+    public List<DayOfWeek> getDays() {
         return this.days;
     }
 
@@ -96,7 +131,7 @@ public class Shop {
         this.closingHour = newHour;
     }
 
-    public ArrayList<PaymentMethod> getPaymentMethods() {
+    public List<PaymentMethod> getPaymentMethods() {
         return this.paymentMethods;
     }
 
@@ -137,7 +172,7 @@ public class Shop {
         this.manager.validate(manager);
     }
 
-    public ArrayList<Product> getProducts() {
+    public List<Product> getProducts() {
         return this.products;
     }
 
@@ -157,10 +192,10 @@ public class Shop {
     }
 
     private Optional<Product> findProduct(Product product){
-        return this.products.stream().filter(p-> p.getID().equals(product.getID())).findFirst();
+        return this.products.stream().filter(p-> p.getId().equals(product.getId())).findFirst();
     }
 
-    public ArrayList<Discount> getDiscounts() {
+    public List<Discount> getDiscounts() {
         return this.discounts;
     }
 
@@ -191,7 +226,7 @@ public class Shop {
         this.activeDeliveries.add(delivery);
     }
 
-    public ArrayList<ShopDelivery> getActiveDeliveries() {
+    public List<ShopDelivery> getActiveDeliveries() {
         return this.activeDeliveries;
     }
 
