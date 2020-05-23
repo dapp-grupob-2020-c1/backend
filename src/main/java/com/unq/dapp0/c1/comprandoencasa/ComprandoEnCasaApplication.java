@@ -1,4 +1,4 @@
-package com.unq.dapp0.c1.comprandoencasa.webservices;
+package com.unq.dapp0.c1.comprandoencasa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
