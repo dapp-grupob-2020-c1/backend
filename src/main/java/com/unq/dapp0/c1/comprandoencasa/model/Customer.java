@@ -3,15 +3,31 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.LocationAlreadyPresentException;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.*;
 
+@Entity
+@Table
 public class Customer extends CECUser {
-    private ArrayList<Location> locations;
+
+    @Id
+    private Long id;
+
+    @OneToMany
+    private List<Location> locations;
+
+    @Column
     private BigDecimal totalThreshold;
+
+    @Column
     private Dictionary<ProductType, BigDecimal> typesThreshold;
+
+    @OneToOne
     private ShoppingList activeShoppingList;
-    private ArrayList<ShoppingList> historicShoppingLists;
+
+    @OneToMany
+    private List<ShoppingList> historicShoppingLists;
 
     public Customer(String name, String password, String email) {
         super(name, password, email);
@@ -23,7 +39,7 @@ public class Customer extends CECUser {
         this.validate(name, password, email,new InvalidUserException() );
     }
 
-    public ArrayList<Location> getLocations() {
+    public List<Location> getLocations() {
         return this.locations;
     }
 
@@ -71,7 +87,7 @@ public class Customer extends CECUser {
         this.historicShoppingLists.add(shoppingList);
     }
 
-    public ArrayList<ShoppingList> getHistoricShoppingLists() {
+    public List<ShoppingList> getHistoricShoppingLists() {
         return this.historicShoppingLists;
     }
 
