@@ -1,5 +1,10 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import static java.lang.StrictMath.pow;
 import static java.lang.StrictMath.sin;
 import static java.lang.StrictMath.cos;
@@ -8,13 +13,22 @@ import static java.lang.StrictMath.sqrt;
 import static java.lang.StrictMath.floor;
 import static java.lang.StrictMath.PI;
 
+@Entity
+@Table
 public class Location {
     private final Double EARTH_RADIUS = 6371.0;
     private final Double MINUTES_PER_KM = 2.0;
 
+    @Id
     private Long id;
+
+    @Column
     private String address;
+
+    @Column
     private Double latitude;
+
+    @Column
     private Double longitude;
 
     public Location(String address, Double latitude, Double longitude) {
