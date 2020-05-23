@@ -25,8 +25,10 @@ public class Product {
     @Column
     private BigDecimal price;
 
+    @OneToMany
     private Collection<ProductType> types;
 
+    @ManyToOne
     private Shop shop;
 
     public Product(String name, String brand, String image, BigDecimal price, Shop shop) {
