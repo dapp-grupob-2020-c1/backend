@@ -1,5 +1,7 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidManagerException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;

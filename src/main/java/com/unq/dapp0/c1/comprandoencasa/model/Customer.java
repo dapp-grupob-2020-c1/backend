@@ -1,5 +1,8 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.LocationAlreadyPresentException;
+
 import java.math.BigDecimal;
 import java.util.*;
 
