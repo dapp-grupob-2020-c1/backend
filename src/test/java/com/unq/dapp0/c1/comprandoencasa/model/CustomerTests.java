@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -154,7 +155,7 @@ public class CustomerTests {
 
         assertEquals(BigDecimal.valueOf(200), customer.getTotalThreshold());
 
-        Dictionary<ProductType, BigDecimal> typeList = new Hashtable<>();
+        Map<ProductType, BigDecimal> typeList = new Hashtable<>();
 
         for (ProductType productType : ProductType.values()){
             typeList.put(productType, BigDecimal.valueOf(1));

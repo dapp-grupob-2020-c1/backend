@@ -95,7 +95,7 @@ public abstract class Discount {
 
     public abstract int compare(Discount discount);
 
-    public BigDecimal calculateFor(List<Map.Entry<Product, Integer>> products){
+    public BigDecimal calculateFor(List<ShoppingListEntry> entries){
         return null;
     }
 }

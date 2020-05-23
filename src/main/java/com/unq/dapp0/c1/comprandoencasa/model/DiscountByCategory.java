@@ -46,14 +46,14 @@ public class DiscountByCategory extends Discount {
     }
 
     @Override
-    public BigDecimal calculateFor(List<Map.Entry<Product, Integer>> products) {
+    public BigDecimal calculateFor(List<ShoppingListEntry> entries) {
         BigDecimal total = new BigDecimal(0);
-        for (Map.Entry<Product, Integer> productIntegerEntry : products){
-            Product product = productIntegerEntry.getKey();
+        for (ShoppingListEntry entry : entries){
+            Product product = entry.getProduct();
             if (product.getShop().equals(this.shop) && product.isType(this.productType)){
                 BigDecimal discount = BigDecimal.valueOf(this.percentage).multiply(BigDecimal.valueOf(0.01)).multiply(product.getPrice());
-                total = total.add(product.getPrice().subtract(discount).multiply(BigDecimal.valueOf(productIntegerEntry.getValue())));
-                products.remove(productIntegerEntry);
+                total = total.add(product.getPrice().subtract(discount).multiply(BigDecimal.valueOf(entry.getQuantity())));
+                entries.remove(entry);
             }
         }
         return total;

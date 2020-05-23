@@ -25,7 +25,7 @@ public class Product {
     @Column
     private BigDecimal price;
 
-    @OneToMany
+    @ElementCollection
     private Collection<ProductType> types;
 
     @ManyToOne

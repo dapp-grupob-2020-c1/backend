@@ -474,7 +474,7 @@ public class DiscountTests {
                 .withShop(shop)
                 .build();
 
-        List<Map.Entry<Product, Integer>> products = new ArrayList<>();
+        List<ShoppingListEntry> entries = new ArrayList<>();
         Product validProduct = mock(Product.class);
         Product productOfAnotherShop = mock(Product.class);
 
@@ -483,12 +483,12 @@ public class DiscountTests {
         when(validProduct.isType(ProductType.Bazaar)).thenReturn(true);
         when(validProduct.getPrice()).thenReturn(BigDecimal.valueOf(5));
 
-        products.add(new AbstractMap.SimpleEntry<>(validProduct, 2));
-        products.add(new AbstractMap.SimpleEntry<>(productOfAnotherShop, 1));
+        entries.add(new ShoppingListEntry(validProduct, 2));
+        entries.add(new ShoppingListEntry(productOfAnotherShop, 1));
 
-        assertEquals(2, products.size());
-        assertEquals(new BigDecimal("9.900"), discount.calculateFor(products));
-        assertEquals(1, products.size());
+        assertEquals(2, entries.size());
+        assertEquals(new BigDecimal("9.900"), discount.calculateFor(entries));
+        assertEquals(1, entries.size());
     }
 
 
@@ -503,19 +503,19 @@ public class DiscountTests {
                 .withProducts(discountProducts)
                 .build();
 
-        List<Map.Entry<Product, Integer>> products = new ArrayList<>();
+        List<ShoppingListEntry> entries = new ArrayList<>();
         Product productOfAnotherShop = mock(Product.class);
 
         when(validProduct.getId()).thenReturn(1L);
         when(productOfAnotherShop.getId()).thenReturn(2L);
         when(validProduct.getPrice()).thenReturn(BigDecimal.valueOf(5));
 
-        products.add(new AbstractMap.SimpleEntry<>(validProduct, 2));
-        products.add(new AbstractMap.SimpleEntry<>(productOfAnotherShop, 1));
+        entries.add(new ShoppingListEntry(validProduct, 2));
+        entries.add(new ShoppingListEntry(productOfAnotherShop, 1));
 
-        assertEquals(2, products.size());
-        assertEquals(new BigDecimal("9.900"), discount.calculateFor(products));
-        assertEquals(1, products.size());
+        assertEquals(2, entries.size());
+        assertEquals(new BigDecimal("9.900"), discount.calculateFor(entries));
+        assertEquals(1, entries.size());
     }
 
 
@@ -532,7 +532,7 @@ public class DiscountTests {
                 .withProducts(discountProducts)
                 .build();
 
-        List<Map.Entry<Product, Integer>> products = new ArrayList<>();
+        List<ShoppingListEntry> entries = new ArrayList<>();
         Product productOfAnotherShop = mock(Product.class);
 
         when(validProduct.getId()).thenReturn(1L);
@@ -541,13 +541,13 @@ public class DiscountTests {
         when(validProduct.getPrice()).thenReturn(BigDecimal.valueOf(5));
         when(anotherValidProduct.getPrice()).thenReturn(BigDecimal.valueOf(2));
 
-        products.add(new AbstractMap.SimpleEntry<>(validProduct, 2));
-        products.add(new AbstractMap.SimpleEntry<>(anotherValidProduct, 1));
-        products.add(new AbstractMap.SimpleEntry<>(productOfAnotherShop, 1));
+        entries.add(new ShoppingListEntry(validProduct, 2));
+        entries.add(new ShoppingListEntry(anotherValidProduct, 1));
+        entries.add(new ShoppingListEntry(productOfAnotherShop, 1));
 
-        assertEquals(3, products.size());
-        assertEquals(new BigDecimal("11.880"), discount.calculateFor(products));
-        assertEquals(2, products.size());
+        assertEquals(3, entries.size());
+        assertEquals(new BigDecimal("11.880"), discount.calculateFor(entries));
+        assertEquals(2, entries.size());
     }
 }
 

@@ -20,8 +20,8 @@ public class Customer extends CECUser {
     @Column
     private BigDecimal totalThreshold;
 
-    @Column
-    private Dictionary<ProductType, BigDecimal> typesThreshold;
+    @ElementCollection
+    private Map<ProductType, BigDecimal> typesThreshold;
 
     @OneToOne
     private ShoppingList activeShoppingList;
@@ -67,11 +67,11 @@ public class Customer extends CECUser {
         return this.totalThreshold;
     }
 
-    public void setTypesThreshold(Dictionary<ProductType, BigDecimal> typeList) {
+    public void setTypesThreshold(Map<ProductType, BigDecimal> typeList) {
         this.typesThreshold = typeList;
     }
 
-    public Dictionary<ProductType, BigDecimal> getTypesThreshold() {
+    public Map<ProductType, BigDecimal> getTypesThreshold() {
         return this.typesThreshold;
     }
 
