@@ -32,10 +32,10 @@ public class Shop {
     @OneToMany
     private List<DayOfWeek> days;
 
-    @OneToOne
+    @Column
     private LocalTime openingHour;
 
-    @OneToOne
+    @Column
     private LocalTime closingHour;
 
     @OneToMany
