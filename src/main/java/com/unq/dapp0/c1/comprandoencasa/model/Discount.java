@@ -2,16 +2,28 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidDiscountDatesException;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+@Entity
+@Table
 public abstract class Discount {
+    @Id
     protected final long id;
+
+    @Column
     protected LocalDate startingDate;
+
+    @Column
     protected LocalDate endingDate;
+
+    @Column
     protected double percentage;
+
+    @OneToOne
     protected final Shop shop;
 
     protected Discount(long id, double percentage, LocalDate startingDate, LocalDate endingDate, Shop shop){
