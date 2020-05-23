@@ -38,11 +38,8 @@ public class Product {
         this.shop = shop;
     }
 
-    /**
-     * @return Long representing the unique ID.
-     */
-    public Long getID() {
-        return null;
+    public Long getId() {
+        return this.id;
     }
 
     public String getName() {
@@ -61,6 +58,14 @@ public class Product {
         return this.price;
     }
 
+    public Shop getShop() {
+        return this.shop;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -77,6 +82,10 @@ public class Product {
         this.price = price;
     }
 
+    public void setShop(Shop shop) {
+        this.shop = shop;
+    }
+
     public void addType(ProductType aProductType) {
         this.types.add(aProductType);
     }
@@ -87,10 +96,6 @@ public class Product {
 
     public void removeType(ProductType aProductType) {
         this.types.remove(aProductType);
-    }
-
-    public Shop getShop() {
-        return this.shop;
     }
 
 }
