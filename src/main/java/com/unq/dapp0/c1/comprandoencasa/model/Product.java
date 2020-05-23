@@ -1,15 +1,32 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
+import javax.persistence.*;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Entity
+@Table
 public class Product {
+
+    @Id
+    private Long id;
+
+    @Column
     private String name;
+
+    @Column
     private String brand;
+
+    @Column
     private String image;
+
+    @Column
     private BigDecimal price;
+
     private Collection<ProductType> types;
+
     private Shop shop;
 
     public Product(String name, String brand, String image, BigDecimal price, Shop shop) {
