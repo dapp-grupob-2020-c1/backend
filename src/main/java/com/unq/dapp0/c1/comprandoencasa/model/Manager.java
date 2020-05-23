@@ -2,15 +2,34 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidManagerException;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 /**
  * Representation of a Shop Manager. Holds validation methods for login and transactions.
  */
+@Entity
+@Table
 public class Manager extends CECUser {
+
+    @Id
+    private Long id;
+
+    @OneToOne
     private final Shop shop;
 
     public Manager(String name, String password, String email, Shop shop) {
         super(name, password, email);
         this.shop = shop;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+    public void setId(Long id) {
+        this.id = id;
     }
 
     /**
