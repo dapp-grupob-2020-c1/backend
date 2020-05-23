@@ -42,7 +42,7 @@ public class DiscountBySingle extends Discount {
         BigDecimal total = new BigDecimal(0);
         for (Map.Entry<Product, Integer> productIntegerEntry : products){
             Product product = productIntegerEntry.getKey();
-            if (product.getID().equals(this.product.getID())){
+            if (product.getId().equals(this.product.getId())){
                 BigDecimal discount = BigDecimal.valueOf(this.percentage).multiply(BigDecimal.valueOf(0.01)).multiply(product.getPrice());
                 total = total.add(product.getPrice().subtract(discount).multiply(BigDecimal.valueOf(productIntegerEntry.getValue())));
                 products.remove(productIntegerEntry);

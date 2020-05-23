@@ -41,7 +41,7 @@ public class DiscountByMultiple extends Discount {
     }
 
     private Optional<Product> findProduct(Product product){
-        return this.products.stream().filter(p-> p.getID().equals(product.getID())).findFirst();
+        return this.products.stream().filter(p-> p.getId().equals(product.getId())).findFirst();
     }
 
     @Override
@@ -79,7 +79,7 @@ public class DiscountByMultiple extends Discount {
     private boolean mapListContains(Product product, List<Map.Entry<Product, Integer>> products) {
         for (Map.Entry<Product, Integer> productIntegerEntry : products){
             Product key = productIntegerEntry.getKey();
-            if (key.getID().equals(product.getID())){
+            if (key.getId().equals(product.getId())){
                 return true;
             }
         }

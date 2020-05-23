@@ -228,10 +228,10 @@ public class DiscountTests {
     @Test
     public void aDiscountCanBeForMultipleProducts(){
         Product product1 = mock(Product.class);
-        when(product1.getID()).thenReturn(1L);
+        when(product1.getId()).thenReturn(1L);
 
         Product product2 = mock(Product.class);
-        when(product2.getID()).thenReturn(2L);
+        when(product2.getId()).thenReturn(2L);
 
         ArrayList<Product> products = new ArrayList<>();
         products.add(product1);
@@ -249,10 +249,10 @@ public class DiscountTests {
     @Test
     public void aDiscountForMultipleProductsCanAddNewProductsToTheList(){
         Product product1 = mock(Product.class);
-        when(product1.getID()).thenReturn(1L);
+        when(product1.getId()).thenReturn(1L);
 
         Product product2 = mock(Product.class);
-        when(product2.getID()).thenReturn(2L);
+        when(product2.getId()).thenReturn(2L);
 
         ArrayList<Product> products = new ArrayList<>();
         products.add(product1);
@@ -267,7 +267,7 @@ public class DiscountTests {
         assertTrue(discount.getProducts().contains(product2));
 
         Product product3 = mock(Product.class);
-        when(product3.getID()).thenReturn(3L);
+        when(product3.getId()).thenReturn(3L);
 
         discount.addProduct(product3);
 
@@ -277,7 +277,7 @@ public class DiscountTests {
     @Test
     public void aDiscountForMultipleProductsCanAddAProductThatItAlreadyContains(){
         Product product = mock(Product.class);
-        when(product.getID()).thenReturn(1L);
+        when(product.getId()).thenReturn(1L);
 
         ArrayList<Product> products = new ArrayList<>();
         products.add(product);
@@ -298,13 +298,13 @@ public class DiscountTests {
     @Test
     public void aDiscountForMultipleProductsCanRemoveADiscountFromItsList(){
         Product product1 = mock(Product.class);
-        when(product1.getID()).thenReturn(1L);
+        when(product1.getId()).thenReturn(1L);
 
         Product product2 = mock(Product.class);
-        when(product2.getID()).thenReturn(2L);
+        when(product2.getId()).thenReturn(2L);
 
         Product product3 = mock(Product.class);
-        when(product3.getID()).thenReturn(3L);
+        when(product3.getId()).thenReturn(3L);
 
         ArrayList<Product> products = new ArrayList<>();
         products.add(product1);
@@ -328,10 +328,10 @@ public class DiscountTests {
     @Test
     public void aDiscountForMultipleProductsCannotRemoveAProductIfItCausesTheListToHaveASingleItem(){
         Product product1 = mock(Product.class);
-        when(product1.getID()).thenReturn(1L);
+        when(product1.getId()).thenReturn(1L);
 
         Product product2 = mock(Product.class);
-        when(product2.getID()).thenReturn(2L);
+        when(product2.getId()).thenReturn(2L);
 
         ArrayList<Product> products = new ArrayList<>();
         products.add(product1);
@@ -348,7 +348,7 @@ public class DiscountTests {
         Throwable exception = assertThrows(MultipleDiscountWithSingleItemException.class,()->
                 discount.removeProduct(product2));
 
-        assertEquals("Removal of the product "+product2.getID()+" will cause the Discount to be composed of a single item. Use the class DiscountBySingle instead for the item that should remain",
+        assertEquals("Removal of the product "+product2.getId()+" will cause the Discount to be composed of a single item. Use the class DiscountBySingle instead for the item that should remain",
                 exception.getMessage());
     }
 
@@ -506,8 +506,8 @@ public class DiscountTests {
         List<Map.Entry<Product, Integer>> products = new ArrayList<>();
         Product productOfAnotherShop = mock(Product.class);
 
-        when(validProduct.getID()).thenReturn(1L);
-        when(productOfAnotherShop.getID()).thenReturn(2L);
+        when(validProduct.getId()).thenReturn(1L);
+        when(productOfAnotherShop.getId()).thenReturn(2L);
         when(validProduct.getPrice()).thenReturn(BigDecimal.valueOf(5));
 
         products.add(new AbstractMap.SimpleEntry<>(validProduct, 2));
@@ -535,9 +535,9 @@ public class DiscountTests {
         List<Map.Entry<Product, Integer>> products = new ArrayList<>();
         Product productOfAnotherShop = mock(Product.class);
 
-        when(validProduct.getID()).thenReturn(1L);
-        when(productOfAnotherShop.getID()).thenReturn(2L);
-        when(anotherValidProduct.getID()).thenReturn(3L);
+        when(validProduct.getId()).thenReturn(1L);
+        when(productOfAnotherShop.getId()).thenReturn(2L);
+        when(anotherValidProduct.getId()).thenReturn(3L);
         when(validProduct.getPrice()).thenReturn(BigDecimal.valueOf(5));
         when(anotherValidProduct.getPrice()).thenReturn(BigDecimal.valueOf(2));
 
