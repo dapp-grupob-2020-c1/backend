@@ -23,13 +23,13 @@ public class Shop {
     @Id
     private Long id;
 
-    @OneToMany
+    @ElementCollection
     private List<ShopCategory> shopCategories;
 
     @OneToOne
     private Location location;
 
-    @OneToMany
+    @ElementCollection
     private List<DayOfWeek> days;
 
     @Column
@@ -38,7 +38,7 @@ public class Shop {
     @Column
     private LocalTime closingHour;
 
-    @OneToMany
+    @ElementCollection
     private List<PaymentMethod> paymentMethods;
 
     @Column
