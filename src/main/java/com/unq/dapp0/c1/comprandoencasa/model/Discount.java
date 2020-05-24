@@ -2,11 +2,15 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidDiscountDatesException;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Table

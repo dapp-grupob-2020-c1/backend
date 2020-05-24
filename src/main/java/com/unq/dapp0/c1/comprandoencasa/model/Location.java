@@ -5,13 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import static java.lang.StrictMath.PI;
+import static java.lang.StrictMath.atan2;
+import static java.lang.StrictMath.cos;
+import static java.lang.StrictMath.floor;
 import static java.lang.StrictMath.pow;
 import static java.lang.StrictMath.sin;
-import static java.lang.StrictMath.cos;
-import static java.lang.StrictMath.atan2;
 import static java.lang.StrictMath.sqrt;
-import static java.lang.StrictMath.floor;
-import static java.lang.StrictMath.PI;
 
 @Entity
 @Table

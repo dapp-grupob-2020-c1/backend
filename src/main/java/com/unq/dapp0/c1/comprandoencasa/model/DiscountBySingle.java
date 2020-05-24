@@ -3,7 +3,6 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 public class DiscountBySingle extends Discount {
     private Product product;

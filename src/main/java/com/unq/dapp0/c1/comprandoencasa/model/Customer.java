@@ -3,9 +3,21 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.LocationAlreadyPresentException;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Entity
 @Table
