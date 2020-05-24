@@ -18,7 +18,7 @@ public class Manager extends CECUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "manager")
+    @OneToOne
     private final Shop shop;
 
     public Manager(String name, String password, String email, Shop shop) {
