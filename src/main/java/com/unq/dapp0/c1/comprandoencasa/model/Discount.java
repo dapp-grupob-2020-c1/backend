@@ -15,7 +15,9 @@ import java.util.List;
 @Entity
 @Table
 public abstract class Discount {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected final long id;
 
     @Column

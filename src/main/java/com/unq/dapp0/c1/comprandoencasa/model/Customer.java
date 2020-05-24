@@ -24,6 +24,7 @@ import java.util.Optional;
 public class Customer extends CECUser {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToMany

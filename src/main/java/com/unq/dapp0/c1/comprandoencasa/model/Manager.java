@@ -15,6 +15,7 @@ import javax.persistence.Table;
 public class Manager extends CECUser {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne

@@ -13,6 +13,7 @@ import java.util.List;
 public abstract class ShopDelivery {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
 
     @OneToOne

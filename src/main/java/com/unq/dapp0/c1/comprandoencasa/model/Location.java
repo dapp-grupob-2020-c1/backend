@@ -20,6 +20,7 @@ public class Location {
     private final Double MINUTES_PER_KM = 2.0;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column

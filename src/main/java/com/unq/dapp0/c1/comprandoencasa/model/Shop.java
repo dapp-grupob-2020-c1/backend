@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 public class Shop {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ElementCollection
