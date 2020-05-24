@@ -76,6 +76,6 @@ public class InitService {
                 new BigDecimal("89.99"),
                 aShop
         );
-        this.productService.save(aProduct);
+        this.productService.save(anotherProduct);
     }
 }
