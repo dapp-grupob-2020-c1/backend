@@ -34,6 +34,8 @@ public class Location {
     @Column
     private Double longitude;
 
+    public Location() {}
+
     public Location(String address, Double latitude, Double longitude) {
         this.address = address;
         this.latitude = latitude;

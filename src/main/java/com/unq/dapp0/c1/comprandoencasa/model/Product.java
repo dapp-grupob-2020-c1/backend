@@ -39,6 +39,8 @@ public class Product {
     @ManyToOne
     private Shop shop;
 
+    public Product() {}
+
     public Product(String name, String brand, String image, BigDecimal price, Shop shop) {
         this.name = name;
         this.brand = brand;

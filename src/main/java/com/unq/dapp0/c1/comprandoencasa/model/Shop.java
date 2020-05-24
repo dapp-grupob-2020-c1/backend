@@ -55,7 +55,7 @@ public class Shop {
     private Integer deliveryRadius;
 
     @OneToOne
-    private final Manager manager;
+    private Manager manager;
 
     @OneToMany
     private List<Product> products;
@@ -65,6 +65,8 @@ public class Shop {
 
     @OneToMany
     private List<ShopDelivery> activeDeliveries;
+
+    public Shop() {}
 
     public Shop(ArrayList<ShopCategory> shopCategories, Location location, ArrayList<DayOfWeek> days, LocalTime openingHour, LocalTime closingHour, ArrayList<PaymentMethod> paymentMethods, Integer deliveryRadius, Manager manager, ArrayList<Product> products) {
         this.shopCategories = shopCategories;

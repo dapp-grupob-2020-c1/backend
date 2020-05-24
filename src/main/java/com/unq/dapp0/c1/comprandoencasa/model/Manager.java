@@ -21,7 +21,11 @@ public class Manager extends CECUser {
     private Long id;
 
     @OneToOne(mappedBy = "manager")
-    private final Shop shop;
+    private Shop shop;
+
+    public Manager() {
+        super();
+    }
 
     public Manager(String name, String password, String email, Shop shop) {
         super(name, password, email);
