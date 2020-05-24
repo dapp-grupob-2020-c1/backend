@@ -4,6 +4,8 @@ import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidDiscountDatesExc
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
