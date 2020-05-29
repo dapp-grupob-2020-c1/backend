@@ -78,14 +78,14 @@ public class CustomerTests {
         assertTrue(customer.getLocations().isEmpty());
 
         Location location1 = mock(Location.class);
-        when(location1.getID()).thenReturn(1L);
+        when(location1.getId()).thenReturn(1L);
         customer.addLocation(location1);
 
         assertEquals(1, customer.getLocations().size());
         assertTrue(customer.getLocations().contains(location1));
 
         Location location2 = mock(Location.class);
-        when(location2.getID()).thenReturn(2L);
+        when(location2.getId()).thenReturn(2L);
         customer.addLocation(location2);
 
         assertEquals(2, customer.getLocations().size());
@@ -99,7 +99,7 @@ public class CustomerTests {
         assertTrue(customer.getLocations().isEmpty());
 
         Location location1 = mock(Location.class);
-        when(location1.getID()).thenReturn(1L);
+        when(location1.getId()).thenReturn(1L);
         customer.addLocation(location1);
 
         assertEquals(1, customer.getLocations().size());
@@ -115,13 +115,13 @@ public class CustomerTests {
         Customer customer = CustomerBuilder.anyCustomer().build();
 
         Location location1 = mock(Location.class);
-        when(location1.getID()).thenReturn(1L);
+        when(location1.getId()).thenReturn(1L);
         customer.addLocation(location1);
 
         Throwable exception = assertThrows(LocationAlreadyPresentException.class,
                 ()->customer.addLocation(location1));
 
-        assertEquals("Location "+location1.getID()+" already exists",
+        assertEquals("Location "+location1.getId()+" already exists",
                 exception.getMessage());
     }
 

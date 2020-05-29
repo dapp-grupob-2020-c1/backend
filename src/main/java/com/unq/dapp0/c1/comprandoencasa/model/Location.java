@@ -42,8 +42,12 @@ public class Location {
         this.longitude = longitude;
     }
 
-    public Long getID() {
+    public Long getId() {
         return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getAddress() {

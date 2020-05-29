@@ -79,7 +79,7 @@ public class Customer extends CECUser {
     }
 
     private Optional<Location> findLocation(Location location) {
-        return this.locations.stream().filter(loc -> loc.getID().equals(location.getID())).findFirst();
+        return this.locations.stream().filter(loc -> loc.getId().equals(location.getId())).findFirst();
     }
 
     public void setTotalThreshold(BigDecimal threshold) {
