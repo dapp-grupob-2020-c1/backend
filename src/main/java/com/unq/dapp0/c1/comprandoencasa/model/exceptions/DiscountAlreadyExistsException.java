@@ -4,6 +4,6 @@ import com.unq.dapp0.c1.comprandoencasa.model.Discount;
 
 public class DiscountAlreadyExistsException extends RuntimeException {
     public DiscountAlreadyExistsException(Discount discount) {
-        super("The given discount "+discount.getId()+" already exists");
+        super("The given discount " + discount.getId() + " already exists");
     }
 }
