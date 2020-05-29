@@ -20,7 +20,7 @@ public abstract class Discount {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected final long id;
+    protected long id;
 
     @Column
     protected LocalDate startingDate;
@@ -49,8 +49,12 @@ public abstract class Discount {
             throw new InvalidDiscountDatesException(startingDate, endingDate);
     }
 
-    public Long getID() {
+    public Long getId() {
         return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Boolean isActive() {

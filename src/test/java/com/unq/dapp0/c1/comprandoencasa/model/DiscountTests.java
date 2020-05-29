@@ -23,7 +23,7 @@ public class DiscountTests {
     public void aDiscountHasAnID(){
         Discount discount = DiscountBuilder.anyDiscount().withID(1L).build();
 
-        assertEquals(1L, discount.getID());
+        assertEquals(1L, discount.getId());
     }
 
     @Test

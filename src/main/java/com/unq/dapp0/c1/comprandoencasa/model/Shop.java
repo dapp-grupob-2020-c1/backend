@@ -227,7 +227,7 @@ public class Shop {
     }
 
     private Optional<Discount> findDiscount(Discount discount) {
-        return this.discounts.stream().filter(d-> d.getID().equals(discount.getID())).findFirst();
+        return this.discounts.stream().filter(d-> d.getId().equals(discount.getId())).findFirst();
     }
 
     public ArrayList<Discount> getActiveDiscounts() {

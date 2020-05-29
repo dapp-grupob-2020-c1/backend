@@ -411,7 +411,7 @@ public class ShopTests {
         assertEquals(0, shop.getDiscounts().size());
 
         Discount discount = mock(Discount.class);
-        when(discount.getID()).thenReturn(1L);
+        when(discount.getId()).thenReturn(1L);
 
         shop.addDiscount(discount);
 
@@ -424,12 +424,12 @@ public class ShopTests {
         Shop shop = ShopBuilder.anyShop().build();
 
         Discount discount = mock(Discount.class);
-        when(discount.getID()).thenReturn(1L);
+        when(discount.getId()).thenReturn(1L);
 
         shop.addDiscount(discount);
 
         Throwable exception = assertThrows(DiscountAlreadyExistsException.class, ()->shop.addDiscount(discount));
-        assertEquals("The given discount "+discount.getID()+" already exists", exception.getMessage());
+        assertEquals("The given discount "+discount.getId()+" already exists", exception.getMessage());
     }
 
     @Test
@@ -437,7 +437,7 @@ public class ShopTests {
         Shop shop = ShopBuilder.anyShop().build();
 
         Discount discount = mock(Discount.class);
-        when(discount.getID()).thenReturn(1L);
+        when(discount.getId()).thenReturn(1L);
         shop.addDiscount(discount);
 
         assertEquals(discount, shop.getDiscounts().get(0));
@@ -452,13 +452,13 @@ public class ShopTests {
         Shop shop = ShopBuilder.anyShop().build();
 
         Discount activeDiscount = mock(Discount.class);
-        when(activeDiscount.getID()).thenReturn(1L);
+        when(activeDiscount.getId()).thenReturn(1L);
         when(activeDiscount.isActive()).thenReturn(true);
 
         shop.addDiscount(activeDiscount);
 
         Discount inactiveDiscount = mock(Discount.class);
-        when(inactiveDiscount.getID()).thenReturn(2L);
+        when(inactiveDiscount.getId()).thenReturn(2L);
         when(inactiveDiscount.isActive()).thenReturn(false);
 
         shop.addDiscount(inactiveDiscount);
