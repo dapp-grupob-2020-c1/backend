@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static com.unq.dapp0.c1.comprandoencasa.model.ProductBuilder.aProduct;
+import static com.unq.dapp0.c1.comprandoencasa.model.ProductBuilder.anyProduct;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -26,7 +26,7 @@ class ProductTest {
 
     @Test
     public void aProductCanChangeItsName(){
-        Product aProduct = aProduct().build();
+        Product aProduct = anyProduct().build();
 
         assertNotEquals("Nombre de Producto", aProduct.getName());
         aProduct.setName("Nombre de Producto");
@@ -35,7 +35,7 @@ class ProductTest {
 
     @Test
     public void aProductCanChangeItsBrand(){
-        Product aProduct = aProduct().build();
+        Product aProduct = anyProduct().build();
 
         assertNotEquals("Marca de Producto", aProduct.getBrand());
         aProduct.setBrand("Marca de Producto");
@@ -44,7 +44,7 @@ class ProductTest {
 
     @Test
     public void aProductCanChangeItsImage(){
-        Product aProduct = aProduct().build();
+        Product aProduct = anyProduct().build();
 
         assertNotEquals("Imagen de Producto", aProduct.getImage());
         aProduct.setImage("Imagen de Producto");
@@ -53,7 +53,7 @@ class ProductTest {
 
     @Test
     public void aProductCanChangeItsPrice(){
-        Product aProduct = aProduct().build();
+        Product aProduct = anyProduct().build();
 
         BigDecimal newPrice = new BigDecimal(500);
 
@@ -64,7 +64,7 @@ class ProductTest {
 
     @Test
     public void aProductCanBeOfAType(){
-        Product aProduct = aProduct().build();
+        Product aProduct = anyProduct().build();
         ProductType aProductType = ProductType.values()[0];
 
         aProduct.addType(aProductType);
@@ -74,7 +74,7 @@ class ProductTest {
 
     @Test
     public void aProductCanBeOfMultipleTypes(){
-        Product aProduct = aProduct().build();
+        Product aProduct = anyProduct().build();
         ProductType aProductType = ProductType.values()[0];
         ProductType anotherProductType = ProductType.values()[1];
 
@@ -87,7 +87,7 @@ class ProductTest {
 
     @Test
     public void aProductCanRemoveAType(){
-        Product aProduct = aProduct().build();
+        Product aProduct = anyProduct().build();
         ProductType aProductType = ProductType.values()[0];
 
         aProduct.addType(aProductType);
@@ -97,5 +97,21 @@ class ProductTest {
         assertFalse(aProduct.isType(aProductType));
     }
 
+}
+
+class ProductBuilder {
+    private String name = "no name";
+    private String brand = "no brand";
+    private String image = "no image";
+    private BigDecimal price = new BigDecimal(999);
+    private Shop shop = mock(Shop.class);
+
+    public static ProductBuilder anyProduct() {
+        return new ProductBuilder();
+    }
+
+    public Product build() {
+        return new Product(name, brand, image, price, shop);
+    }
 }
 
