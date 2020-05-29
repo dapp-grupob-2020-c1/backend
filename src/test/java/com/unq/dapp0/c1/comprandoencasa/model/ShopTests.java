@@ -243,7 +243,7 @@ public class ShopTests {
     }
 
     @Test
-    public void ashopCanRemoveAPaymentMethod(){
+    public void aShopCanRemoveAPaymentMethod(){
         ArrayList<PaymentMethod> paymentMethods = new ArrayList<>();
         paymentMethods.add(PaymentMethod.CASH);
         paymentMethods.add(PaymentMethod.DEBIT);
@@ -308,7 +308,7 @@ public class ShopTests {
     }
 
     @Test
-    public void aShopHasAManagerWithWichToValidate() throws Exception {
+    public void aShopHasAManagerWithWhichToValidate() throws Exception {
         Manager manager = mock(Manager.class);
         Manager anotherManager = mock(Manager.class);
 
