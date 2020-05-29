@@ -19,21 +19,21 @@ public class ShoppingList {
 
     @OneToOne
     private final Customer customer;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    // Map.Entry<Product, Integer> es un producto y su cantidad, dentro de una lista de compras
-    // yo quería una tupla, pero... JAVA.
+
     @OneToMany
     private final List<ShoppingListEntry> entries;
 
     // ubicación hacia donde se debe hacer el envio, domicilio de comprador
     @OneToOne
-    private Location location;
+    private Location deliveryLocation;
 
-    public ShoppingList(Location location, Customer customer) {
+    public ShoppingList(Location deliveryLocation, Customer customer) {
         this.entries = new ArrayList<>();
-        this.location = location;
+        this.deliveryLocation = deliveryLocation;
         this.customer = customer;
     }
 
@@ -92,16 +92,16 @@ public class ShoppingList {
         return total;
     }
 
-    public List<ShoppingListEntry> getEntries() {
+    public List<ShoppingListEntry> getEntriesList() {
         return this.entries;
     }
 
-    public Location getLocation() {
-        return this.location;
+    public Location getDeliveryLocation() {
+        return this.deliveryLocation;
     }
 
-    public void setLocation(Location aLocation) {
-        this.location = aLocation;
+    public void setDeliveryLocation(Location aLocation) {
+        this.deliveryLocation = aLocation;
     }
 
     public Customer getCustomer() {
