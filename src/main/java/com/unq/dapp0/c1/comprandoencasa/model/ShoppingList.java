@@ -17,17 +17,15 @@ import java.util.List;
 @Table
 public class ShoppingList {
 
+    @OneToOne
+    private final Customer customer;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToOne
-    private final Customer customer;
-
     // Map.Entry<Product, Integer> es un producto y su cantidad, dentro de una lista de compras
     // yo quería una tupla, pero... JAVA.
     @OneToMany
-    private List<ShoppingListEntry> entries;
+    private final List<ShoppingListEntry> entries;
 
     // ubicación hacia donde se debe hacer el envio, domicilio de comprador
     @OneToOne
@@ -42,6 +40,7 @@ public class ShoppingList {
     public Long getId() {
         return this.id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -78,9 +77,9 @@ public class ShoppingList {
         discounts.sort(Discount::compare);
 
         BigDecimal total = new BigDecimal(0);
-        List<ShoppingListEntry> products =  new ArrayList<>(this.entries);
+        List<ShoppingListEntry> products = new ArrayList<>(this.entries);
 
-        for (Discount discount : discounts){
+        for (Discount discount : discounts) {
             total = discount.calculateFor(products);
         }
 
@@ -111,9 +110,9 @@ public class ShoppingList {
 
     public BigDecimal evaluateTotalFor(ProductType productType) {
         BigDecimal total = new BigDecimal(0);
-        for (ShoppingListEntry entry : this.entries){
+        for (ShoppingListEntry entry : this.entries) {
             Product product = entry.getProduct();
-            if (product.isType(productType)){
+            if (product.isType(productType)) {
                 Integer quantity = entry.getQuantity();
                 total = total.add(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
             }

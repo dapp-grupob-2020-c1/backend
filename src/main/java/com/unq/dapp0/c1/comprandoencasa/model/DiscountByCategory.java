@@ -24,7 +24,7 @@ public class DiscountByCategory extends Discount {
 
     public ArrayList<Product> getProducts() {
         return this.shop.getProducts().stream()
-                .filter(p->p.isType(this.productType))
+                .filter(p -> p.isType(this.productType))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -35,9 +35,9 @@ public class DiscountByCategory extends Discount {
 
     @Override
     public int compare(Discount discount) {
-        if (discount.isTypeSingle() || discount.isTypeMultiple() || this.percentage < discount.percentage){
+        if (discount.isTypeSingle() || discount.isTypeMultiple() || this.percentage < discount.percentage) {
             return -1;
-        } else if (this.percentage > discount.percentage){
+        } else if (this.percentage > discount.percentage) {
             return 1;
         } else {
             return 0;
@@ -47,9 +47,9 @@ public class DiscountByCategory extends Discount {
     @Override
     public BigDecimal calculateFor(List<ShoppingListEntry> entries) {
         BigDecimal total = new BigDecimal(0);
-        for (ShoppingListEntry entry : entries){
+        for (ShoppingListEntry entry : entries) {
             Product product = entry.getProduct();
-            if (product.getShop().equals(this.shop) && product.isType(this.productType)){
+            if (product.getShop().equals(this.shop) && product.isType(this.productType)) {
                 BigDecimal discount = BigDecimal.valueOf(this.percentage).multiply(BigDecimal.valueOf(0.01)).multiply(product.getPrice());
                 total = total.add(product.getPrice().subtract(discount).multiply(BigDecimal.valueOf(entry.getQuantity())));
                 entries.remove(entry);

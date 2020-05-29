@@ -18,23 +18,19 @@ import java.util.List;
 @Table
 public abstract class Discount {
 
+    @OneToOne
+    protected final Shop shop;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
-
     @Column
     protected LocalDate startingDate;
-
     @Column
     protected LocalDate endingDate;
-
     @Column
     protected double percentage;
 
-    @OneToOne
-    protected final Shop shop;
-
-    protected Discount(long id, double percentage, LocalDate startingDate, LocalDate endingDate, Shop shop){
+    protected Discount(long id, double percentage, LocalDate startingDate, LocalDate endingDate, Shop shop) {
         this.checkDates(startingDate, endingDate);
 
         this.id = id;
@@ -93,21 +89,21 @@ public abstract class Discount {
         return this.shop;
     }
 
-    public boolean isTypeCategory(){
+    public boolean isTypeCategory() {
         return false;
     }
 
-    public boolean isTypeSingle(){
+    public boolean isTypeSingle() {
         return false;
     }
 
-    public boolean isTypeMultiple(){
+    public boolean isTypeMultiple() {
         return false;
     }
 
     public abstract int compare(Discount discount);
 
-    public BigDecimal calculateFor(List<ShoppingListEntry> entries){
+    public BigDecimal calculateFor(List<ShoppingListEntry> entries) {
         return null;
     }
 }

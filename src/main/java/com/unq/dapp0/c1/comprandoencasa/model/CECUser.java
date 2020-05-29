@@ -7,7 +7,8 @@ public abstract class CECUser {
     protected String password;
     protected String email;
 
-    public CECUser() {}
+    public CECUser() {
+    }
 
     public CECUser(String name, String password, String email) {
         this.checkEmailFormat(email);
