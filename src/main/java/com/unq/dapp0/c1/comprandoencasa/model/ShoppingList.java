@@ -1,16 +1,36 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
-import java.math.BigDecimal;
-import java.util.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+@Entity
+@Table
 public class ShoppingList {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne
     private final Customer customer;
+
     // Map.Entry<Product, Integer> es un producto y su cantidad, dentro de una lista de compras
     // yo quería una tupla, pero... JAVA.
-    private List<Map.Entry<Product, Integer>> entries;
+    @OneToMany
+    private List<ShoppingListEntry> entries;
 
     // ubicación hacia donde se debe hacer el envio, domicilio de comprador
+    @OneToOne
     private Location location;
 
     public ShoppingList(Location location, Customer customer) {
@@ -19,12 +39,18 @@ public class ShoppingList {
         this.customer = customer;
     }
 
+    public Long getId() {
+        return this.id;
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public void add(Product aProduct, int aQuantity) {
         // TODO: chequeo errores, tiro exceptions
 
-        // creo una nueva shoppingListEntry para agregar al listado products
-        Map.Entry<Product, Integer> newShoppingListEntry = new AbstractMap.SimpleEntry<>(aProduct, aQuantity);
-        entries.add(newShoppingListEntry);
+        ShoppingListEntry newEntry = new ShoppingListEntry(aProduct, aQuantity);
+        entries.add(newEntry);
     }
 
     public int countProducts() {
@@ -33,15 +59,18 @@ public class ShoppingList {
 
     public int countItems() {
         int sum = 0;
-        for (Map.Entry<Product, Integer> shoppingListEntry : entries) {
-            sum += shoppingListEntry.getValue();
+        for (ShoppingListEntry shoppingListEntry : entries) {
+            sum += shoppingListEntry.getQuantity();
         }
         return sum;
     }
 
     public BigDecimal totalValue() {
         HashSet<Shop> shops = new HashSet<>();
-        this.entries.forEach(el -> shops.add(el.getKey().getShop()));
+        this.entries.forEach(shoppingListEntry -> {
+            Shop productShop = shoppingListEntry.getProduct().getShop();
+            shops.add(productShop);
+        });
 
         ArrayList<Discount> discounts = new ArrayList<>();
         shops.forEach(shop -> discounts.addAll(shop.getActiveDiscounts()));
@@ -49,23 +78,22 @@ public class ShoppingList {
         discounts.sort(Discount::compare);
 
         BigDecimal total = new BigDecimal(0);
-        List<Map.Entry<Product, Integer>> products =  new ArrayList<>(this.entries);
+        List<ShoppingListEntry> products =  new ArrayList<>(this.entries);
 
         for (Discount discount : discounts){
             total = discount.calculateFor(products);
         }
 
-        if (!products.isEmpty()){
-            for (Map.Entry<Product, Integer> shoppingListEntry : products) {
-                BigDecimal productCalculatedPrice = shoppingListEntry.getKey().getPrice();
-                total = total.add(productCalculatedPrice.multiply(BigDecimal.valueOf(shoppingListEntry.getValue())));
-            }
+        for (ShoppingListEntry shoppingListEntry : entries) {
+            BigDecimal productCalculatedPrice = shoppingListEntry.getProduct().getPrice();
+            BigDecimal entryQuantity = BigDecimal.valueOf(shoppingListEntry.getQuantity());
+            total = total.add(productCalculatedPrice.multiply(entryQuantity));
         }
 
         return total;
     }
 
-    public List<Map.Entry<Product, Integer>> getEntries() {
+    public List<ShoppingListEntry> getEntries() {
         return this.entries;
     }
 
@@ -83,11 +111,11 @@ public class ShoppingList {
 
     public BigDecimal evaluateTotalFor(ProductType productType) {
         BigDecimal total = new BigDecimal(0);
-        for (Map.Entry<Product, Integer> productIntegerEntry : this.entries){
-            Product product = productIntegerEntry.getKey();
+        for (ShoppingListEntry entry : this.entries){
+            Product product = entry.getProduct();
             if (product.isType(productType)){
-                Integer amount = productIntegerEntry.getValue();
-                total = total.add(product.getPrice().multiply(BigDecimal.valueOf(amount)));
+                Integer quantity = entry.getQuantity();
+                total = total.add(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
             }
         }
         return total;

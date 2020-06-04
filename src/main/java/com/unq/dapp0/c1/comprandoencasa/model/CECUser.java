@@ -3,9 +3,11 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
 
 public abstract class CECUser {
-    protected final String name;
-    protected final String password;
-    protected final String email;
+    protected String name;
+    protected String password;
+    protected String email;
+
+    public CECUser() {}
 
     public CECUser(String name, String password, String email) {
         this.checkEmailFormat(email);

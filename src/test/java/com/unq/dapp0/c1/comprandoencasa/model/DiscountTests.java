@@ -228,10 +228,10 @@ public class DiscountTests {
     @Test
     public void aDiscountCanBeForMultipleProducts(){
         Product product1 = mock(Product.class);
-        when(product1.getID()).thenReturn(1L);
+        when(product1.getId()).thenReturn(1L);
 
         Product product2 = mock(Product.class);
-        when(product2.getID()).thenReturn(2L);
+        when(product2.getId()).thenReturn(2L);
 
         ArrayList<Product> products = new ArrayList<>();
         products.add(product1);
@@ -249,10 +249,10 @@ public class DiscountTests {
     @Test
     public void aDiscountForMultipleProductsCanAddNewProductsToTheList(){
         Product product1 = mock(Product.class);
-        when(product1.getID()).thenReturn(1L);
+        when(product1.getId()).thenReturn(1L);
 
         Product product2 = mock(Product.class);
-        when(product2.getID()).thenReturn(2L);
+        when(product2.getId()).thenReturn(2L);
 
         ArrayList<Product> products = new ArrayList<>();
         products.add(product1);
@@ -267,7 +267,7 @@ public class DiscountTests {
         assertTrue(discount.getProducts().contains(product2));
 
         Product product3 = mock(Product.class);
-        when(product3.getID()).thenReturn(3L);
+        when(product3.getId()).thenReturn(3L);
 
         discount.addProduct(product3);
 
@@ -277,7 +277,7 @@ public class DiscountTests {
     @Test
     public void aDiscountForMultipleProductsCanAddAProductThatItAlreadyContains(){
         Product product = mock(Product.class);
-        when(product.getID()).thenReturn(1L);
+        when(product.getId()).thenReturn(1L);
 
         ArrayList<Product> products = new ArrayList<>();
         products.add(product);
@@ -298,13 +298,13 @@ public class DiscountTests {
     @Test
     public void aDiscountForMultipleProductsCanRemoveADiscountFromItsList(){
         Product product1 = mock(Product.class);
-        when(product1.getID()).thenReturn(1L);
+        when(product1.getId()).thenReturn(1L);
 
         Product product2 = mock(Product.class);
-        when(product2.getID()).thenReturn(2L);
+        when(product2.getId()).thenReturn(2L);
 
         Product product3 = mock(Product.class);
-        when(product3.getID()).thenReturn(3L);
+        when(product3.getId()).thenReturn(3L);
 
         ArrayList<Product> products = new ArrayList<>();
         products.add(product1);
@@ -328,10 +328,10 @@ public class DiscountTests {
     @Test
     public void aDiscountForMultipleProductsCannotRemoveAProductIfItCausesTheListToHaveASingleItem(){
         Product product1 = mock(Product.class);
-        when(product1.getID()).thenReturn(1L);
+        when(product1.getId()).thenReturn(1L);
 
         Product product2 = mock(Product.class);
-        when(product2.getID()).thenReturn(2L);
+        when(product2.getId()).thenReturn(2L);
 
         ArrayList<Product> products = new ArrayList<>();
         products.add(product1);
@@ -348,7 +348,7 @@ public class DiscountTests {
         Throwable exception = assertThrows(MultipleDiscountWithSingleItemException.class,()->
                 discount.removeProduct(product2));
 
-        assertEquals("Removal of the product "+product2.getID()+" will cause the Discount to be composed of a single item. Use the class DiscountBySingle instead for the item that should remain",
+        assertEquals("Removal of the product "+product2.getId()+" will cause the Discount to be composed of a single item. Use the class DiscountBySingle instead for the item that should remain",
                 exception.getMessage());
     }
 
@@ -474,7 +474,7 @@ public class DiscountTests {
                 .withShop(shop)
                 .build();
 
-        List<Map.Entry<Product, Integer>> products = new ArrayList<>();
+        List<ShoppingListEntry> entries = new ArrayList<>();
         Product validProduct = mock(Product.class);
         Product productOfAnotherShop = mock(Product.class);
 
@@ -483,12 +483,12 @@ public class DiscountTests {
         when(validProduct.isType(ProductType.Bazaar)).thenReturn(true);
         when(validProduct.getPrice()).thenReturn(BigDecimal.valueOf(5));
 
-        products.add(new AbstractMap.SimpleEntry<>(validProduct, 2));
-        products.add(new AbstractMap.SimpleEntry<>(productOfAnotherShop, 1));
+        entries.add(new ShoppingListEntry(validProduct, 2));
+        entries.add(new ShoppingListEntry(productOfAnotherShop, 1));
 
-        assertEquals(2, products.size());
-        assertEquals(new BigDecimal("9.900"), discount.calculateFor(products));
-        assertEquals(1, products.size());
+        assertEquals(2, entries.size());
+        assertEquals(new BigDecimal("9.900"), discount.calculateFor(entries));
+        assertEquals(1, entries.size());
     }
 
 
@@ -503,19 +503,19 @@ public class DiscountTests {
                 .withProducts(discountProducts)
                 .build();
 
-        List<Map.Entry<Product, Integer>> products = new ArrayList<>();
+        List<ShoppingListEntry> entries = new ArrayList<>();
         Product productOfAnotherShop = mock(Product.class);
 
-        when(validProduct.getID()).thenReturn(1L);
-        when(productOfAnotherShop.getID()).thenReturn(2L);
+        when(validProduct.getId()).thenReturn(1L);
+        when(productOfAnotherShop.getId()).thenReturn(2L);
         when(validProduct.getPrice()).thenReturn(BigDecimal.valueOf(5));
 
-        products.add(new AbstractMap.SimpleEntry<>(validProduct, 2));
-        products.add(new AbstractMap.SimpleEntry<>(productOfAnotherShop, 1));
+        entries.add(new ShoppingListEntry(validProduct, 2));
+        entries.add(new ShoppingListEntry(productOfAnotherShop, 1));
 
-        assertEquals(2, products.size());
-        assertEquals(new BigDecimal("9.900"), discount.calculateFor(products));
-        assertEquals(1, products.size());
+        assertEquals(2, entries.size());
+        assertEquals(new BigDecimal("9.900"), discount.calculateFor(entries));
+        assertEquals(1, entries.size());
     }
 
 
@@ -532,22 +532,22 @@ public class DiscountTests {
                 .withProducts(discountProducts)
                 .build();
 
-        List<Map.Entry<Product, Integer>> products = new ArrayList<>();
+        List<ShoppingListEntry> entries = new ArrayList<>();
         Product productOfAnotherShop = mock(Product.class);
 
-        when(validProduct.getID()).thenReturn(1L);
-        when(productOfAnotherShop.getID()).thenReturn(2L);
-        when(anotherValidProduct.getID()).thenReturn(3L);
+        when(validProduct.getId()).thenReturn(1L);
+        when(productOfAnotherShop.getId()).thenReturn(2L);
+        when(anotherValidProduct.getId()).thenReturn(3L);
         when(validProduct.getPrice()).thenReturn(BigDecimal.valueOf(5));
         when(anotherValidProduct.getPrice()).thenReturn(BigDecimal.valueOf(2));
 
-        products.add(new AbstractMap.SimpleEntry<>(validProduct, 2));
-        products.add(new AbstractMap.SimpleEntry<>(anotherValidProduct, 1));
-        products.add(new AbstractMap.SimpleEntry<>(productOfAnotherShop, 1));
+        entries.add(new ShoppingListEntry(validProduct, 2));
+        entries.add(new ShoppingListEntry(anotherValidProduct, 1));
+        entries.add(new ShoppingListEntry(productOfAnotherShop, 1));
 
-        assertEquals(3, products.size());
-        assertEquals(new BigDecimal("11.880"), discount.calculateFor(products));
-        assertEquals(2, products.size());
+        assertEquals(3, entries.size());
+        assertEquals(new BigDecimal("11.880"), discount.calculateFor(entries));
+        assertEquals(2, entries.size());
     }
 }
 

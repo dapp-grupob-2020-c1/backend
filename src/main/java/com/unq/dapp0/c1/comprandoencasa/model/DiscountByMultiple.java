@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class DiscountByMultiple extends Discount {
@@ -41,7 +40,7 @@ public class DiscountByMultiple extends Discount {
     }
 
     private Optional<Product> findProduct(Product product){
-        return this.products.stream().filter(p-> p.getID().equals(product.getID())).findFirst();
+        return this.products.stream().filter(p-> p.getId().equals(product.getId())).findFirst();
     }
 
     @Override
@@ -56,19 +55,19 @@ public class DiscountByMultiple extends Discount {
     }
 
     @Override
-    public BigDecimal calculateFor(List<Map.Entry<Product, Integer>> products) {
+    public BigDecimal calculateFor(List<ShoppingListEntry> entries) {
         BigDecimal total = new BigDecimal(0);
-        boolean isValid = this.products.stream().allMatch(product -> this.mapListContains(product, products));
+        boolean isValid = this.products.stream().allMatch(product -> this.mapListContains(product, entries));
         if (isValid){
-            for (Map.Entry<Product, Integer> productIntegerEntry : products){
-                Product product = productIntegerEntry.getKey();
+            for (ShoppingListEntry entry : entries){
+                Product product = entry.getProduct();
                 if (this.findProduct(product).isPresent()){
                     BigDecimal discount = BigDecimal.valueOf(this.percentage).multiply(BigDecimal.valueOf(0.01)).multiply(product.getPrice());
-                    total = total.add(product.getPrice().subtract(discount).multiply(BigDecimal.valueOf(productIntegerEntry.getValue())));
-                    if (productIntegerEntry.getValue() > 1){
-                        productIntegerEntry.setValue(productIntegerEntry.getValue() - 1);
+                    total = total.add(product.getPrice().subtract(discount).multiply(BigDecimal.valueOf(entry.getQuantity())));
+                    if (entry.getQuantity() > 1){
+                        entry.setQuantity(entry.getQuantity() - 1);
                     } else {
-                        products.remove(productIntegerEntry);
+                        entries.remove(entry);
                     }
                 }
             }
@@ -76,10 +75,10 @@ public class DiscountByMultiple extends Discount {
         return total;
     }
 
-    private boolean mapListContains(Product product, List<Map.Entry<Product, Integer>> products) {
-        for (Map.Entry<Product, Integer> productIntegerEntry : products){
-            Product key = productIntegerEntry.getKey();
-            if (key.getID().equals(product.getID())){
+    private boolean mapListContains(Product product, List<ShoppingListEntry> entries) {
+        for (ShoppingListEntry entry : entries){
+            Product key = entry.getProduct();
+            if (key.getId().equals(product.getId())){
                 return true;
             }
         }

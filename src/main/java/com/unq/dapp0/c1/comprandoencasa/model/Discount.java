@@ -2,16 +2,36 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidDiscountDatesException;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
+@Entity
+@Table
 public abstract class Discount {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected final long id;
+
+    @Column
     protected LocalDate startingDate;
+
+    @Column
     protected LocalDate endingDate;
+
+    @Column
     protected double percentage;
+
+    @OneToOne
     protected final Shop shop;
 
     protected Discount(long id, double percentage, LocalDate startingDate, LocalDate endingDate, Shop shop){
@@ -83,7 +103,7 @@ public abstract class Discount {
 
     public abstract int compare(Discount discount);
 
-    public BigDecimal calculateFor(List<Map.Entry<Product, Integer>> products){
+    public BigDecimal calculateFor(List<ShoppingListEntry> entries){
         return null;
     }
 }

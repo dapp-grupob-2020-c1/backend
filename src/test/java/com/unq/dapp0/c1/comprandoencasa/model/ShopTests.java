@@ -342,8 +342,8 @@ public class ShopTests {
         Product prodMock1 = mock(Product.class);
         Product prodMock2 = mock(Product.class);
 
-        when(prodMock1.getID()).thenReturn(1L);
-        when(prodMock2.getID()).thenReturn(2L);
+        when(prodMock1.getId()).thenReturn(1L);
+        when(prodMock2.getId()).thenReturn(2L);
 
         ArrayList<Product> products = new ArrayList<>();
         products.add(prodMock1);
@@ -363,8 +363,8 @@ public class ShopTests {
         Product prodMock1 = mock(Product.class);
         Product prodMock2 = mock(Product.class);
 
-        when(prodMock1.getID()).thenReturn(1L);
-        when(prodMock2.getID()).thenReturn(2L);
+        when(prodMock1.getId()).thenReturn(1L);
+        when(prodMock2.getId()).thenReturn(2L);
 
         ArrayList<Product> products = new ArrayList<>();
         products.add(prodMock1);
@@ -383,7 +383,7 @@ public class ShopTests {
     @Test
     public void aShopCannotAddTheSameProductTwice(){
         Product prodMock = mock(Product.class);
-        when(prodMock.getID()).thenReturn(1L);
+        when(prodMock.getId()).thenReturn(1L);
 
         ArrayList<Product> products = new ArrayList<>();
         products.add(prodMock);
