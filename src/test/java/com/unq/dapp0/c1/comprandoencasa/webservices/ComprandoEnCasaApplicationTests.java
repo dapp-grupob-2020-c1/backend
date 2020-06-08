@@ -10,4 +10,9 @@ class ComprandoEnCasaApplicationTests {
 	void contextLoads() {
 	}
 
+	@Test
+	public void endpointSearchReturnsAListOfProductsWithAGivenKeywordAndOrCategory(){
+
+	}
+
 }
