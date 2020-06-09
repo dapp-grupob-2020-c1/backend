@@ -33,6 +33,9 @@ public class Shop {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
+    private String name;
+
     @ElementCollection
     private List<ShopCategory> shopCategories;
 
@@ -68,7 +71,8 @@ public class Shop {
 
     public Shop() {}
 
-    public Shop(ArrayList<ShopCategory> shopCategories, Location location, ArrayList<DayOfWeek> days, LocalTime openingHour, LocalTime closingHour, ArrayList<PaymentMethod> paymentMethods, Integer deliveryRadius, Manager manager, ArrayList<Product> products) {
+    public Shop(String name, ArrayList<ShopCategory> shopCategories, Location location, ArrayList<DayOfWeek> days, LocalTime openingHour, LocalTime closingHour, ArrayList<PaymentMethod> paymentMethods, Integer deliveryRadius, Manager manager, ArrayList<Product> products) {
+        this.name = name;
         this.shopCategories = shopCategories;
         this.location = location;
         this.days = days;
@@ -87,6 +91,10 @@ public class Shop {
     }
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public List<ShopCategory> getShopCategories() {

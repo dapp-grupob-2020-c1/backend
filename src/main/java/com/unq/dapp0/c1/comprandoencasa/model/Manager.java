@@ -62,4 +62,8 @@ public class Manager extends CECUser {
     public Shop getShop() {
         return this.shop;
     }
+
+    public void setShop(Shop shop){
+        this.shop = shop;
+    }
 }

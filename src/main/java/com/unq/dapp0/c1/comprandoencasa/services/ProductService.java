@@ -1,6 +1,7 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
 import com.unq.dapp0.c1.comprandoencasa.model.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,9 @@ public class ProductService {
 
     public List<Product> findAll() {
         return this.repository.findAll();
+    }
+
+    public List<Product> searchBy(String keyword, List<ProductType> categories) {
+        return null;
     }
 }

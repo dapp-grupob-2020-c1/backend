@@ -9,7 +9,6 @@ import com.unq.dapp0.c1.comprandoencasa.model.ShopCategory;
 
 import com.unq.dapp0.c1.comprandoencasa.repositories.ManagerRepositroy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -48,6 +47,7 @@ public class InitService {
         this.locationService.save(aShopLocation);
 
         Shop aShop = new Shop(
+                "La Marca",
                 new ArrayList<ShopCategory>(),
                 aShopLocation,
                 new ArrayList<DayOfWeek>(),
@@ -65,7 +65,8 @@ public class InitService {
                 "Pepito",
                 "https://picsum.photos/200/300",
                 new BigDecimal("99.99"),
-                aShop
+                aShop,
+                new ArrayList<>()
         );
         this.productService.save(aProduct);
 
@@ -74,7 +75,8 @@ public class InitService {
                 "Pepito",
                 "https://picsum.photos/200/200",
                 new BigDecimal("89.99"),
-                aShop
+                aShop,
+                new ArrayList<>()
         );
         this.productService.save(anotherProduct);
     }

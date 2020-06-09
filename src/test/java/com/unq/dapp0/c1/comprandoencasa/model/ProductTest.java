@@ -3,6 +3,8 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.unq.dapp0.c1.comprandoencasa.model.ProductBuilder.aProduct;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,12 +18,13 @@ class ProductTest {
     @Test
     public void aProductCanBeCreatedWithItsAtributes(){
         Shop shop = mock(Shop.class);
-        Product aProduct = new Product("ProductName", "ProductBrand", "ProductImage", new BigDecimal(999), shop);
+        Product aProduct = new Product("ProductName", "ProductBrand", "ProductImage", new BigDecimal(999), shop, new ArrayList<>());
         assertEquals("ProductName", aProduct.getName());
         assertEquals("ProductBrand", aProduct.getBrand());
         assertEquals("ProductImage", aProduct.getImage());
         assertEquals(new BigDecimal(999), aProduct.getPrice());
         assertEquals(shop, aProduct.getShop());
+        assertTrue(aProduct.getTypes().isEmpty());
     }
 
     @Test
@@ -95,6 +98,16 @@ class ProductTest {
 
         aProduct.removeType(aProductType);
         assertFalse(aProduct.isType(aProductType));
+    }
+
+    @Test
+    public void aProductCanReturnItsTypes(){
+        List<ProductType> types = new ArrayList<>();
+        types.add(ProductType.Bazaar);
+
+        Product aProduct = aProduct().withTypes(types).build();
+
+        assertEquals(types, aProduct.getTypes());
     }
 
 }
