@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import static com.unq.dapp0.c1.comprandoencasa.model.ShoppingListBuilder.anyShoppingList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -16,21 +16,22 @@ class ShoppingListTest {
 
     @Test
     public void aShoppingListStartsEmpty(){
-        ShoppingList aShoppingList = ShoppingListBuilder.anyShoppingList().build();
+        ShoppingList aShoppingList = anyShoppingList().build();
         assertEquals(0, aShoppingList.countProducts());
+        assertEquals(0, aShoppingList.countItems());
     }
 
     @Test
     public void aShoppingListHasAnEntriesList(){
-        ShoppingList aShoppingList = ShoppingListBuilder.anyShoppingList().build();
-        List<Map.Entry<Product, Integer>> emptyEntriesList = new ArrayList<>();
+        ShoppingList aShoppingList = anyShoppingList().build();
+        List<ShoppingListEntry> emptyEntriesList = new ArrayList<>();
 
-        assertEquals(emptyEntriesList, aShoppingList.getEntries());
+        assertEquals(emptyEntriesList, aShoppingList.getEntriesList());
     }
 
     @Test
     public void aShoppingListCanCountProducts(){
-        ShoppingList aShoppingList = ShoppingListBuilder.anyShoppingList().build();
+        ShoppingList aShoppingList = anyShoppingList().build();
         Product aProduct = mock(Product.class);
 
         assertEquals(0, aShoppingList.countProducts());
@@ -40,7 +41,7 @@ class ShoppingListTest {
 
     @Test
     public void aShoppingListCanCountItems(){
-        ShoppingList aShoppingList = ShoppingListBuilder.anyShoppingList().build();
+        ShoppingList aShoppingList = anyShoppingList().build();
         Product aProduct = mock(Product.class);
 
         assertEquals(0, aShoppingList.countItems());
@@ -50,7 +51,7 @@ class ShoppingListTest {
 
     @Test
     public void aShoppingListHasTotalValue(){
-        ShoppingList aShoppingList = ShoppingListBuilder.anyShoppingList().build();
+        ShoppingList aShoppingList = anyShoppingList().build();
         Product aProduct = mock(Product.class);
         Shop shop = mock(Shop.class);
         Discount discount = mock(Discount.class);
@@ -72,9 +73,9 @@ class ShoppingListTest {
     @Test
     public void aShoppingListHasALocation(){
         Location aLocation = mock(Location.class);
-        ShoppingList aShoppingList = ShoppingListBuilder.anyShoppingList().withLocation(aLocation).build();
+        ShoppingList aShoppingList = anyShoppingList().withLocation(aLocation).build();
 
-        assertEquals(aLocation, aShoppingList.getLocation());
+        assertEquals(aLocation, aShoppingList.getDeliveryLocation());
     }
 
     @Test
@@ -82,18 +83,18 @@ class ShoppingListTest {
         Location aLocation = mock(Location.class);
         Location anotherLocation = mock(Location.class);
 
-        ShoppingList aShoppingList = ShoppingListBuilder.anyShoppingList().withLocation(aLocation).build();
-        assertEquals(aLocation, aShoppingList.getLocation());
+        ShoppingList aShoppingList = anyShoppingList().withLocation(aLocation).build();
+        assertEquals(aLocation, aShoppingList.getDeliveryLocation());
 
-        aShoppingList.setLocation(anotherLocation);
-        assertEquals(anotherLocation, aShoppingList.getLocation());
+        aShoppingList.setDeliveryLocation(anotherLocation);
+        assertEquals(anotherLocation, aShoppingList.getDeliveryLocation());
     }
 
     @Test
     public void aShoppingListKnowsItBelongsToACustomer(){
         Customer customer = mock(Customer.class);
 
-        ShoppingList shoppingList = ShoppingListBuilder.anyShoppingList()
+        ShoppingList shoppingList = anyShoppingList()
                 .withCustomer(customer)
                 .build();
 
@@ -102,7 +103,7 @@ class ShoppingListTest {
 
     @Test
     public void aShoppingListCanEvaluateTheTotalValueForAGivenProductType(){
-        ShoppingList shoppingList = ShoppingListBuilder.anyShoppingList().build();
+        ShoppingList shoppingList = anyShoppingList().build();
 
         Product product1 = mock(Product.class);
         Product product2 = mock(Product.class);

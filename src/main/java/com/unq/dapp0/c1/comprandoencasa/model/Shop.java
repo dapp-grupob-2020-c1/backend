@@ -66,7 +66,8 @@ public class Shop {
     @OneToMany
     private List<ShopDelivery> activeDeliveries;
 
-    public Shop() {}
+    public Shop() {
+    }
 
     public Shop(ArrayList<ShopCategory> shopCategories, Location location, ArrayList<DayOfWeek> days, LocalTime openingHour, LocalTime closingHour, ArrayList<PaymentMethod> paymentMethods, Integer deliveryRadius, Manager manager, ArrayList<Product> products) {
         this.shopCategories = shopCategories;
@@ -85,6 +86,7 @@ public class Shop {
     public Long getId() {
         return this.id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -117,8 +119,16 @@ public class Shop {
         return this.openingHour;
     }
 
+    public void setOpeningHour(LocalTime newHour) {
+        this.openingHour = newHour;
+    }
+
     public LocalTime getClosingHour() {
         return this.closingHour;
+    }
+
+    public void setClosingHour(LocalTime newHour) {
+        this.closingHour = newHour;
     }
 
     public void removeDay(DayOfWeek dia) {
@@ -129,18 +139,10 @@ public class Shop {
      * @throws DayAlreadyExistsException if the day is already present.
      */
     public void addDay(DayOfWeek day) {
-        if (this.days.contains(day)){
+        if (this.days.contains(day)) {
             throw new DayAlreadyExistsException(day);
         }
         this.days.add(day);
-    }
-
-    public void setOpeningHour(LocalTime newHour) {
-        this.openingHour = newHour;
-    }
-
-    public void setClosingHour(LocalTime newHour) {
-        this.closingHour = newHour;
     }
 
     public List<PaymentMethod> getPaymentMethods() {
@@ -151,7 +153,7 @@ public class Shop {
      * @throws PaymentMethodAlreadyExistsException if the payment method is already present.
      */
     public void addPaymentMethod(PaymentMethod paymentMethod) {
-        if (this.paymentMethods.contains(paymentMethod)){
+        if (this.paymentMethods.contains(paymentMethod)) {
             throw new PaymentMethodAlreadyExistsException(paymentMethod);
         }
         this.paymentMethods.add(paymentMethod);
@@ -178,6 +180,7 @@ public class Shop {
     /**
      * Validates that the given manager is the same as the manager in charge of the Shop.
      * Delegates the verification to his own manager.
+     *
      * @param manager to validate
      */
     public void validateManager(Manager manager) throws Exception {
@@ -192,7 +195,7 @@ public class Shop {
      * @throws ProductAlreadyPresentException if the product is already present.
      */
     public void addProduct(Product product) {
-        if (!this.findProduct(product).isPresent()){
+        if (!this.findProduct(product).isPresent()) {
             this.products.add(product);
         } else {
             throw new ProductAlreadyPresentException(product);
@@ -203,8 +206,8 @@ public class Shop {
         this.findProduct(product).ifPresent(value -> this.products.remove(value));
     }
 
-    private Optional<Product> findProduct(Product product){
-        return this.products.stream().filter(p-> p.getId().equals(product.getId())).findFirst();
+    private Optional<Product> findProduct(Product product) {
+        return this.products.stream().filter(p -> p.getId().equals(product.getId())).findFirst();
     }
 
     public List<Discount> getDiscounts() {
@@ -215,7 +218,7 @@ public class Shop {
      * @throws DiscountAlreadyExistsException if the discount is already present.
      */
     public void addDiscount(Discount discount) {
-        if (!this.findDiscount(discount).isPresent()){
+        if (!this.findDiscount(discount).isPresent()) {
             this.discounts.add(discount);
         } else {
             throw new DiscountAlreadyExistsException(discount);
@@ -227,7 +230,7 @@ public class Shop {
     }
 
     private Optional<Discount> findDiscount(Discount discount) {
-        return this.discounts.stream().filter(d-> d.getID().equals(discount.getID())).findFirst();
+        return this.discounts.stream().filter(d -> d.getId().equals(discount.getId())).findFirst();
     }
 
     public ArrayList<Discount> getActiveDiscounts() {
@@ -246,7 +249,7 @@ public class Shop {
         ArrayList<ShopDelivery> deliveries = this.activeDeliveries.stream()
                 .filter(delivery -> delivery instanceof DeliveryAtShop).collect(Collectors.toCollection(ArrayList::new));
         ArrayList<Turn> turns = new ArrayList<>();
-        for (ShopDelivery delivery : deliveries){
+        for (ShopDelivery delivery : deliveries) {
             turns.add(((DeliveryAtShop) delivery).getTurn());
         }
         return turns;

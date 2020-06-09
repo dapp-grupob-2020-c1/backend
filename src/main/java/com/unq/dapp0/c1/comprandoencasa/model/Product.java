@@ -39,7 +39,8 @@ public class Product {
     @ManyToOne
     private Shop shop;
 
-    public Product() {}
+    public Product() {
+    }
 
     public Product(String name, String brand, String image, BigDecimal price, Shop shop) {
         this.name = name;
@@ -54,44 +55,44 @@ public class Product {
         return this.id;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public String getBrand() {
-        return this.brand;
-    }
-
-    public String getImage() {
-        return this.image;
-    }
-
-    public BigDecimal getPrice() {
-        return this.price;
-    }
-
-    public Shop getShop() {
-        return this.shop;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getBrand() {
+        return this.brand;
+    }
+
     public void setBrand(String brand) {
         this.brand = brand;
+    }
+
+    public String getImage() {
+        return this.image;
     }
 
     public void setImage(String image) {
         this.image = image;
     }
 
+    public BigDecimal getPrice() {
+        return this.price;
+    }
+
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public Shop getShop() {
+        return this.shop;
     }
 
     public void setShop(Shop shop) {

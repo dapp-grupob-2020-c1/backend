@@ -30,7 +30,7 @@ public class Customer extends CECUser {
     private Long id;
 
     @OneToMany
-    private List<Location> locations;
+    private final List<Location> locations;
 
     @Column
     private BigDecimal totalThreshold;
@@ -42,7 +42,7 @@ public class Customer extends CECUser {
     private ShoppingList activeShoppingList;
 
     @OneToMany
-    private List<ShoppingList> historicShoppingLists;
+    private final List<ShoppingList> historicShoppingLists;
 
     public Customer(String name, String password, String email) {
         super(name, password, email);
@@ -59,7 +59,7 @@ public class Customer extends CECUser {
     }
 
     public void validate(String name, String password, String email) throws Exception {
-        this.validate(name, password, email,new InvalidUserException() );
+        this.validate(name, password, email, new InvalidUserException());
     }
 
     public List<Location> getLocations() {
@@ -79,23 +79,23 @@ public class Customer extends CECUser {
     }
 
     private Optional<Location> findLocation(Location location) {
-        return this.locations.stream().filter(loc -> loc.getID().equals(location.getID())).findFirst();
-    }
-
-    public void setTotalThreshold(BigDecimal threshold) {
-        this.totalThreshold = threshold;
+        return this.locations.stream().filter(loc -> loc.getId().equals(location.getId())).findFirst();
     }
 
     public BigDecimal getTotalThreshold() {
         return this.totalThreshold;
     }
 
-    public void setTypesThreshold(Map<ProductType, BigDecimal> typeList) {
-        this.typesThreshold = typeList;
+    public void setTotalThreshold(BigDecimal threshold) {
+        this.totalThreshold = threshold;
     }
 
     public Map<ProductType, BigDecimal> getTypesThreshold() {
         return this.typesThreshold;
+    }
+
+    public void setTypesThreshold(Map<ProductType, BigDecimal> typeList) {
+        this.typesThreshold = typeList;
     }
 
     public void addActiveShoppingList(ShoppingList shoppingList) {
@@ -116,7 +116,7 @@ public class Customer extends CECUser {
 
     public Dictionary<ProductType, BigDecimal> evaluateHistoricTypeThresholds() {
         Dictionary<ProductType, BigDecimal> returnThresholds = new Hashtable<>();
-        for (ProductType productType : ProductType.values()){
+        for (ProductType productType : ProductType.values()) {
             returnThresholds.put(productType, this.evaluateForShoppingList(productType));
         }
         return returnThresholds;
@@ -125,14 +125,14 @@ public class Customer extends CECUser {
     private BigDecimal evaluateForShoppingList(ProductType productType) {
         BigDecimal total = new BigDecimal(0);
         int numberOfLists = 0;
-        for (ShoppingList shoppingList : this.historicShoppingLists){
+        for (ShoppingList shoppingList : this.historicShoppingLists) {
             BigDecimal value = shoppingList.evaluateTotalFor(productType);
-            if (value.compareTo(BigDecimal.valueOf(0)) > 0){
+            if (value.compareTo(BigDecimal.valueOf(0)) > 0) {
                 numberOfLists += 1;
                 total = total.add(value);
             }
         }
-        if (numberOfLists > 0){
+        if (numberOfLists > 0) {
             return total.divide(BigDecimal.valueOf(numberOfLists));
         } else {
             return BigDecimal.valueOf(0);
