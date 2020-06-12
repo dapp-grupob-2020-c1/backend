@@ -14,6 +14,8 @@ public class ProductDTO {
     public Collection<ProductType> types;
     public ShopDTO shop;
 
+    public ProductDTO(){}
+
     public ProductDTO(Product product) {
         this.id = product.getId();
         this.name = product.getName();

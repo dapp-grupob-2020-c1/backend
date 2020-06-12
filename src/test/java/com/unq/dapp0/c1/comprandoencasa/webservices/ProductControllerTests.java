@@ -2,25 +2,29 @@ package com.unq.dapp0.c1.comprandoencasa.webservices;
 
 import com.unq.dapp0.c1.comprandoencasa.model.*;
 import com.unq.dapp0.c1.comprandoencasa.services.ProductService;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
 public class ProductControllerTests extends AbstractRestTest {
@@ -40,7 +44,7 @@ public class ProductControllerTests extends AbstractRestTest {
     }
 
     @Test
-    public void endpointSearchReturnsAListOfProductsWithAGivenKeywordAndOrCategory() throws Exception{
+    public void endpointGETSearchReturnsAListOfProductsWithAGivenKeywordAndOrCategory() throws Exception{
         String keyword = "foo";
         List<ProductType> categories = new ArrayList<>();
         categories.add(ProductType.Bazaar);
@@ -55,30 +59,77 @@ public class ProductControllerTests extends AbstractRestTest {
         when(shop.getClosingHour()).thenReturn(LocalTime.of(2, 0));
         when(shop.getDeliveryRadius()).thenReturn(1);
 
-        Product product = mock(Product.class);
-        when(product.getId()).thenReturn(1L);
-        when(product.getName()).thenReturn("foo");
-        when(product.getImage()).thenReturn("any");
-        when(product.getPrice()).thenReturn(BigDecimal.ONE);
-        when(product.getTypes()).thenReturn(categories);
-        when(product.getShop()).thenReturn(shop);
+        Product product1 = mock(Product.class);
+        when(product1.getId()).thenReturn(1L);
+        when(product1.getName()).thenReturn("foo");
+        when(product1.getImage()).thenReturn("any");
+        when(product1.getPrice()).thenReturn(BigDecimal.ONE);
+        when(product1.getTypes()).thenReturn(categories);
+        when(product1.getShop()).thenReturn(shop);
+
+        Product product2 = mock(Product.class);
+        when(product2.getId()).thenReturn(3L);
+        when(product2.getName()).thenReturn("fee");
+        when(product2.getImage()).thenReturn("anyone");
+        when(product2.getPrice()).thenReturn(BigDecimal.TEN);
+        when(product2.getTypes()).thenReturn(categories);
+        when(product2.getShop()).thenReturn(shop);
 
         List<Product> expectedProducts = new ArrayList<>();
-        expectedProducts.add(product);
+        expectedProducts.add(product1);
+        expectedProducts.add(product2);
 
         when(service.searchBy(keyword, categories)).thenReturn(expectedProducts);
 
-        String expected= mapToJson(ProductController.parseProducts(expectedProducts));
+        List<ProductDTO> expected = ProductController.parseProducts(expectedProducts);
 
-        System.out.print(expected);
-
-        this.mockMvc.perform(
+        MvcResult mvcResult = this.mockMvc.perform(
                 get("/api/search")
                         .param("keyword", keyword)
                         .param("categories", categories.get(0).toString())
-                )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().json(expected));
+                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+
+        String content = mvcResult.getResponse().getContentAsString();
+        List<ProductDTO> productlist = Arrays.stream(super.mapFromJson(content, ProductDTO[].class)).collect(Collectors.toList());
+        assertEquals(expected.size(), productlist.size());
+
+        boolean result = false;
+        for (ProductDTO prod : productlist){
+            result = expected.stream().anyMatch(productDTO -> productDTO.id.equals(prod.id));
+        }
+        assertTrue(result);
+    }
+
+    @Test
+    public void endpointGETSearchReturnsBadRequestIfTheCategoryIsMissingOrIfItContainsInvalidCategories() throws Exception {
+        MvcResult noCatResult = this.mockMvc.perform(
+                get("/api/search").param("keyword", "foo"))
+                .andReturn();
+
+        int noCatStatus = noCatResult.getResponse().getStatus();
+        assertEquals(400, noCatStatus);
+
+        String noCatError = noCatResult.getResponse().getErrorMessage();
+        assertEquals("Required List parameter 'categories' is not present", noCatError);
+
+        MvcResult invalidCatResult = this.mockMvc.perform(
+                get("/api/search").param("categories", "foo"))
+                .andReturn();
+
+        int invCatStatus = invalidCatResult.getResponse().getStatus();
+        assertEquals(400, invCatStatus);
+
+        String invCatError = invalidCatResult.getResponse().getErrorMessage();
+        assertEquals("Product type category not found", invCatError);
+
+        MvcResult noKeyResult = this.mockMvc.perform(
+                get("/api/search").param("categories", ProductType.Bazaar.toString()))
+                .andReturn();
+
+        int noKeyStatus = noKeyResult.getResponse().getStatus();
+        assertEquals(200, noKeyStatus);
     }
 }

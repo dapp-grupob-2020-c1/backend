@@ -1,6 +1,9 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices.dtos;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.unq.dapp0.c1.comprandoencasa.model.Location;
 import com.unq.dapp0.c1.comprandoencasa.model.Shop;
 import com.unq.dapp0.c1.comprandoencasa.model.ShopCategory;
@@ -15,11 +18,16 @@ public class ShopDTO {
     public List<ShopCategory> categories;
     public Location location;
     public List<DayOfWeek> days;
-    @JsonFormat(pattern = "hh:mm:ss")
+    @JsonDeserialize(using = LocalTimeDeserializer.class)
+    @JsonSerialize(using = LocalTimeSerializer.class)
     public LocalTime openingHour;
-    @JsonFormat(pattern = "hh:mm:ss")
+    @JsonDeserialize(using = LocalTimeDeserializer.class)
+    @JsonSerialize(using = LocalTimeSerializer.class)
     public LocalTime closingHour;
     public Integer deliveryRadius;
+
+    public ShopDTO(){}
+
     public ShopDTO(Shop shop) {
         this.id = shop.getId();
         this.name = shop.getName();

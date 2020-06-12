@@ -1,29 +1,31 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices;
 
-import java.io.IOException;
-
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.springframework.test.web.servlet.ResultMatcher;
+import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.io.IOException;
 
 public abstract class AbstractRestTest {
-    private ObjectMapper objectMapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
-
-    public <T> ResultMatcher containsObjectAsJson(Object expectedObject, Class<T> targetClass) {
-        return mvcResult -> {
-            String json = mvcResult.getResponse().getContentAsString();
-            T actualObject = objectMapper.readValue(json, targetClass);
-            assertThat(expectedObject).isEqualToComparingFieldByField(actualObject);
-        };
-    }
+    private ObjectMapper objectMapper = JsonMapper.builder()
+            .addModule(new ParameterNamesModule())
+            .addModule(new Jdk8Module())
+            .addModule(new JavaTimeModule())
+            .build();
 
     protected String mapToJson(Object obj) throws JsonProcessingException {
         return objectMapper.writeValueAsString(obj);
+    }
+
+    protected <T> T mapFromJson(String json, Class<T> clazz)
+            throws JsonParseException, JsonMappingException, IOException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(json, clazz);
     }
 }
