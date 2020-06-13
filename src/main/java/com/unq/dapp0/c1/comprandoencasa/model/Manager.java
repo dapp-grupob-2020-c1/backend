@@ -20,16 +20,12 @@ public class Manager extends CECUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "manager")
-    private Shop shop;
-
     public Manager() {
         super();
     }
 
-    public Manager(String name, String password, String email, Shop shop) {
+    public Manager(String name, String password, String email) {
         super(name, password, email);
-        this.shop = shop;
     }
 
     public Long getId() {
@@ -57,13 +53,5 @@ public class Manager extends CECUser {
      */
     public void validate(String name, String password, String email) throws Exception {
         this.validate(name, password, email, new InvalidManagerException());
-    }
-
-    public Shop getShop() {
-        return this.shop;
-    }
-
-    public void setShop(Shop shop){
-        this.shop = shop;
     }
 }

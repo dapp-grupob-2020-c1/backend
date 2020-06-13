@@ -28,10 +28,13 @@ public class ProductController {
 
     @GetMapping("/api/search")
     public List<ProductDTO> searchProducts(@RequestParam(value = "keyword", defaultValue = "") String keyword,
-                                        @RequestParam(value = "categories") List<String> categories){
+                                           @RequestParam(value = "categories") List<String> categories,
+                                           @RequestParam(value = "locationId") String locationId,
+                                           @RequestParam(value = "page") String page,
+                                           @RequestParam(value = "size") String size){
         try{
             List<ProductType> types = this.parseToType(categories);
-            List<Product> response = productService.searchBy(keyword, types);
+            List<Product> response = productService.searchBy(keyword, types, Long.valueOf(locationId), Integer.valueOf(page), Integer.valueOf(size));
             return parseProducts(response);
         } catch (IllegalArgumentException e){
             throw new ProductTypeBadRequestException();

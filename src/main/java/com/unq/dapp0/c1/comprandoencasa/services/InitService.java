@@ -7,7 +7,10 @@ import com.unq.dapp0.c1.comprandoencasa.model.Product;
 import com.unq.dapp0.c1.comprandoencasa.model.Shop;
 import com.unq.dapp0.c1.comprandoencasa.model.ShopCategory;
 
-import com.unq.dapp0.c1.comprandoencasa.repositories.ManagerRepositroy;
+import com.unq.dapp0.c1.comprandoencasa.repositories.LocationRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.ManagerRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.ShopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,27 +27,26 @@ import java.util.ArrayList;
 public class InitService {
 
     @Autowired
-    private ProductService productService;
+    private ProductRepository productRepository;
 
     @Autowired
-    private ManagerRepositroy managerRepositroy;
+    private ManagerRepository managerRepository;
 
     @Autowired
-    private LocationService locationService;
+    private LocationRepository locationRepository;
 
     @Autowired
-    private ShopService shopService;
+    private ShopRepository shopRepository;
 
     @PostConstruct
+    @Transactional
     public void initialize() {
         LocalTime opening = LocalTime.of(9, 30, 0, 0);
         LocalTime closing = LocalTime.of(18, 0, 0, 0);
 
-        Manager aShopManager = new Manager("Manager", "123456", "manager@example.com", null);
-        this.managerRepositroy.save(aShopManager);
+        Manager aShopManager = new Manager("Manager", "123456", "manager@example.com");
 
         Location aShopLocation = new Location("AAA 123", 1234d, 1234d);
-        this.locationService.save(aShopLocation);
 
         Shop aShop = new Shop(
                 "La Marca",
@@ -55,10 +57,8 @@ public class InitService {
                 closing,
                 new ArrayList<PaymentMethod>(),
                 10,
-                aShopManager,
-                new ArrayList<Product>()
+                aShopManager
         );
-        this.shopService.save(aShop);
 
         Product aProduct = new Product(
                 "Lata de Atún",
@@ -68,7 +68,6 @@ public class InitService {
                 aShop,
                 new ArrayList<>()
         );
-        this.productService.save(aProduct);
 
         Product anotherProduct = new Product(
                 "Lata de Sardinas",
@@ -78,6 +77,12 @@ public class InitService {
                 aShop,
                 new ArrayList<>()
         );
-        this.productService.save(anotherProduct);
+        this.managerRepository.save(aShopManager);
+
+        this.locationRepository.save(aShopLocation);
+        this.shopRepository.save(aShop);
+
+        this.productRepository.save(aProduct);
+        this.productRepository.save(anotherProduct);
     }
 }

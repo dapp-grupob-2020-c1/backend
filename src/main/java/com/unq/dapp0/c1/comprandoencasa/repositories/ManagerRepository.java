@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Configuration
 @Repository
-public interface ManagerRepositroy extends CrudRepository<Manager, Long> {
+public interface ManagerRepository extends CrudRepository<Manager, Long> {
 
     Optional<Manager> findById(Long id);
 

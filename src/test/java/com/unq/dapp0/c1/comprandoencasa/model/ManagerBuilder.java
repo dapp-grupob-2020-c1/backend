@@ -40,7 +40,7 @@ public class ManagerBuilder{
     }
 
     public Manager build() {
-        return new Manager(name, password, email, shop);
+        return new Manager(name, password, email);
     }
 }
 

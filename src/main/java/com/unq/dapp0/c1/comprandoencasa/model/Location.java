@@ -34,12 +34,22 @@ public class Location {
     @Column
     private Double longitude;
 
+    @Column
+    private Double latitudeRadians;
+
+    @Column
+    private Double longitudeRadians;
+
+
     public Location() {}
 
     public Location(String address, Double latitude, Double longitude) {
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
+
+        this.latitudeRadians = deg2rad(latitude);
+        this.longitudeRadians = deg2rad(longitude);
     }
 
     public Long getID() {

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.Mockito.mock;
 
 public class ManagerTests {
 
@@ -82,17 +81,6 @@ public class ManagerTests {
                 manager.validate(anotherManager));
 
         assertEquals("Invalid manager access", exception.getMessage());
-    }
-
-    @Test
-    public void aManagerCanInitializeWithAShopAndReturnIt(){
-        Shop shop = mock(Shop.class);
-
-        Manager manager = ManagerBuilder.anyManager()
-                .withShop(shop)
-                .build();
-
-        assertEquals(shop, manager.getShop());
     }
 
 }

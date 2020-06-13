@@ -36,7 +36,7 @@ public class ShopBuilder {
     }
 
     public Shop build(){
-        return new Shop(
+        Shop shop = new Shop(
                 name,
                 shopCategories,
                 location,
@@ -45,8 +45,9 @@ public class ShopBuilder {
                 closingHour,
                 paymentMethods,
                 deliveryRadius,
-                manager,
-                products);
+                manager);
+        products.forEach(shop::addProduct);
+        return shop;
     }
     public ShopBuilder withCategories(ArrayList<ShopCategory> shopCategories){
         this.shopCategories = shopCategories;

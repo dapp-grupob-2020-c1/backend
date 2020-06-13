@@ -1,6 +1,9 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices;
 
-import com.unq.dapp0.c1.comprandoencasa.model.*;
+import com.unq.dapp0.c1.comprandoencasa.model.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
 import com.unq.dapp0.c1.comprandoencasa.services.ProductService;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductDTO;
 import org.junit.jupiter.api.Test;
@@ -79,7 +82,11 @@ public class ProductControllerTests extends AbstractRestTest {
         expectedProducts.add(product1);
         expectedProducts.add(product2);
 
-        when(service.searchBy(keyword, categories)).thenReturn(expectedProducts);
+        Long locationId = 10L;
+        Integer page = 1;
+        Integer size = 2;
+
+        when(service.searchBy(keyword, categories, locationId, page, size)).thenReturn(expectedProducts);
 
         List<ProductDTO> expected = ProductController.parseProducts(expectedProducts);
 
@@ -87,6 +94,8 @@ public class ProductControllerTests extends AbstractRestTest {
                 get("/api/search")
                         .param("keyword", keyword)
                         .param("categories", categories.get(0).toString())
+                        .param("locationId", String.valueOf(locationId))
+
                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
