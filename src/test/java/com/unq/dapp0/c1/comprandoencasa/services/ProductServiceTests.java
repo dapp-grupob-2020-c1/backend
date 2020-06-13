@@ -5,12 +5,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @ActiveProfiles("test")
 @SpringBootTest
+@Transactional
 public class ProductServiceTests {
 
     @Autowired
@@ -108,6 +112,7 @@ public class ProductServiceTests {
 
         locationService.save(searchLocation);
 
-        List<Product> result = productService.searchBy(keyword, categories, searchLocation.getID(), 1, 3);
+        List<Product> result = productService.searchBy(keyword, categories, searchLocation.getID(), 0, 3);
+        assertTrue(result.size()>0);
     }
 }

@@ -11,8 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -46,9 +46,8 @@ public class ProductService {
         Optional<Location> location = locationRepository.findById(locationId);
         if (location.isPresent()){
             Location loc = location.get();
-            Collection<String> cats = categories.stream().map(Enum::toString).collect(Collectors.toCollection(ArrayList::new));
             Pageable pageable = PageRequest.of(page, size, Sort.by("price").descending());
-            return productRepository.searchBy(keyword, cats, loc.getLatitude(), loc.getLongitude(), pageable);
+            return productRepository.searchBy(keyword, categories, loc.getLatitude(), loc.getLongitude(), pageable);
         } else {
             return new ArrayList<>();
         }
