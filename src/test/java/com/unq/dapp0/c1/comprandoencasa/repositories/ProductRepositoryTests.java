@@ -1,4 +1,4 @@
-package com.unq.dapp0.c1.comprandoencasa.services;
+package com.unq.dapp0.c1.comprandoencasa.repositories;
 
 import com.unq.dapp0.c1.comprandoencasa.model.Product;
 import com.unq.dapp0.c1.comprandoencasa.model.Shop;
@@ -12,35 +12,46 @@ import com.unq.dapp0.c1.comprandoencasa.model.ProductBuilder;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@DataJpaTest
 @ActiveProfiles("test")
-@SpringBootTest
-@Transactional
-public class ProductServiceTests {
+public class ProductRepositoryTests {
 
     @Autowired
-    private ProductService productService;
+    private ProductRepository productRepository;
 
     @Autowired
-    private LocationService locationService;
+    private ManagerRepository managerRepository;
 
     @Autowired
-    private ShopService shopService;
+    private LocationRepository locationRepository;
 
     @Autowired
-    private ManagerService managerService;
+    private ShopRepository shopRepository;
+
+    @Autowired
+    private TestEntityManager entityManager;
 
     @Test
-    public void serviceCanReturnAListOfProductsBeingSearched(){
+    public void givenACorrectSetup_thenAnEntityManagerWillBeAvailable() {
+        assertNotNull(entityManager);
+    }
+
+    @Test
+    public void repositorySearchByReturnsAListOfProductsBasedOnAKeywordCategoriesLatitudeLongitudeAndAPageable(){
         Location nearLocation1 = LocationBuilder.anyLocation()
                 .withCoordinates(-34.709572, -58.280855).build(); //Estacion Bernal
         Location nearLocation2 = LocationBuilder.anyLocation()
@@ -96,25 +107,25 @@ public class ProductServiceTests {
                 .withTypes(validTypes2)
                 .withShop(shop4).build();
 
-        managerService.save(manager);
+        managerRepository.save(manager);
 
-        locationService.save(nearLocation1);
-        locationService.save(nearLocation2);
-        locationService.save(farLocation1);
-        locationService.save(farLocation2);
+        locationRepository.save(nearLocation1);
+        locationRepository.save(nearLocation2);
+        locationRepository.save(farLocation1);
+        locationRepository.save(farLocation2);
 
-        shopService.save(shop1);
-        shopService.save(shop2);
-        shopService.save(shop3);
-        shopService.save(shop4);
+        shopRepository.save(shop1);
+        shopRepository.save(shop2);
+        shopRepository.save(shop3);
+        shopRepository.save(shop4);
 
-        productService.save(product1);
-        productService.save(product2);
-        productService.save(product3);
-        productService.save(product4);
-        productService.save(product5);
-        productService.save(product6);
-        productService.save(product7);
+        productRepository.save(product1);
+        productRepository.save(product2);
+        productRepository.save(product3);
+        productRepository.save(product4);
+        productRepository.save(product5);
+        productRepository.save(product6);
+        productRepository.save(product7);
 
         String keyword = "lata";
         List<ProductType> categories = new ArrayList<>();
@@ -124,12 +135,13 @@ public class ProductServiceTests {
         Location searchLocation = LocationBuilder.anyLocation()
                 .withCoordinates(-34.706519, -58.278026).build(); //UNQ
 
-        locationService.save(searchLocation);
+        Pageable page = PageRequest.of(0, 3, Sort.by("price").ascending());
 
-        List<Product> result = productService.searchBy(keyword, categories, searchLocation.getID(), 0, 3);
+        List<Product> result = productRepository.searchBy(keyword, categories, searchLocation.getLatitude(), searchLocation.getLongitude(), page);
         assertEquals(3, result.size());
         assertEquals(result.get(0).getId(), product1.getId());
         assertEquals(result.get(1).getId(), product2.getId());
         assertEquals(result.get(2).getId(), product4.getId());
+
     }
 }

@@ -7,6 +7,7 @@ import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ProductTypeBadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +27,7 @@ public class ProductController {
         return this.productService.findAll();
     }
 
+    @CrossOrigin
     @GetMapping("/api/search")
     public List<ProductDTO> searchProducts(@RequestParam(value = "keyword", defaultValue = "") String keyword,
                                            @RequestParam(value = "categories") List<String> categories,

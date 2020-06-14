@@ -43,7 +43,7 @@ public class ProductService {
         Optional<Location> location = locationRepository.findById(locationId);
         if (location.isPresent()){
             Location loc = location.get();
-            Pageable pageable = PageRequest.of(page, size, Sort.by("price").descending());
+            Pageable pageable = PageRequest.of(page, size, Sort.by("price").ascending());
             List<ProductType> cat = (categories.size() > 0) ? categories : Arrays.stream(ProductType.values()).collect(Collectors.toCollection(ArrayList::new));
             return productRepository.searchBy(keyword, cat, loc.getLatitude(), loc.getLongitude(), pageable);
         } else {

@@ -36,4 +36,9 @@ public class ProductBuilder {
         this.shop = shop;
         return this;
     }
+
+    public ProductBuilder withPrice(BigDecimal price) {
+        this.price = price;
+        return this;
+    }
 }
