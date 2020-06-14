@@ -5,11 +5,12 @@
 
 #####Query values:
 
-- ``keyword``(Optional): String used to search. Uses empty string if ommited.
-- ``categories``: List of ProductType strings. Can be concatenated like ``categories=v1,v2,v3`` or ``categories=v1&categories=v2&categories=v3``.
+- ``keyword``(Optional): String used to search. Default: Empty string.
+- ``categories``(Optional): List of ProductType strings. Can be concatenated like ``categories=v1,v2,v3`` or ``categories=v1&categories=v2&categories=v3``. Default: All categories set.
 - ``locationId``: String indicating the unique id of the location used as centerpiece for the search.
-- ``page``: Number identifying the page number for the search. Keep in mind, ``0`` indicates page 1.
-- ``size``: Number identifying the search size for each page.
+- ``page``(Optional): Number identifying the page number for the search. Keep in mind, ``0`` indicates page 1. Default: 0.
+- ``size``(Optional): Number identifying the search size for each page. Default: 10
+- ``order``(Optional): Identifies the order of the resulting list. Values can be "priceAsc", "priceDesc", "idAsc", (default) "idDesc".
 
 #####Returns:
 
