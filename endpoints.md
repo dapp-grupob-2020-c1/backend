@@ -61,6 +61,7 @@ Used for searching products in the database
 ####Errors
 
 - 400 BAD_REQUEST: on category mismatch, or lack of locationId.
+- 404 NOT_FOUND: Location id not found.
 
 ###POST /api/user
 

@@ -22,9 +22,9 @@ import org.springframework.test.context.ActiveProfiles;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("test")
@@ -48,6 +48,21 @@ public class ProductRepositoryTests {
     @Test
     public void givenACorrectSetupthenAnEntityManagerWillBeAvailable() {
         assertNotNull(entityManager);
+    }
+
+    @Test
+    public void repositoryCanSaveAndReturnAGivenProduct(){
+        Product product = new Product();
+        productRepository.save(product);
+        Optional<Product> result = productRepository.findById(product.getId());
+        assertTrue(result.isPresent());
+        assertEquals(product.getId(), result.get().getId());
+    }
+
+    @Test
+    public void repositoryReturnsEmptyOptionalIfTheProductWithTheGivenIdDoesNotExist(){
+        Optional<Product> result = productRepository.findById(0L);
+        assertFalse(result.isPresent());
     }
 
     @Test
