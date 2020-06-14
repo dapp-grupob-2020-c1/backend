@@ -39,15 +39,29 @@ public class ProductService {
     }
 
     @Transactional
-    public List<Product> searchBy(String keyword, List<ProductType> categories, Long locationId, Integer page, Integer size) {
+    public List<Product> searchBy(String keyword, List<ProductType> categories, Long locationId, Integer page, Integer size, String order) {
         Optional<Location> location = locationRepository.findById(locationId);
         if (location.isPresent()){
             Location loc = location.get();
-            Pageable pageable = PageRequest.of(page, size, Sort.by("price").ascending());
+            Sort sort = determineSort(order);
+            Pageable pageable = PageRequest.of(page, size, sort);
             List<ProductType> cat = (categories.size() > 0) ? categories : Arrays.stream(ProductType.values()).collect(Collectors.toCollection(ArrayList::new));
             return productRepository.searchBy(keyword, cat, loc.getLatitude(), loc.getLongitude(), pageable);
         } else {
             return new ArrayList<>();
+        }
+    }
+
+    private Sort determineSort(String order) {
+        switch(order){
+            case "idAsc":
+                return Sort.by("id").ascending();
+            case "priceDesc":
+                return Sort.by("price").descending();
+            case "priceAsc":
+                return Sort.by("price").ascending();
+            default:
+                return Sort.by("id").descending();
         }
     }
 }

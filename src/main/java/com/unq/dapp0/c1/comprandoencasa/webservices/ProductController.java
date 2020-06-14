@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @EnableAutoConfiguration
@@ -30,13 +32,14 @@ public class ProductController {
     @CrossOrigin
     @GetMapping("/api/search")
     public List<ProductDTO> searchProducts(@RequestParam(value = "keyword", defaultValue = "") String keyword,
-                                           @RequestParam(value = "categories") List<String> categories,
+                                           @RequestParam(value = "categories", defaultValue = "") List<String> categories,
                                            @RequestParam(value = "locationId") String locationId,
-                                           @RequestParam(value = "page") String page,
-                                           @RequestParam(value = "size") String size){
+                                           @RequestParam(value = "page", defaultValue = "0") String page,
+                                           @RequestParam(value = "size", defaultValue = "10") String size,
+                                           @RequestParam(value = "order", defaultValue = "idDesc") String order){
         try{
             List<ProductType> types = this.parseToType(categories);
-            List<Product> response = productService.searchBy(keyword, types, Long.valueOf(locationId), Integer.valueOf(page), Integer.valueOf(size));
+            List<Product> response = productService.searchBy(keyword, types, Long.valueOf(locationId), Integer.valueOf(page), Integer.valueOf(size), order);
             return parseProducts(response);
         } catch (IllegalArgumentException e){
             throw new ProductTypeBadRequestException();
@@ -52,6 +55,9 @@ public class ProductController {
     }
 
     private List<ProductType> parseToType(List<String> categories) {
+        if (categories.isEmpty()){
+            return Arrays.stream(ProductType.values()).collect(Collectors.toCollection(ArrayList::new));
+        }
         List<ProductType> list = new ArrayList<>();
         for (String category : categories){
             list.add(ProductType.valueOf(category));

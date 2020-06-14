@@ -85,8 +85,9 @@ public class ProductControllerTests extends AbstractRestTest {
         Long locationId = 10L;
         Integer page = 0;
         Integer size = 5;
+        String order = "priceAsc";
 
-        when(service.searchBy(keyword, categories, locationId, page, size)).thenReturn(expectedProducts);
+        when(service.searchBy(keyword, categories, locationId, page, size, order)).thenReturn(expectedProducts);
 
         List<ProductDTO> expected = ProductController.parseProducts(expectedProducts);
 
@@ -97,6 +98,7 @@ public class ProductControllerTests extends AbstractRestTest {
                         .param("locationId", String.valueOf(locationId))
                         .param("page", String.valueOf(page))
                         .param("size", String.valueOf(size))
+                        .param("order", order)
                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
@@ -114,20 +116,9 @@ public class ProductControllerTests extends AbstractRestTest {
     }
 
     @Test
-    public void endpointGETSearchReturnsBadRequestIfOneParameterExceptKeywordIsMissingOrIfItContainsInvalidCategories() throws Exception {
-        MvcResult noCatResult = this.mockMvc.perform(
-                get("/api/search"))
-                .andReturn();
-
-        int noCatStatus = noCatResult.getResponse().getStatus();
-        assertEquals(400, noCatStatus);
-
-        String noCatError = noCatResult.getResponse().getErrorMessage();
-        assertEquals("Required List parameter 'categories' is not present", noCatError);
-
+    public void endpointGETSearchReturnsBadRequestIfLocationIdIsMissingOrIfItContainsInvalidCategories() throws Exception {
         MvcResult noLocResult = this.mockMvc.perform(
-                get("/api/search")
-                        .param("categories", ProductType.Bazaar.toString()))
+                get("/api/search"))
                 .andReturn();
 
         int noLocStatus = noLocResult.getResponse().getStatus();
@@ -136,37 +127,10 @@ public class ProductControllerTests extends AbstractRestTest {
         String noLocError = noLocResult.getResponse().getErrorMessage();
         assertEquals("Required String parameter 'locationId' is not present", noLocError);
 
-        MvcResult noPageResult = this.mockMvc.perform(
-                get("/api/search")
-                        .param("categories", ProductType.Bazaar.toString())
-                        .param("locationId", "1"))
-                .andReturn();
-
-        int noPageStatus = noPageResult.getResponse().getStatus();
-        assertEquals(400, noPageStatus);
-
-        String noPageError = noPageResult.getResponse().getErrorMessage();
-        assertEquals("Required String parameter 'page' is not present", noPageError);
-
-        MvcResult noSizeResult = this.mockMvc.perform(
-                get("/api/search")
-                        .param("categories", ProductType.Bazaar.toString())
-                        .param("locationId", "1")
-                        .param("page", "1"))
-                .andReturn();
-
-        int noSizeStatus = noSizeResult.getResponse().getStatus();
-        assertEquals(400, noSizeStatus);
-
-        String noSizeError = noSizeResult.getResponse().getErrorMessage();
-        assertEquals("Required String parameter 'size' is not present", noSizeError);
-
         MvcResult invalidCatResult = this.mockMvc.perform(
                 get("/api/search")
                         .param("categories", "foo")
-                        .param("locationId", "foo")
-                        .param("page", "foo")
-                        .param("size", "foo"))
+                        .param("locationId", "1"))
                 .andReturn();
 
         int invCatStatus = invalidCatResult.getResponse().getStatus();
@@ -175,15 +139,21 @@ public class ProductControllerTests extends AbstractRestTest {
         String invCatError = invalidCatResult.getResponse().getErrorMessage();
         assertEquals("Product type category not found", invCatError);
 
-        MvcResult noKeyResult = this.mockMvc.perform(
+        MvcResult correctCatResult = this.mockMvc.perform(
                 get("/api/search")
                         .param("categories", ProductType.Bazaar.toString())
-                        .param("locationId", "1")
-                        .param("page", "1")
-                        .param("size", "1"))
+                        .param("locationId", "1"))
                 .andReturn();
 
-        int noKeyStatus = noKeyResult.getResponse().getStatus();
-        assertEquals(200, noKeyStatus);
+        int correctCatStatus = correctCatResult.getResponse().getStatus();
+        assertEquals(200, correctCatStatus);
+
+        MvcResult onlyLocResult = this.mockMvc.perform(
+                get("/api/search")
+                        .param("locationId", "1"))
+                .andReturn();
+
+        int onlyLocStatus = onlyLocResult.getResponse().getStatus();
+        assertEquals(200, onlyLocStatus);
     }
 }
