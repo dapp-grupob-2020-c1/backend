@@ -25,6 +25,7 @@ public class ShopDTO {
     @JsonSerialize(using = LocalTimeSerializer.class)
     public LocalTime closingHour;
     public Integer deliveryRadius;
+    public List<DiscountDTO> discounts;
 
     public ShopDTO(){}
 
@@ -37,5 +38,6 @@ public class ShopDTO {
         this.openingHour = shop.getOpeningHour();
         this.closingHour = shop.getClosingHour();
         this.deliveryRadius = shop.getDeliveryRadius();
+        this.discounts = DiscountDTO.createDiscounts(shop.getActiveDiscounts());
     }
 }
