@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
@@ -106,6 +107,7 @@ public class ProductServiceTests {
         String keyword = "lata";
         List<ProductType> categories = new ArrayList<>();
         categories.add(ProductType.Bazaar);
+        categories.add(ProductType.FoodsAndDrinks);
 
         Location searchLocation = LocationBuilder.anyLocation()
                 .withCoordinates(-34.706519, -58.278026).build(); //UNQ
@@ -113,6 +115,9 @@ public class ProductServiceTests {
         locationService.save(searchLocation);
 
         List<Product> result = productService.searchBy(keyword, categories, searchLocation.getID(), 0, 3);
-        assertTrue(result.size()>0);
+        assertEquals(3, result.size());
+        assertTrue(result.stream().anyMatch(product -> product.getId().equals(product1.getId())));
+        assertTrue(result.stream().anyMatch(product -> product.getId().equals(product2.getId())));
+        assertTrue(result.stream().anyMatch(product -> product.getId().equals(product4.getId())));
     }
 }

@@ -28,7 +28,7 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
                 " SIN( s.location.latitudeRadians ) * SIN( RADIANS( :latitude ) )" +
                 " + COS( s.location.latitudeRadians ) * COS( RADIANS( :latitude ) )" +
                 " * COS( RADIANS( :longitude ) - s.location.longitudeRadians )" +
-                " )) <= p.shop.deliveryRadius ) ",
+                " )) <= 20 ) ", //Hardcoded 20km distance
             countQuery = "SELECT count(p) FROM Product")
     List<Product> searchBy(@Param("keyword") String keyword,
                            @Param("categories") Collection<ProductType> categories,

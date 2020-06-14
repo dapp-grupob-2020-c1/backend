@@ -13,10 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,7 +44,8 @@ public class ProductService {
         if (location.isPresent()){
             Location loc = location.get();
             Pageable pageable = PageRequest.of(page, size, Sort.by("price").descending());
-            return productRepository.searchBy(keyword, categories, loc.getLatitude(), loc.getLongitude(), pageable);
+            List<ProductType> cat = (categories.size() > 0) ? categories : Arrays.stream(ProductType.values()).collect(Collectors.toCollection(ArrayList::new));
+            return productRepository.searchBy(keyword, cat, loc.getLatitude(), loc.getLongitude(), pageable);
         } else {
             return new ArrayList<>();
         }
