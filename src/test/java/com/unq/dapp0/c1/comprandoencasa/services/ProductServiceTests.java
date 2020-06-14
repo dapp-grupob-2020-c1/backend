@@ -126,7 +126,7 @@ public class ProductServiceTests {
 
         locationService.save(searchLocation);
 
-        List<Product> result = productService.searchBy(keyword, categories, searchLocation.getID(), 0, 3);
+        List<Product> result = productService.searchBy(keyword, categories, searchLocation.getId(), 0, 3);
         assertEquals(3, result.size());
         assertEquals(result.get(0).getId(), product1.getId());
         assertEquals(result.get(1).getId(), product2.getId());

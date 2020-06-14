@@ -12,7 +12,8 @@ public abstract class CECUser {
     @Column
     protected String email;
 
-    public CECUser() {}
+    public CECUser() {
+    }
 
     public CECUser(String name, String password, String email) {
         this.checkEmailFormat(email);

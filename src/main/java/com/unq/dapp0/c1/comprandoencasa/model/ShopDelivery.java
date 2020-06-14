@@ -14,18 +14,15 @@ import java.util.List;
 @Table
 public abstract class ShopDelivery {
 
+    @OneToOne
+    private final Shop shop;
+    @OneToMany
+    private final List<Product> products;
+    @OneToOne
+    private final Customer customer;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
-
-    @OneToOne
-    private final Shop shop;
-
-    @OneToMany
-    private final List<Product> products;
-
-    @OneToOne
-    private final Customer customer;
 
 
     public ShopDelivery(Shop shop, List<Product> products, Customer customer) {
@@ -37,11 +34,12 @@ public abstract class ShopDelivery {
     public Long getId() {
         return this.id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
 
-    public Shop getShop(){
+    public Shop getShop() {
         return this.shop;
     }
 

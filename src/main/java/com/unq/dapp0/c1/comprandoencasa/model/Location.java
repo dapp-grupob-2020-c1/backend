@@ -40,7 +40,6 @@ public class Location {
     @Column
     private Double longitudeRadians;
 
-
     public Location() {}
 
     public Location(String address, Double latitude, Double longitude) {
@@ -52,8 +51,12 @@ public class Location {
         this.longitudeRadians = deg2rad(longitude);
     }
 
-    public Long getID() {
+    public Long getId() {
         return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getAddress() {
@@ -68,11 +71,11 @@ public class Location {
         return this.longitude;
     }
 
-    public Double distanceTo(Location aLocation){
+    public Double distanceTo(Location aLocation) {
         Double dLat = deg2rad(aLocation.latitude - this.latitude);
         Double dLon = deg2rad(aLocation.longitude - this.longitude);
-        Double temp1 = pow(sin(dLat/2), 2.0);
-        Double temp2 = cos(deg2rad(this.latitude)) * cos(deg2rad(aLocation.latitude)) * pow(sin(dLon/2), 2.0);
+        Double temp1 = pow(sin(dLat / 2), 2.0);
+        Double temp2 = cos(deg2rad(this.latitude)) * cos(deg2rad(aLocation.latitude)) * pow(sin(dLon / 2), 2.0);
         Double a = temp1 + temp2;
         Double aTan = 2 * atan2(sqrt(a), sqrt(1 - a));
         Double res = aTan * EARTH_RADIUS;

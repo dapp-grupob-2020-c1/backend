@@ -30,14 +30,16 @@ public class Manager extends CECUser {
     public Long getId() {
         return this.id;
     }
+
     public void setId(Long id) {
         this.id = id;
     }
 
     /**
      * Validates that the Manager is the same.
-     * @throws InvalidManagerException when fails the validation
+     *
      * @param manager to validate.
+     * @throws InvalidManagerException when fails the validation
      */
     public void validate(Manager manager) throws Exception {
         manager.validate(this.name, this.password, this.email);
@@ -45,10 +47,11 @@ public class Manager extends CECUser {
 
     /**
      * Validates access data for the manager.
-     * @throws InvalidManagerException when fails the validation
-     * @param name to validate.
+     *
+     * @param name     to validate.
      * @param password to validate.
      * @param email
+     * @throws InvalidManagerException when fails the validation
      */
     public void validate(String name, String password, String email) throws Exception {
         this.validate(name, password, email, new InvalidManagerException());
