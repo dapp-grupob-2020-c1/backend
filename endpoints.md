@@ -45,3 +45,34 @@
 }
 ```
 
+###POST /api/user
+
+###PUT /api/user
+
+###DELETE /api/user
+
+###POST /api/user/location
+
+###GET /api/user/location
+
+###DELETE /api/user/location
+
+###POST /api/manager
+
+###PUT /api/manager
+
+###POST /api/shop
+
+###GET /api/shop
+
+###DELETE /api/shop
+
+###POST /api/product
+
+###GET /api/product
+
+###DELETE /api/shop
+
+###POST /api/discount
+
+###DELETE /api/discount
