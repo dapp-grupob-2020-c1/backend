@@ -79,11 +79,19 @@ public class Location {
         return floor(res * 100) / 100;
     }
 
-    private Double deg2rad(Double dec){
+    static public Double deg2rad(Double dec){
         return dec * (PI / 180);
     }
 
     public Double timeTo(Location location) {
         return this.distanceTo(location) * MINUTES_PER_KM;
+    }
+
+    public Double getLatitudeRadians() {
+        return this.latitudeRadians;
+    }
+
+    public Double getLongitudeRadians() {
+        return this.longitudeRadians;
     }
 }

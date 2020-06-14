@@ -2,6 +2,7 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 
 import org.junit.jupiter.api.Test;
 
+import static com.unq.dapp0.c1.comprandoencasa.model.Location.deg2rad;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LocationTests {
@@ -20,6 +21,8 @@ public class LocationTests {
         assertEquals(address, location.getAddress());
         assertEquals(latitude, location.getLatitude());
         assertEquals(longitude, location.getLongitude());
+        assertEquals(deg2rad(latitude), location.getLatitudeRadians());
+        assertEquals(deg2rad(longitude), location.getLongitudeRadians());
     }
 
     @Test

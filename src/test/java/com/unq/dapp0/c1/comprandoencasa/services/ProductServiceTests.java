@@ -1,6 +1,15 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
-import com.unq.dapp0.c1.comprandoencasa.model.*;
+import com.unq.dapp0.c1.comprandoencasa.model.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.LocationBuilder;
+import com.unq.dapp0.c1.comprandoencasa.model.ShopBuilder;
+import com.unq.dapp0.c1.comprandoencasa.model.Manager;
+import com.unq.dapp0.c1.comprandoencasa.model.ManagerBuilder;
+import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
+import com.unq.dapp0.c1.comprandoencasa.model.ProductBuilder;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,16 +28,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ProductServiceTests {
 
     @Autowired
-    ProductService productService;
+    private ProductService productService;
 
     @Autowired
-    LocationService locationService;
+    private LocationService locationService;
 
     @Autowired
-    ShopService shopService;
+    private ShopService shopService;
 
     @Autowired
-    ManagerService managerService;
+    private ManagerService managerService;
 
     @Test
     public void serviceCanReturnAListOfProductsBeingSearched(){

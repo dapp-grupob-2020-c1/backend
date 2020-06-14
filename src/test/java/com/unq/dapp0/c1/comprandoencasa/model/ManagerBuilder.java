@@ -1,11 +1,8 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
-import static org.mockito.Mockito.mock;
-
 public class ManagerBuilder{
     private String name;
     private String password;
-    private Shop shop;
     private String email;
 
     public static ManagerBuilder anyManager(){
@@ -16,7 +13,6 @@ public class ManagerBuilder{
         this.name = "Test";
         this.password = "1234";
         this.email = "example@example.com";
-        this.shop = mock(Shop.class);
     }
 
     public ManagerBuilder withName(String name) {
@@ -26,11 +22,6 @@ public class ManagerBuilder{
 
     public ManagerBuilder withPassword(String password) {
         this.password = password;
-        return this;
-    }
-
-    public ManagerBuilder withShop(Shop shop) {
-        this.shop = shop;
         return this;
     }
 
