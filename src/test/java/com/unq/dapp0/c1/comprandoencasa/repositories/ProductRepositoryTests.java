@@ -46,7 +46,7 @@ public class ProductRepositoryTests {
     private TestEntityManager entityManager;
 
     @Test
-    public void givenACorrectSetup_thenAnEntityManagerWillBeAvailable() {
+    public void givenACorrectSetupthenAnEntityManagerWillBeAvailable() {
         assertNotNull(entityManager);
     }
 

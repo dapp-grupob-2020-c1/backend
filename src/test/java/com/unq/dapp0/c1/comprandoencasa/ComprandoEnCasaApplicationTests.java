@@ -1,6 +1,7 @@
-package com.unq.dapp0.c1.comprandoencasa.webservices;
+package com.unq.dapp0.c1.comprandoencasa;
 
 import com.unq.dapp0.c1.comprandoencasa.ComprandoEnCasaApplication;
+import com.unq.dapp0.c1.comprandoencasa.webservices.AbstractRestTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -14,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.assertj.core.api.Assertions.assertThat;
 
 @WebMvcTest(ComprandoEnCasaApplication.class)
-public class ComprandoEnCasaApplicationTests extends AbstractRestTest{
+public class ComprandoEnCasaApplicationTests extends AbstractRestTest {
 
     @Autowired
     private ComprandoEnCasaApplication application;
@@ -23,7 +24,7 @@ public class ComprandoEnCasaApplicationTests extends AbstractRestTest{
     private MockMvc mockMvc;
 
 	@Test
-	void contextLoads() throws Exception{
+	public void contextLoads() throws Exception{
 	    assertThat(this.application).isNotNull();
 	}
 
