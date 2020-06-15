@@ -1,4 +1,4 @@
-package com.unq.dapp0.c1.comprandoencasa.webservices;
+package com.unq.dapp0.c1.comprandoencasa.webservices.dtos;
 
 import com.unq.dapp0.c1.comprandoencasa.model.Customer;
 

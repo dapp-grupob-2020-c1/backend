@@ -15,6 +15,4 @@ public interface LocationRepository extends CrudRepository<Location, Long> {
 
     Optional<Location> findById(Long id);
 
-    List<Location> findAll();
-
 }

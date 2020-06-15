@@ -22,7 +22,4 @@ public class LocationService {
         return this.repository.findById(id).get();
     }
 
-    public List<Location> findAll() {
-        return this.repository.findAll();
-    }
 }

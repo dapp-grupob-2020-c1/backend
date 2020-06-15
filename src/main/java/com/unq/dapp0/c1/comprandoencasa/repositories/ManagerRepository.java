@@ -15,6 +15,4 @@ public interface ManagerRepository extends CrudRepository<Manager, Long> {
 
     Optional<Manager> findById(Long id);
 
-    List<Manager> findAll();
-
 }

@@ -142,7 +142,6 @@ Used to return all known locations for the customer
 ####Query values:
 
   -  ``customerId``: customer id for manipulation
-  -  ``password``: customer password for validation
 
 ####Response:
 
@@ -153,7 +152,7 @@ Used to return all known locations for the customer
 {
     customerId,
     locations = [{
-            locationId,
+            id,
             address,
             latitude,
             longitude,
@@ -162,6 +161,11 @@ Used to return all known locations for the customer
         }]
 }
 ```
+
+####Errors:
+
+  -  400 BAD_REQUEST: If customerId is empty or missing.
+  -  404 NOT_FOUND: If the customer doesn't exist.
 
 ###POST /api/customer/location
 
@@ -181,7 +185,7 @@ Used for creating a new Location for a customer.
 
 ```
 {
-    locationId,
+    id,
     address,
     latitude,
     longitude,
@@ -211,7 +215,7 @@ Used for deleting a Location for a customer.
 
 ```
 {
-    locationId,
+    id,
     address,
     latitude,
     longitude,

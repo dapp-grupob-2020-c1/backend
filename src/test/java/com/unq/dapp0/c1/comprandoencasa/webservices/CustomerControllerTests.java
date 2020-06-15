@@ -1,11 +1,16 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices;
 
 import com.unq.dapp0.c1.comprandoencasa.model.Customer;
+import com.unq.dapp0.c1.comprandoencasa.model.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.LocationBuilder;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.CustomerDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.CustomerService;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.FieldAlreadyExistsException;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.CustomerOkDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.LocationDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -14,8 +19,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -222,7 +231,6 @@ public class CustomerControllerTests extends AbstractRestTest{
         assertEquals(customer.getId(), result.id);
     }
 
-
     @Test
     public void endpointGETCustomerReturnsBadRequestOnMissingOrEmptyParametersOrBadEmailFormat() throws Exception {
         String generic = "foo";
@@ -307,5 +315,237 @@ public class CustomerControllerTests extends AbstractRestTest{
 
         String errorMessage = result.getResponse().getErrorMessage();
         assertEquals("Incorrect email or password", errorMessage);
+    }
+
+    @Test
+    public void endpointGETCustomerLocationsReturnsOkWithAListOfLocations() throws Exception {
+        Location location1 = LocationBuilder.anyLocation().build();
+        location1.setId(2L);
+        Location location2 = LocationBuilder.anyLocation().build();
+        location2.setId(3L);
+
+        List<Location> locations = new ArrayList<>();
+        locations.add(location1);
+        locations.add(location2);
+
+        when(service.getLocationsOf(1L)).thenReturn(locations);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                get("/api/customer/locations")
+                        .param("customerId", String.valueOf(1L))
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+
+        String content = mvcResult.getResponse().getContentAsString();
+        LocationDTO result = super.mapFromJson(content, LocationDTO.class);
+        assertEquals(1L, result.customerId);
+        assertEquals(2, result.locations.size());
+        assertTrue(result.locations.stream().anyMatch(location -> location.getId().equals(location1.getId())));
+        assertTrue(result.locations.stream().anyMatch(location -> location.getId().equals(location2.getId())));
+    }
+
+    @Test
+    public void endpointGETCustomerLocationsReturnsBadRequestIfParameterCustomerIdIsEmptyOrMissing() throws Exception {
+        MvcResult noIdResult = this.mockMvc.perform(
+                get("/api/customer/locations")
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int noIdStatus = noIdResult.getResponse().getStatus();
+        assertEquals(400, noIdStatus);
+
+        String noIdError = noIdResult.getResponse().getErrorMessage();
+        assertEquals("Required String parameter 'customerId' is not present", noIdError);
+
+        String emptyId = "";
+
+        MvcResult emptyIdResult = this.mockMvc.perform(
+                get("/api/customer/locations")
+                        .param("customerId", emptyId)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int emptyIdStatus = emptyIdResult.getResponse().getStatus();
+        assertEquals(400, emptyIdStatus);
+
+        String emptyIdError = emptyIdResult.getResponse().getErrorMessage();
+        assertEquals("The field customerId is empty", emptyIdError);
+    }
+
+    @Test
+    public void endpointGETCustomerLocationsReturnsNotFoundIfNoCustomerIsFound() throws Exception {
+        Long id = 1L;
+
+        when(service.getLocationsOf(id)).thenThrow(new CustomerDoesntExistException(id));
+
+        MvcResult result = this.mockMvc.perform(
+                get("/api/customer/locations")
+                        .param("customerId", String.valueOf(id))
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int status = result.getResponse().getStatus();
+        assertEquals(404, status);
+
+        String errorMessage = result.getResponse().getErrorMessage();
+        assertEquals("Customer with id " + id + " does not exist", errorMessage);
+    }
+
+    @Test
+    public void endpointPOSTCustomerLocationReturnsCreated() throws Exception {
+        Location location = LocationBuilder.anyLocation().build();
+        location.setId(2L);
+
+        String address = location.getAddress();
+        Double latitude = location.getLatitude();
+        Double longitude = location.getLongitude();
+
+        String customerId = "1";
+
+        when(service.addLocationTo(Long.valueOf(customerId), address, latitude, longitude)).thenReturn(location);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                post("/api/customer/location")
+                        .param("customerId", customerId)
+                        .param("address", address)
+                        .param("latitude", String.valueOf(latitude))
+                        .param("longitude", String.valueOf(longitude))
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getContentAsString();
+        assertEquals(201, status);
+
+        Location result = super.mapFromJson(content, Location.class);
+        assertEquals(location.getId(), result.getId());
+    }
+
+    @Test
+    public void endpointPOSTCustomerLocationReturnsBadRequestIfThereIsAnyEmptyOrMissingParameter() throws Exception {
+        String generic = "foo";
+
+        MvcResult noCustomerIdResult = this.mockMvc.perform(
+                post("/api/customer/location")
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int noCustomerIdStatus = noCustomerIdResult.getResponse().getStatus();
+        assertEquals(400, noCustomerIdStatus);
+
+        String noCustomerIdError = noCustomerIdResult.getResponse().getErrorMessage();
+        assertEquals("Required String parameter 'customerId' is not present", noCustomerIdError);
+
+        MvcResult noAddressResult = this.mockMvc.perform(
+                post("/api/customer/location")
+                        .param("customerId", generic)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int noAddressStatus = noAddressResult.getResponse().getStatus();
+        assertEquals(400, noAddressStatus);
+
+        String noAddressError = noAddressResult.getResponse().getErrorMessage();
+        assertEquals("Required String parameter 'address' is not present", noAddressError);
+
+        MvcResult noLatitudeResult = this.mockMvc.perform(
+                post("/api/customer/location")
+                        .param("customerId", generic)
+                        .param("address", generic)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int noLatitudeStatus = noLatitudeResult.getResponse().getStatus();
+        assertEquals(400, noLatitudeStatus);
+
+        String noLatitudeError = noLatitudeResult.getResponse().getErrorMessage();
+        assertEquals("Required String parameter 'latitude' is not present", noLatitudeError);
+
+        MvcResult noLongitudeResult = this.mockMvc.perform(
+                post("/api/customer/location")
+                        .param("customerId", generic)
+                        .param("address", generic)
+                        .param("latitude", generic)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int noLongitudeStatus = noLongitudeResult.getResponse().getStatus();
+        assertEquals(400, noLongitudeStatus);
+
+        String noLongitudeError = noLongitudeResult.getResponse().getErrorMessage();
+        assertEquals("Required String parameter 'longitude' is not present", noLongitudeError);
+
+        MvcResult customerIdEmptyResult = this.mockMvc.perform(
+                post("/api/customer/location")
+                        .param("customerId", "")
+                        .param("address", generic)
+                        .param("latitude", generic)
+                        .param("longitude", generic)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int customerIdEmptyStatus = customerIdEmptyResult.getResponse().getStatus();
+        assertEquals(400, customerIdEmptyStatus);
+
+        String customerIdEmptyError = customerIdEmptyResult.getResponse().getErrorMessage();
+        assertEquals("The field customerId is empty", customerIdEmptyError);
+
+        MvcResult addressEmptyResult = this.mockMvc.perform(
+                post("/api/customer/location")
+                        .param("customerId", generic)
+                        .param("address", "")
+                        .param("latitude", generic)
+                        .param("longitude", generic)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int addressEmptyStatus = addressEmptyResult.getResponse().getStatus();
+        assertEquals(400, addressEmptyStatus);
+
+        String addressEmptyError = addressEmptyResult.getResponse().getErrorMessage();
+        assertEquals("The field address is empty", addressEmptyError);
+
+        MvcResult latitudeEmptyResult = this.mockMvc.perform(
+                post("/api/customer/location")
+                        .param("customerId", generic)
+                        .param("address", generic)
+                        .param("latitude", "")
+                        .param("longitude", generic)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int latitudeEmptyStatus = latitudeEmptyResult.getResponse().getStatus();
+        assertEquals(400, latitudeEmptyStatus);
+
+        String latitudeEmptyError = latitudeEmptyResult.getResponse().getErrorMessage();
+        assertEquals("The field latitude is empty", latitudeEmptyError);
+
+        MvcResult longitudeEmptyResult = this.mockMvc.perform(
+                post("/api/customer/location")
+                        .param("customerId", generic)
+                        .param("address", generic)
+                        .param("latitude", generic)
+                        .param("longitude", "")
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int longitudeEmptyStatus = longitudeEmptyResult.getResponse().getStatus();
+        assertEquals(400, longitudeEmptyStatus);
+
+        String longitudeEmptyError = longitudeEmptyResult.getResponse().getErrorMessage();
+        assertEquals("The field longitude is empty", longitudeEmptyError);
+    }
+
+    @Test
+    public void endpointPOSTCustomerLocationReturnsNotFoundIfCustomerIdDoesntExist() throws Exception {
+        String generic = "2";
+        Long id = 1L;
+
+        when(service.addLocationTo(id, generic, Double.valueOf(generic), Double.valueOf(generic)))
+                .thenThrow(new CustomerDoesntExistException(id));
+
+        MvcResult result = this.mockMvc.perform(
+                post("/api/customer/location")
+                        .param("customerId", String.valueOf(id))
+                        .param("address", generic)
+                        .param("latitude", generic)
+                        .param("longitude", generic)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int status = result.getResponse().getStatus();
+        assertEquals(404, status);
+
+        String errorMessage = result.getResponse().getErrorMessage();
+        assertEquals("Customer with id " + id + " does not exist", errorMessage);
     }
 }

@@ -22,7 +22,4 @@ public class ManagerService {
         return this.repository.findById(id).get();
     }
 
-    public List<Manager> findAll() {
-        return this.repository.findAll();
-    }
 }
