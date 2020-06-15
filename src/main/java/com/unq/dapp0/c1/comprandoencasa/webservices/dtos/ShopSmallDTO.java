@@ -12,7 +12,7 @@ import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 
-public class ShopDTO {
+public class ShopSmallDTO {
     public Long id;
     public String name;
     public List<ShopCategory> categories;
@@ -25,12 +25,11 @@ public class ShopDTO {
     @JsonSerialize(using = LocalTimeSerializer.class)
     public LocalTime closingHour;
     public Integer deliveryRadius;
-    public List<ProductSmallDTO> products;
     public List<DiscountDTO> discounts;
 
-    public ShopDTO(){}
+    public ShopSmallDTO(){}
 
-    public ShopDTO(Shop shop) {
+    public ShopSmallDTO(Shop shop) {
         this.id = shop.getId();
         this.name = shop.getName();
         this.categories = shop.getShopCategories();
@@ -39,7 +38,6 @@ public class ShopDTO {
         this.openingHour = shop.getOpeningHour();
         this.closingHour = shop.getClosingHour();
         this.deliveryRadius = shop.getDeliveryRadius();
-        this.products = ProductSmallDTO.createProducts(shop.getProducts());
         this.discounts = DiscountDTO.createDiscounts(shop.getActiveDiscounts());
     }
 }

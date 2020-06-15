@@ -29,7 +29,7 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/api/product")
-    public ProductDTO searchProduct(@RequestParam(value = "productId") String productId) {
+    public ProductDTO getProduct(@RequestParam(value = "productId") String productId) {
         try{
             Product product = this.productService.findProductById(Long.valueOf(productId));
             return new ProductDTO(product);

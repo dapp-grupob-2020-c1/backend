@@ -56,7 +56,7 @@ public class DiscountDTO {
         }
     }
 
-    public static List<DiscountDTO> createDiscounts(ArrayList<Discount> discounts) {
+    public static List<DiscountDTO> createDiscounts(List<Discount> discounts) {
         List<DiscountDTO> discountDTOList = new ArrayList<>();
         for (Discount discount : discounts){
             discountDTOList.add(new DiscountDTO(discount));
