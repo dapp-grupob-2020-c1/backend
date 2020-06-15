@@ -6,7 +6,6 @@ import com.unq.dapp0.c1.comprandoencasa.model.exceptions.LocationAlreadyPresentE
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -22,20 +21,18 @@ public class CustomerTests {
 
     @Test
     public void aCustomerCanCreateItsAccountWithANameAndAPasswordThatCanBeValidated(){
-        String name = "Testeo";
         String email = "testo@test.com";
         String password = "1234";
 
         Customer customer = CustomerBuilder.anyCustomer()
-                .withName(name)
                 .withEmail(email)
                 .withPassword(password)
                 .build();
 
-        assertDoesNotThrow(()->customer.validate(name, password, email));
+        assertDoesNotThrow(()->customer.validate(password, email));
 
         Throwable exception = assertThrows(InvalidUserException.class,
-                ()->customer.validate("Algo", "5678", "anything@any.com"));
+                ()->customer.validate("5678", "anything@any.com"));
 
         assertEquals("The user, email or password are incorrect", exception.getMessage());
     }

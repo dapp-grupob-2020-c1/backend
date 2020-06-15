@@ -67,4 +67,17 @@ public class CustomerRepositoryTests {
         assertTrue(resultList.stream().anyMatch(customer -> customer.getId().equals(customer2.getId())));
         assertTrue(resultList.stream().anyMatch(customer -> customer.getId().equals(customer3.getId())));
     }
+
+    @Test
+    public void repositoryCanFindACustomerByItsEmail(){
+        String name = "foo";
+        String email = "foo@foo.com";
+        String password = "1234";
+
+        Customer customer = new Customer(name, password, email);
+        customerRepository.save(customer);
+        Optional<Customer> result = customerRepository.findByEmail(email);
+        assertTrue(result.isPresent());
+        assertEquals(customer.getId(), result.get().getId());
+    }
 }

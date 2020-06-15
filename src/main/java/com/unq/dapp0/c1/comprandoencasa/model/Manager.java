@@ -42,18 +42,17 @@ public class Manager extends CECUser {
      * @throws InvalidManagerException when fails the validation
      */
     public void validate(Manager manager) throws Exception {
-        manager.validate(this.name, this.password, this.email);
+        manager.validate(this.password, this.email);
     }
 
     /**
      * Validates access data for the manager.
      *
-     * @param name     to validate.
      * @param password to validate.
      * @param email
      * @throws InvalidManagerException when fails the validation
      */
-    public void validate(String name, String password, String email) throws Exception {
-        this.validate(name, password, email, new InvalidManagerException());
+    public void validate(String password, String email) throws Exception {
+        this.validate(password, email, new InvalidManagerException());
     }
 }

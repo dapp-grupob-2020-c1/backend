@@ -12,20 +12,18 @@ public class ManagerTests {
 
     @Test
     public void aManagerCanBeCreatedWithANameAndAPasswordThatItCanThenValidate(){
-        String name = "Testo";
         String email = "test@testo.com";
         String password = "1234";
 
         Manager manager = ManagerBuilder.anyManager()
-                .withName(name)
                 .withEmail(email)
                 .withPassword(password)
                 .build();
 
-        assertDoesNotThrow(()->manager.validate(name, password, email));
+        assertDoesNotThrow(()->manager.validate(password, email));
 
         Throwable exception = assertThrows(InvalidManagerException.class, ()->
-                manager.validate("Otro", "5678", "wrongful@another.com"));
+                manager.validate("5678", "wrongful@another.com"));
 
         assertEquals("Invalid manager access", exception.getMessage());
     }

@@ -44,8 +44,8 @@ public abstract class CECUser {
         }
     }
 
-    protected void validate(String name, String password, String email, Exception exception) throws Exception {
-        if (!this.name.equals(name) && !this.email.equals(email) && !this.password.equals(password)) {
+    protected void validate(String password, String email, Exception exception) throws Exception {
+        if (!this.email.equals(email) || !this.password.equals(password)) {
             throw exception;
         }
     }

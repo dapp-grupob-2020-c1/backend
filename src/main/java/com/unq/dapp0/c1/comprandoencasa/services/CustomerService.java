@@ -1,6 +1,9 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
 import com.unq.dapp0.c1.comprandoencasa.model.Customer;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
 import com.unq.dapp0.c1.comprandoencasa.repositories.CustomerRepository;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.FieldAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +46,35 @@ public class CustomerService {
             return result.get();
         } else {
             throw new CustomerDoesntExistException(id);
+        }
+    }
+
+    @Transactional
+    public Customer validateCustomer(String email, String password) throws Exception {
+        checkParameters(email, password);
+        checkEmailFormat(email);
+        Optional<Customer> result = customerRepository.findByEmail(email);
+        if (result.isPresent()){
+            Customer customer = result.get();
+            customer.validate(password, email);
+            return customer;
+        } else {
+            throw new InvalidUserException();
+        }
+    }
+
+    private void checkParameters(String email, String password) {
+        if (email.isEmpty()){
+            throw new EmptyFieldException("email");
+        } else if (password.isEmpty()){
+            throw new EmptyFieldException("password");
+        }
+    }
+
+    private void checkEmailFormat(String email) {
+        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+        if (!email.matches(regex)) {
+            throw new InvalidEmailFormatException();
         }
     }
 }

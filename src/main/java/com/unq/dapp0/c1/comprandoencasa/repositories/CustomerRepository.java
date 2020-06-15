@@ -21,4 +21,6 @@ public interface CustomerRepository extends CrudRepository<Customer, Long> {
             "or c.email = :email ")
     List<Customer> findByNameOrEmail(@Param(value = "name") String name,
                                      @Param(value = "email") String email);
+
+    Optional<Customer> findByEmail(String email);
 }

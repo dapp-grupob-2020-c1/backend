@@ -2,6 +2,7 @@ package com.unq.dapp0.c1.comprandoencasa.webservices;
 
 import com.unq.dapp0.c1.comprandoencasa.model.Customer;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
 import com.unq.dapp0.c1.comprandoencasa.services.CustomerService;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.FieldAlreadyExistsException;
@@ -17,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @WebMvcTest(CustomerController.class)
@@ -37,7 +39,7 @@ public class CustomerControllerTests extends AbstractRestTest{
     }
 
     @Test
-    public void endpointPOSTCustomerReturnsOkIfDataMatchesForNewCustomerCreation() throws Exception {
+    public void endpointPOSTCustomerReturnsCreatedIfDataMatchesForNewCustomerCreation() throws Exception {
         String name = "jo";
         String email = "hola@adios.com";
         String password = "1234";
@@ -195,4 +197,115 @@ public class CustomerControllerTests extends AbstractRestTest{
         assertEquals("The field email already exists", emailExistsError);
     }
 
+    @Test
+    public void endpointGETCustomerReturnsOkIfValuesGivenValidateAnExistingCustomer() throws Exception {
+        String generic = "foo";
+
+        Customer customer = mock(Customer.class);
+        when(customer.getId()).thenReturn(1L);
+        when(customer.getName()).thenReturn(generic);
+
+        when(service.validateCustomer(generic, generic)).thenReturn(customer);
+
+        MvcResult mvcResult = this.mockMvc.perform(
+                get("/api/customer")
+                        .param("email", generic)
+                        .param("password", generic)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        String content = mvcResult.getResponse().getContentAsString();
+        assertEquals(200, status);
+
+        CustomerOkDTO result = super.mapFromJson(content, CustomerOkDTO.class);
+        assertEquals(generic, result.name);
+        assertEquals(customer.getId(), result.id);
+    }
+
+
+    @Test
+    public void endpointGETCustomerReturnsBadRequestOnMissingOrEmptyParametersOrBadEmailFormat() throws Exception {
+        String generic = "foo";
+
+        MvcResult noEmailResult = this.mockMvc.perform(
+                get("/api/customer")
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int noEmailStatus = noEmailResult.getResponse().getStatus();
+        assertEquals(400, noEmailStatus);
+
+        String noEmailError = noEmailResult.getResponse().getErrorMessage();
+        assertEquals("Required String parameter 'email' is not present", noEmailError);
+
+        MvcResult noPasswordResult = this.mockMvc.perform(
+                get("/api/customer")
+                        .param("email", generic)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int noPasswordStatus = noPasswordResult.getResponse().getStatus();
+        assertEquals(400, noPasswordStatus);
+
+        String noPasswordError = noPasswordResult.getResponse().getErrorMessage();
+        assertEquals("Required String parameter 'password' is not present", noPasswordError);
+
+        when(service.validateCustomer(generic, generic)).thenThrow(new InvalidEmailFormatException());
+
+        MvcResult badEmailFormatResult = this.mockMvc.perform(
+                get("/api/customer")
+                        .param("email", generic)
+                        .param("password", generic)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int badEmailFormatStatus = badEmailFormatResult.getResponse().getStatus();
+        assertEquals(400, badEmailFormatStatus);
+
+        String badEmailFormatError = badEmailFormatResult.getResponse().getErrorMessage();
+        assertEquals("The email needs to follow the format: user@provider.com", badEmailFormatError);
+
+        when(service.validateCustomer("", generic)).thenThrow(new EmptyFieldException("email"));
+        when(service.validateCustomer(generic, "")).thenThrow(new EmptyFieldException("password"));
+
+        MvcResult emptyEmailResult = this.mockMvc.perform(
+                get("/api/customer")
+                        .param("email", "")
+                        .param("password", generic)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int emptyEmailStatus = emptyEmailResult.getResponse().getStatus();
+        assertEquals(400, emptyEmailStatus);
+
+        String emptyEmailError = emptyEmailResult.getResponse().getErrorMessage();
+        assertEquals("The field email is empty", emptyEmailError);
+
+        MvcResult emptyPasswordResult = this.mockMvc.perform(
+                get("/api/customer")
+                        .param("email", generic)
+                        .param("password", "")
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int emptyPasswordStatus = emptyPasswordResult.getResponse().getStatus();
+        assertEquals(400, emptyPasswordStatus);
+
+        String emptyPasswordError = emptyPasswordResult.getResponse().getErrorMessage();
+        assertEquals("The field password is empty", emptyPasswordError);
+    }
+
+    @Test
+    public void endpointGETCustomerReturnsForbiddenIfEmailOrNameAlreadyExist() throws Exception {
+        String generic = "foo";
+
+        when(service.validateCustomer(generic, generic)).thenThrow(new InvalidUserException());
+
+        MvcResult result = this.mockMvc.perform(
+                get("/api/customer")
+                        .param("email", generic)
+                        .param("password", generic)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
+
+        int status = result.getResponse().getStatus();
+        assertEquals(403, status);
+
+        String errorMessage = result.getResponse().getErrorMessage();
+        assertEquals("Incorrect email or password", errorMessage);
+    }
 }
