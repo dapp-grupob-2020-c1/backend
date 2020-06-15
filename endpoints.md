@@ -196,7 +196,7 @@ Used for creating a new Location for a customer.
 
 ####Errors:
 
-  -  400 BAD_REQUEST: Missing one parameter, or the field is empty.
+  -  400 BAD_REQUEST: Missing at least one parameter, or one of the fields is empty.
   -  404 NOT_FOUND: customer with id not found.
 
 ###DELETE /api/customer/location
