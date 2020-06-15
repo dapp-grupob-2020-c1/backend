@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @EnableAutoConfiguration
@@ -26,16 +29,12 @@ public class CustomerController {
         try{
             Customer customer = this.customerService.createCustomer(name, email, password);
             return new ResponseEntity<>(new CustomerOkDTO(customer), HttpStatus.CREATED);
-        } catch (RuntimeException exception){
-            if (exception instanceof InvalidEmailFormatException){
-                throw new EmailFormatBadRequestException();
-            } else if (exception instanceof EmptyFieldException){
-                throw new EmptyFieldsBadRequestException(exception.getMessage());
-            } else if (exception instanceof FieldAlreadyExistsException) {
-                throw new FieldAlreadyExistsForbiddenException(exception.getMessage());
-            } else {
-                throw exception;
-            }
+        } catch (InvalidEmailFormatException exception){
+            throw new EmailFormatBadRequestException();
+        } catch (EmptyFieldException exception){
+            throw new EmptyFieldsBadRequestException(exception.getMessage());
+        } catch (FieldAlreadyExistsException exception){
+            throw new FieldAlreadyExistsForbiddenException(exception.getMessage());
         }
     }
 }

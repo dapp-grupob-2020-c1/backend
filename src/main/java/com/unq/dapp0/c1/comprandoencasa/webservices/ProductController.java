@@ -51,14 +51,10 @@ public class ProductController {
             List<ProductType> types = parseToTypes(categories);
             List<Product> response = productService.searchBy(keyword, types, Long.valueOf(locationId), Integer.valueOf(page), Integer.valueOf(size), order);
             return parseProducts(response);
-        } catch (RuntimeException e){
-            if (e instanceof IllegalArgumentException){
-                throw new ProductTypeBadRequestException();
-            } else if (e instanceof LocationDoesNotExistException){
-                throw new LocationNotFoundException(locationId);
-            } else {
-                throw e;
-            }
+        } catch (IllegalArgumentException e){
+            throw new ProductTypeBadRequestException();
+        } catch (LocationDoesNotExistException e){
+            throw new LocationNotFoundException(locationId);
         }
     }
 
