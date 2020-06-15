@@ -2,7 +2,14 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidDiscountDatesException;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToOne;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Column;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

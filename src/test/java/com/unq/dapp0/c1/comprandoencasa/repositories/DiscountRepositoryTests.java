@@ -1,6 +1,13 @@
 package com.unq.dapp0.c1.comprandoencasa.repositories;
 
-import com.unq.dapp0.c1.comprandoencasa.model.*;
+import com.unq.dapp0.c1.comprandoencasa.model.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
+import com.unq.dapp0.c1.comprandoencasa.model.Discount;
+import com.unq.dapp0.c1.comprandoencasa.model.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.DiscountByCategory;
+import com.unq.dapp0.c1.comprandoencasa.model.DiscountByMultiple;
+import com.unq.dapp0.c1.comprandoencasa.model.DiscountBySingle;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,7 +20,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 @ActiveProfiles("test")
