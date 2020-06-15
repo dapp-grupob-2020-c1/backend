@@ -2,8 +2,8 @@ package com.unq.dapp0.c1.comprandoencasa.webservices;
 
 import com.unq.dapp0.c1.comprandoencasa.model.Product;
 import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
-import com.unq.dapp0.c1.comprandoencasa.services.LocationDoesNotExistException;
-import com.unq.dapp0.c1.comprandoencasa.services.ProductDoesntExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.ProductService;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.LocationNotFoundException;
@@ -28,6 +28,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @CrossOrigin
     @GetMapping("/api/product")
     public ProductDTO getProduct(@RequestParam(value = "productId") String productId) {
         try{

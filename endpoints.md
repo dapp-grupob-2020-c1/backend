@@ -63,15 +63,15 @@ Used for searching products in the database
 - 400 BAD_REQUEST: on category mismatch, or lack of locationId.
 - 404 NOT_FOUND: Location id not found.
 
-###POST /api/user
+###POST /api/customer
 
-Used for user creation
+Used for customer creation
 
 ####Query values:
 
-- ``name`` : User name to be identified with.
-- ``email`` : User email for validation forms.
-- ``password`` : User password for validation forms.
+- ``name`` : customer name to be identified with.
+- ``email`` : customer email for validation forms.
+- ``password`` : customer password for validation forms.
 
 ####Response:
 
@@ -90,9 +90,9 @@ Used for user creation
 - 400 BAD_REQUEST: On lack of a parameter, on empty fields, or on bad email formatting.
 - 403 FORBIDDEN: On email or name already exist.
 
-###GET /api/user
+###GET /api/customer
 
-Used for user validation
+Used for customer validation
 
 ####Query values:
 
@@ -116,9 +116,9 @@ Used for user validation
 - 400 BAD_REQUEST: If at least one parameter is missing, empty, or email has wrong formatting.
 - 403 FORBIDDEN: If email and/or password are incorrect.
 
-###DELETE /api/user
+###DELETE /api/customer
 
-Used when trying to delete a user from the database
+Used when trying to delete a customer from the database
 
 ####Query values:
 
@@ -133,16 +133,16 @@ Used when trying to delete a user from the database
 
 - 400 BAD_REQUEST: If at least one parameter is missing, empty, or email has wrong formatting.
 - 403 FORBIDDEN: If email and/or password are incorrect.
-- 404 NOT_FOUND: If the user doesn't exist.
+- 404 NOT_FOUND: If the customer doesn't exist.
 
-###GET /api/user/locations
+###GET /api/customer/locations
 
-Used to return all known locations for the user
+Used to return all known locations for the customer
 
 ####Query values:
 
-- ``userId``: User id for manipulation
-- ``password``: User password for validation
+- ``customerId``: customer id for manipulation
+- ``password``: customer password for validation
 
 ####Response:
 
@@ -151,7 +151,7 @@ Used to return all known locations for the user
 
 ```
 {
-    userId,
+    customerId,
     locations = [{
             locationId,
             address,
@@ -163,13 +163,13 @@ Used to return all known locations for the user
 }
 ```
 
-###POST /api/user/location
+###POST /api/customer/location
 
-Used for creating a new Location for a user.
+Used for creating a new Location for a customer.
 
 ####Query values:
 
-- ``userId``: User id for manipulation.
+- ``customerId``: customer id for manipulation.
 - ``address``: Location address as it appears on a map.
 - ``latitude``: Latitude as it appears on a map.
 - ``longitude``: Longitude as it appears on a map.
@@ -193,15 +193,15 @@ Used for creating a new Location for a user.
 ####Errors:
 
 - 400 BAD_REQUEST: Missing one parameter, or the field is empty.
-- 404 NOT_FOUND: User with id not found.
+- 404 NOT_FOUND: customer with id not found.
 
-###DELETE /api/user/location
+###DELETE /api/customer/location
 
-Used for deleting a Location for a user.
+Used for deleting a Location for a customer.
 
 ####Query values:
 
-- ``userId``: User id for verification.
+- ``customerId``: customer id for verification.
 - ``locationId``: Location id for verification.
 
 ####Response:
@@ -223,7 +223,7 @@ Used for deleting a Location for a user.
 ####Errors:
 
 - 400 BAD_REQUEST: Missing one parameter, or field is empty.
-- 404 NOT_FOUND: User or Location with id not found.
+- 404 NOT_FOUND: customer or Location with id not found.
 
 ###POST /api/product
 

@@ -38,7 +38,7 @@ public class ShopControllerTests extends AbstractRestTest{
     private ShopService service;
 
     @Test
-    public void contexLoads() throws Exception {
+    public void contextLoads() throws Exception {
         assertThat(controller).isNotNull();
     }
 

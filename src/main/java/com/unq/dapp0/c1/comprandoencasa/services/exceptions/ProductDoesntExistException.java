@@ -1,4 +1,4 @@
-package com.unq.dapp0.c1.comprandoencasa.services;
+package com.unq.dapp0.c1.comprandoencasa.services.exceptions;
 
 public class ProductDoesntExistException extends RuntimeException {
     public ProductDoesntExistException(Long id) {

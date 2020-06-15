@@ -4,8 +4,8 @@ import com.unq.dapp0.c1.comprandoencasa.model.Product;
 import com.unq.dapp0.c1.comprandoencasa.model.Shop;
 import com.unq.dapp0.c1.comprandoencasa.model.Location;
 import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
-import com.unq.dapp0.c1.comprandoencasa.services.LocationDoesNotExistException;
-import com.unq.dapp0.c1.comprandoencasa.services.ProductDoesntExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.ProductService;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductDTO;
 import org.junit.jupiter.api.Test;
@@ -44,7 +44,7 @@ public class ProductControllerTests extends AbstractRestTest {
     private ProductService service;
 
     @Test
-    public void contexLoads() throws Exception {
+    public void contextLoads() throws Exception {
         assertThat(controller).isNotNull();
     }
 

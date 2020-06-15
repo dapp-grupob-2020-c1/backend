@@ -7,6 +7,7 @@ import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistEx
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ public class ShopController {
     @Autowired
     private ShopService shopService;
 
+    @CrossOrigin
     @GetMapping("/api/shop")
     public ShopDTO getShop(@RequestParam(value = "shopId") String shopId) {
         try{
