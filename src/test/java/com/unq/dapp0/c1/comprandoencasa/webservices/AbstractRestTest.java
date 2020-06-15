@@ -8,8 +8,11 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public abstract class AbstractRestTest {
     private ObjectMapper objectMapper = JsonMapper.builder()
@@ -27,5 +30,13 @@ public abstract class AbstractRestTest {
 
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(json, clazz);
+    }
+
+    protected void errorTestWith(MvcResult mvcResult, int expectedStatus, String expectedMessage) {
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(expectedStatus, status);
+
+        String errorMessage = mvcResult.getResponse().getErrorMessage();
+        assertEquals(expectedMessage, errorMessage);
     }
 }
