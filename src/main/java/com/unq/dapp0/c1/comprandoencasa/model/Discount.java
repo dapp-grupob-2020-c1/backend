@@ -2,26 +2,20 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidDiscountDatesException;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Discount {
 
     @OneToOne
-    protected final Shop shop;
+    protected Shop shop;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     protected long id;
     @Column
     protected LocalDate startingDate;
@@ -30,10 +24,11 @@ public abstract class Discount {
     @Column
     protected double percentage;
 
-    protected Discount(long id, double percentage, LocalDate startingDate, LocalDate endingDate, Shop shop) {
+    protected Discount(){}
+
+    protected Discount(double percentage, LocalDate startingDate, LocalDate endingDate, Shop shop) {
         this.checkDates(startingDate, endingDate);
 
-        this.id = id;
         this.percentage = percentage;
         this.startingDate = startingDate;
         this.endingDate = endingDate;

@@ -1,14 +1,19 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+@Entity(name = "DiscountBySingle")
 public class DiscountBySingle extends Discount {
+
+    @OneToOne
     private Product product;
 
-    public DiscountBySingle(long id, double percentage, LocalDate startingDate, LocalDate endingDate, Shop shop, Product product) {
-        super(id, percentage, startingDate, endingDate, shop);
+    public DiscountBySingle(double percentage, LocalDate startingDate, LocalDate endingDate, Shop shop, Product product) {
+        super(percentage, startingDate, endingDate, shop);
         this.product = product;
     }
 

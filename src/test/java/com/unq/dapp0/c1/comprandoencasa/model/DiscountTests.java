@@ -19,7 +19,8 @@ import static org.mockito.Mockito.when;
 public class DiscountTests {
     @Test
     public void aDiscountHasAnID(){
-        Discount discount = DiscountBuilder.anyDiscount().withID(1L).build();
+        Discount discount = DiscountBuilder.anyDiscount().build();
+        discount.setId(1L);
 
         assertEquals(1L, discount.getId());
     }
@@ -550,7 +551,6 @@ public class DiscountTests {
 }
 
 class DiscountBuilder{
-    private long id;
     private double percentage;
     private LocalDate startingDate;
     private LocalDate endingDate;
@@ -563,7 +563,6 @@ class DiscountBuilder{
     }
 
     private DiscountBuilder(){
-        this.id = 1L;
         this.percentage = 1.0;
         this.startingDate = LocalDate.now();
         this.endingDate = LocalDate.now();
@@ -574,18 +573,13 @@ class DiscountBuilder{
     public Discount build(){
         Discount discount = null;
         if (targType != null){
-            discount = new DiscountByCategory(id, percentage, startingDate, endingDate, shop, targType);
+            discount = new DiscountByCategory(percentage, startingDate, endingDate, shop, targType);
         } else if (targProd.size() == 1){
-            discount = new DiscountBySingle(id, percentage, startingDate, endingDate, shop, targProd.get(0));
+            discount = new DiscountBySingle(percentage, startingDate, endingDate, shop, targProd.get(0));
         } else if (targProd.size() > 1){
-            discount = new DiscountByMultiple(id, percentage, startingDate, endingDate, shop, targProd);
+            discount = new DiscountByMultiple(percentage, startingDate, endingDate, shop, targProd);
         }
         return discount;
-    }
-
-    public DiscountBuilder withID(long id) {
-        this.id = id;
-        return this;
     }
 
     public DiscountBuilder withPercentage(double percentage) {

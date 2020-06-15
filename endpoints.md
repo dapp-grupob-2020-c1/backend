@@ -50,8 +50,8 @@ Used for searching products in the database
                 endingDate,
                 percentage,
                 productType, //Null if type single or multiple
-                products, //Null if type single or category
-                product //Null if type category or multiple
+                productsIds, //Null if type single or category
+                productId //Null if type category or multiple
             }]
     }
     
@@ -278,7 +278,17 @@ Used for loading a new single product into the database.
         days,
         openingHour,
         closingHour,
-        deliveryRadius
+        deliveryRadius,
+        discounts = [{
+                id,
+                type,
+                startingDate,
+                endingDate,
+                percentage,
+                productType, //Null if type single or multiple
+                productsIds, //Null if type single or category
+                productId //Null if type category or multiple
+            }]
     }
     
 }
@@ -333,8 +343,8 @@ Used for requesting a single product from the database.
                 endingDate,
                 percentage,
                 productType, //Null if type single or multiple
-                products, //Null if type single or category
-                product //Null if type category or multiple
+                productsIds, //Null if type single or category
+                productId //Null if type category or multiple
             }]
     }
     
@@ -392,8 +402,8 @@ Used for deleting a single product from the database.
                 endingDate,
                 percentage,
                 productType, //Null if type single or multiple
-                products, //Null if type single or category
-                product //Null if type category or multiple
+                productsIds, //Null if type single or category
+                productId //Null if type category or multiple
             }]
     }
     
@@ -450,8 +460,8 @@ Used for requesting a single shop from the database.
             endingDate,
             percentage,
             productType, //Null if type single or multiple
-            products, //Null if type single or category
-            product //Null if type category or multiple
+            productsIds, //Null if type single or category
+            productId //Null if type category or multiple
         }]
 }
 ```

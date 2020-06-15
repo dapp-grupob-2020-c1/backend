@@ -14,6 +14,7 @@ import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class DiscountDTO {
@@ -29,9 +30,9 @@ public class DiscountDTO {
     @Nullable
     public ProductType productType;
     @Nullable
-    public ArrayList<Product> products;
+    public Collection<Long> productsIds;
     @Nullable
-    public Product product;
+    public Long productId;
 
     public DiscountDTO(){}
 
@@ -49,10 +50,15 @@ public class DiscountDTO {
             this.productType = ((DiscountByCategory) discount).getProductType();
         } else if (discount instanceof DiscountByMultiple){
             this.type = "multiple";
-            this.products = ((DiscountByMultiple) discount).getProducts();
+            Collection<Product> products = ((DiscountByMultiple) discount).getProducts();
+            Collection<Long> ids = new ArrayList<>();
+            for (Product product : products){
+                ids.add(product.getId());
+            }
+            this.productsIds = ids;
         } else if (discount instanceof DiscountBySingle){
             this.type = "single";
-            this.product = ((DiscountBySingle) discount).getProduct();
+            this.productId = ((DiscountBySingle) discount).getProduct().getId();
         }
     }
 
