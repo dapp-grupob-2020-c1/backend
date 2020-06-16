@@ -6,6 +6,8 @@ import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
 import com.unq.dapp0.c1.comprandoencasa.repositories.LocationRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
 
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +15,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Optional;
+import java.util.List;
+import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,13 +34,14 @@ public class ProductService {
         return this.productRepository.save(model);
     }
 
-    public Product findById(Long id) {
+    @Transactional
+    public Product findProductById(Long id) {
         Optional<Product> result = this.productRepository.findById(id);
-        return result.orElse(null);
-    }
-
-    public List<Product> findAll() {
-        return this.productRepository.findAll();
+        if (result.isPresent()){
+            return result.get();
+        } else {
+            throw new ProductDoesntExistException(id);
+        }
     }
 
     @Transactional
@@ -48,7 +54,7 @@ public class ProductService {
             List<ProductType> cat = (categories.size() > 0) ? categories : Arrays.stream(ProductType.values()).collect(Collectors.toCollection(ArrayList::new));
             return productRepository.searchBy(keyword, cat, loc.getLatitude(), loc.getLongitude(), pageable);
         } else {
-            return new ArrayList<>();
+            throw new LocationDoesNotExistException(locationId);
         }
     }
 

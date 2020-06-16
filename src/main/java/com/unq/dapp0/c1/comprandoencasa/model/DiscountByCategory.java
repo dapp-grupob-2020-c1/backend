@@ -1,16 +1,21 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Entity(name = "DiscountByCategory")
 public class DiscountByCategory extends Discount {
+
+    @Column
     private ProductType productType;
 
-    public DiscountByCategory(long id, double percentage, LocalDate startingDate, LocalDate endingDate, Shop shop, ProductType productType) {
-        super(id, percentage, startingDate, endingDate, shop);
+    public DiscountByCategory(double percentage, LocalDate startingDate, LocalDate endingDate, Shop shop, ProductType productType) {
+        super(percentage, startingDate, endingDate, shop);
         this.productType = productType;
     }
 

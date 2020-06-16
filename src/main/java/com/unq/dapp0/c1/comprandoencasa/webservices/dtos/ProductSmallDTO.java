@@ -4,24 +4,32 @@ import com.unq.dapp0.c1.comprandoencasa.model.Product;
 import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-public class ProductDTO {
+public class ProductSmallDTO {
     public Long id;
     public String name;
     public String image;
     public BigDecimal price;
     public Collection<ProductType> types;
-    public ShopSmallDTO shop;
 
-    public ProductDTO(){}
+    public ProductSmallDTO(){}
 
-    public ProductDTO(Product product) {
+    public ProductSmallDTO(Product product) {
         this.id = product.getId();
         this.name = product.getName();
         this.image = product.getImage();
         this.price = product.getPrice();
         this.types = product.getTypes();
-        this.shop = new ShopSmallDTO(product.getShop());
+    }
+
+    public static List<ProductSmallDTO> createProducts(List<Product> products) {
+        List<ProductSmallDTO> productSmallDTOList = new ArrayList<>();
+        for (Product product : products){
+            productSmallDTOList.add(new ProductSmallDTO(product));
+        }
+        return productSmallDTOList;
     }
 }

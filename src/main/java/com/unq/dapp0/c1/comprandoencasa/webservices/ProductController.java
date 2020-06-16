@@ -2,8 +2,12 @@ package com.unq.dapp0.c1.comprandoencasa.webservices;
 
 import com.unq.dapp0.c1.comprandoencasa.model.Product;
 import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.ProductService;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.LocationNotFoundException;
+import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ProductNotFoundException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ProductTypeBadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -24,9 +28,15 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/api/products")
-    public List<Product> allProducts() {
-        return this.productService.findAll();
+    @CrossOrigin
+    @GetMapping("/api/product")
+    public ProductDTO getProduct(@RequestParam(value = "productId") String productId) {
+        try{
+            Product product = this.productService.findProductById(Long.valueOf(productId));
+            return new ProductDTO(product);
+        } catch (ProductDoesntExistException exception){
+            throw new ProductNotFoundException(productId);
+        }
     }
 
     @CrossOrigin
@@ -38,11 +48,13 @@ public class ProductController {
                                            @RequestParam(value = "size", defaultValue = "10") String size,
                                            @RequestParam(value = "order", defaultValue = "idDesc") String order){
         try{
-            List<ProductType> types = this.parseToType(categories);
+            List<ProductType> types = parseToTypes(categories);
             List<Product> response = productService.searchBy(keyword, types, Long.valueOf(locationId), Integer.valueOf(page), Integer.valueOf(size), order);
             return parseProducts(response);
         } catch (IllegalArgumentException e){
             throw new ProductTypeBadRequestException();
+        } catch (LocationDoesNotExistException e){
+            throw new LocationNotFoundException(locationId);
         }
     }
 
@@ -54,7 +66,7 @@ public class ProductController {
         return response;
     }
 
-    private List<ProductType> parseToType(List<String> categories) {
+    static public List<ProductType> parseToTypes(List<String> categories) {
         if (categories.isEmpty()){
             return Arrays.stream(ProductType.values()).collect(Collectors.toCollection(ArrayList::new));
         }

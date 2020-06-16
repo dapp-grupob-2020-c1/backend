@@ -255,7 +255,7 @@ public class Shop {
         return this.discounts.stream().filter(d -> d.getId().equals(discount.getId())).findFirst();
     }
 
-    public ArrayList<Discount> getActiveDiscounts() {
+    public List<Discount> getActiveDiscounts() {
         return this.discounts.stream().filter(Discount::isActive).collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -267,7 +267,7 @@ public class Shop {
         return this.activeDeliveries;
     }
 
-    public ArrayList<Turn> getActiveTurns() {
+    public List<Turn> getActiveTurns() {
         ArrayList<ShopDelivery> deliveries = this.activeDeliveries.stream()
                 .filter(delivery -> delivery instanceof DeliveryAtShop).collect(Collectors.toCollection(ArrayList::new));
         ArrayList<Turn> turns = new ArrayList<>();

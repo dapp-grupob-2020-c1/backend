@@ -2,17 +2,22 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.MultipleDiscountWithSingleItemException;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+@Entity(name = "DiscountByMultiple")
 public class DiscountByMultiple extends Discount {
-    private final ArrayList<Product> products;
 
-    public DiscountByMultiple(long id, double percentage, LocalDate startingDate, LocalDate endingDate, Shop shop, ArrayList<Product> products) {
-        super(id, percentage, startingDate, endingDate, shop);
+    @ManyToMany
+    private final Collection<Product> products;
+
+    public DiscountByMultiple(double percentage, LocalDate startingDate, LocalDate endingDate, Shop shop, List<Product> products) {
+        super(percentage, startingDate, endingDate, shop);
         this.products = products;
     }
 
@@ -21,7 +26,7 @@ public class DiscountByMultiple extends Discount {
         return true;
     }
 
-    public ArrayList<Product> getProducts() {
+    public Collection<Product> getProducts() {
         return this.products;
     }
 

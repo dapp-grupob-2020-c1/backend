@@ -58,8 +58,8 @@ public class Customer extends CECUser {
         this.id = id;
     }
 
-    public void validate(String name, String password, String email) throws Exception {
-        this.validate(name, password, email, new InvalidUserException());
+    public void validate(String password, String email) throws Exception {
+        this.validate(password, email, new InvalidUserException());
     }
 
     public List<Location> getLocations() {
@@ -75,7 +75,7 @@ public class Customer extends CECUser {
     }
 
     public void removeLocation(Location location) {
-        this.findLocation(location).ifPresent(value -> this.locations.remove(value));
+        this.findLocation(location).ifPresent(this.locations::remove);
     }
 
     private Optional<Location> findLocation(Location location) {

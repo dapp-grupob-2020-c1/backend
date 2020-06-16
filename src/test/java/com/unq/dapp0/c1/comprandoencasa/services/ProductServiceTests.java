@@ -10,6 +10,8 @@ import com.unq.dapp0.c1.comprandoencasa.model.ManagerBuilder;
 import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
 import com.unq.dapp0.c1.comprandoencasa.model.ProductBuilder;
 
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -38,6 +42,25 @@ public class ProductServiceTests {
 
     @Autowired
     private ManagerService managerService;
+
+    @Test
+    public void serviceCanSaveAndReturnAProduct(){
+        Product product = new Product();
+        productService.save(product);
+        Product result = productService.findProductById(product.getId());
+        assertEquals(product.getId(), result.getId());
+    }
+
+    @Test
+    public void serviceThrowsProductDoesNotExistIfTheProductIsNotPresentWhenSearchingById(){
+        Long id = 0L;
+        Exception exception = assertThrows(ProductDoesntExistException.class, ()-> productService.findProductById(id));
+        assertNotNull(exception);
+
+        String expected = "Product with id " + id + " does not exist";
+
+        assertEquals(expected, exception.getMessage());
+    }
 
     @Test
     public void serviceCanReturnAListOfProductsBeingSearched(){
@@ -131,5 +154,18 @@ public class ProductServiceTests {
         assertEquals(result.get(0).getId(), product1.getId());
         assertEquals(result.get(1).getId(), product2.getId());
         assertEquals(result.get(2).getId(), product4.getId());
+    }
+
+    @Test
+    public void serviceThrowsLocationDoesNotExistExceptionIfTheLocationIdUsedForSearchByIsInvalid(){
+        List<ProductType> categories = new ArrayList<>();
+        Long locationId = 0L;
+        Exception exception = assertThrows(LocationDoesNotExistException.class, ()-> productService.searchBy("", categories, locationId, 0, 3, "priceAsc"));
+
+        assertNotNull(exception);
+
+        String expected = "Location with the id " + locationId + " does not exist";
+
+        assertEquals(expected, exception.getMessage());
     }
 }
