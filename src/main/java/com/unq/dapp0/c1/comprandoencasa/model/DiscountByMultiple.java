@@ -14,7 +14,9 @@ import java.util.Optional;
 public class DiscountByMultiple extends Discount {
 
     @ManyToMany
-    private final Collection<Product> products;
+    private Collection<Product> products;
+
+    public DiscountByMultiple(){}
 
     public DiscountByMultiple(double percentage, LocalDate startingDate, LocalDate endingDate, Shop shop, List<Product> products) {
         super(percentage, startingDate, endingDate, shop);

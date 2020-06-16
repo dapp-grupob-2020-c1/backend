@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------
+TAG SEGUNDA-ENTREGA-2.0
+---------------------------------------------------------------------
+NEW FEATURES:
+* API REST and persistence model running on Spring Boot using Spring Data JPA with H2/Hibernate.
+* Support for creation of customer users and browsing both on Frontend VUE application and API backend.
+
+NOTES:
+* Frontend application only has Home and a hardcoded search.
+* Shops, Products and Managers are hardcoded. Pending implementation through API and Frontend application.
+* Cannot currently delete customer users or their loaded locations.
+
+KNOWN ISSUES:
+* Some unstability on the Frontend application.
+
+---------------------------------------------------------------------
 TAG PRIMERA-ENTREGA-1.0
 ---------------------------------------------------------------------
 NEW FEATURES:

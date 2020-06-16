@@ -12,6 +12,8 @@ public class DiscountBySingle extends Discount {
     @OneToOne
     private Product product;
 
+    public DiscountBySingle(){}
+
     public DiscountBySingle(double percentage, LocalDate startingDate, LocalDate endingDate, Shop shop, Product product) {
         super(percentage, startingDate, endingDate, shop);
         this.product = product;
