@@ -10,8 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table
@@ -42,12 +42,12 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String brand, String image, BigDecimal price, Shop shop) {
+    public Product(String name, String brand, String image, BigDecimal price, Shop shop, List<ProductType> types) {
         this.name = name;
         this.brand = brand;
         this.image = image;
         this.price = price;
-        this.types = new ArrayList<>();
+        this.types = types;
         this.shop = shop;
     }
 
@@ -111,4 +111,7 @@ public class Product {
         this.types.remove(aProductType);
     }
 
+    public Collection<ProductType> getTypes() {
+        return this.types;
+    }
 }

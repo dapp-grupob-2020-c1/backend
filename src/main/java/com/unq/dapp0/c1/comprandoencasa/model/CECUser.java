@@ -2,9 +2,14 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
 
+import javax.persistence.Column;
+
 public abstract class CECUser {
+    @Column
     protected String name;
+    @Column
     protected String password;
+    @Column
     protected String email;
 
     public CECUser() {

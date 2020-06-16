@@ -2,6 +2,7 @@ package com.unq.dapp0.c1.comprandoencasa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +15,8 @@ public class ComprandoEnCasaApplication {
 		SpringApplication.run(ComprandoEnCasaApplication.class, args);
 	}
 
-	@GetMapping("/hello")
+	@CrossOrigin
+	@GetMapping("/")
 	public String hello(@RequestParam(value = "name", defaultValue = "World") String name) {
 		return String.format("Hello %s!", name);
 	}

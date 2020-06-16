@@ -34,13 +34,21 @@ public class Location {
     @Column
     private Double longitude;
 
-    public Location() {
-    }
+    @Column
+    private Double latitudeRadians;
+
+    @Column
+    private Double longitudeRadians;
+
+    public Location() {}
 
     public Location(String address, Double latitude, Double longitude) {
         this.address = address;
         this.latitude = latitude;
         this.longitude = longitude;
+
+        this.latitudeRadians = deg2rad(latitude);
+        this.longitudeRadians = deg2rad(longitude);
     }
 
     public Long getId() {
@@ -74,11 +82,19 @@ public class Location {
         return floor(res * 100) / 100;
     }
 
-    private Double deg2rad(Double dec) {
+    static public Double deg2rad(Double dec){
         return dec * (PI / 180);
     }
 
     public Double timeTo(Location location) {
         return this.distanceTo(location) * MINUTES_PER_KM;
+    }
+
+    public Double getLatitudeRadians() {
+        return this.latitudeRadians;
+    }
+
+    public Double getLongitudeRadians() {
+        return this.longitudeRadians;
     }
 }

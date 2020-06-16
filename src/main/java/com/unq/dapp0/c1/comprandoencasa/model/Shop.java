@@ -5,15 +5,17 @@ import com.unq.dapp0.c1.comprandoencasa.model.exceptions.DiscountAlreadyExistsEx
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.PaymentMethodAlreadyExistsException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.ProductAlreadyPresentException;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
+import javax.persistence.OneToMany;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -32,6 +34,9 @@ public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column
+    private String name;
 
     @ElementCollection
     private List<ShopCategory> shopCategories;
@@ -54,7 +59,11 @@ public class Shop {
     @Column
     private Integer deliveryRadius;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER,
+            cascade = {
+                    CascadeType.MERGE,
+                    CascadeType.REFRESH
+            })
     private Manager manager;
 
     @OneToMany
@@ -69,7 +78,16 @@ public class Shop {
     public Shop() {
     }
 
-    public Shop(ArrayList<ShopCategory> shopCategories, Location location, ArrayList<DayOfWeek> days, LocalTime openingHour, LocalTime closingHour, ArrayList<PaymentMethod> paymentMethods, Integer deliveryRadius, Manager manager, ArrayList<Product> products) {
+    public Shop(String name,
+                ArrayList<ShopCategory> shopCategories,
+                Location location,
+                ArrayList<DayOfWeek> days,
+                LocalTime openingHour,
+                LocalTime closingHour,
+                ArrayList<PaymentMethod> paymentMethods,
+                Integer deliveryRadius,
+                Manager manager) {
+        this.name = name;
         this.shopCategories = shopCategories;
         this.location = location;
         this.days = days;
@@ -78,7 +96,7 @@ public class Shop {
         this.paymentMethods = paymentMethods;
         this.deliveryRadius = deliveryRadius;
         this.manager = manager;
-        this.products = products;
+        this.products = new ArrayList<>();
         this.discounts = new ArrayList<>();
         this.activeDeliveries = new ArrayList<>();
     }
@@ -89,6 +107,10 @@ public class Shop {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public List<ShopCategory> getShopCategories() {

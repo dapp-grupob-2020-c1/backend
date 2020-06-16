@@ -6,7 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -20,16 +19,12 @@ public class Manager extends CECUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "manager")
-    private Shop shop;
-
     public Manager() {
         super();
     }
 
-    public Manager(String name, String password, String email, Shop shop) {
+    public Manager(String name, String password, String email) {
         super(name, password, email);
-        this.shop = shop;
     }
 
     public Long getId() {
@@ -60,9 +55,5 @@ public class Manager extends CECUser {
      */
     public void validate(String name, String password, String email) throws Exception {
         this.validate(name, password, email, new InvalidManagerException());
-    }
-
-    public Shop getShop() {
-        return this.shop;
     }
 }
