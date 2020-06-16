@@ -14,6 +14,8 @@ public class DiscountByCategory extends Discount {
     @Column
     private ProductType productType;
 
+    public DiscountByCategory(){}
+
     public DiscountByCategory(double percentage, LocalDate startingDate, LocalDate endingDate, Shop shop, ProductType productType) {
         super(percentage, startingDate, endingDate, shop);
         this.productType = productType;

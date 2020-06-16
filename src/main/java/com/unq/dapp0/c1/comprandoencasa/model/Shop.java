@@ -79,12 +79,12 @@ public class Shop {
     }
 
     public Shop(String name,
-                ArrayList<ShopCategory> shopCategories,
+                List<ShopCategory> shopCategories,
                 Location location,
-                ArrayList<DayOfWeek> days,
+                List<DayOfWeek> days,
                 LocalTime openingHour,
                 LocalTime closingHour,
-                ArrayList<PaymentMethod> paymentMethods,
+                List<PaymentMethod> paymentMethods,
                 Integer deliveryRadius,
                 Manager manager) {
         this.name = name;
