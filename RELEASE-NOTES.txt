@@ -1,4 +1,18 @@
 ---------------------------------------------------------------------
+TAG SEGUNDA-ENTREGA-2.0
+---------------------------------------------------------------------
+NEW FEATURES:
+* API REST and persistence model running on Spring Data JPA with H2/Hibernate.
+* Support for creation of customer users and browsing both on Frontend application and API backend.
+
+NOTES:
+* Shops, Products and Managers are hardcoded. Pending implementation through API and Frontend application.
+* Cannot currently delete customer users or their loaded locations.
+
+KNOWN ISSUES:
+* None pertaining the current implementation.
+
+---------------------------------------------------------------------
 TAG PRIMERA-ENTREGA-1.0
 ---------------------------------------------------------------------
 NEW FEATURES:
