@@ -6,6 +6,7 @@ NEW FEATURES:
 * Support for creation of customer users and browsing both on Frontend VUE application and API backend.
 
 NOTES:
+* Frontend application only has Home and a hardcoded search.
 * Shops, Products and Managers are hardcoded. Pending implementation through API and Frontend application.
 * Cannot currently delete customer users or their loaded locations.
 
