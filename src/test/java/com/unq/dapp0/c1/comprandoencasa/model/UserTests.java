@@ -17,22 +17,22 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CustomerTests {
+public class UserTests {
 
     @Test
     public void aCustomerCanCreateItsAccountWithANameAndAPasswordThatCanBeValidated(){
         String email = "testo@test.com";
         String password = "1234";
 
-        Customer customer = CustomerBuilder.anyCustomer()
+        User user = UserBuilder.anyUser()
                 .withEmail(email)
                 .withPassword(password)
                 .build();
 
-        assertDoesNotThrow(()->customer.validate(password, email));
+        assertDoesNotThrow(()->user.validate(password, email));
 
         Throwable exception = assertThrows(InvalidUserException.class,
-                ()->customer.validate("5678", "anything@any.com"));
+                ()->user.validate("5678", "anything@any.com"));
 
         assertEquals("The user, email or password are incorrect", exception.getMessage());
     }
@@ -42,81 +42,104 @@ public class CustomerTests {
         String email = "wrongformat";
 
         Throwable exceptionFormat1 = assertThrows(InvalidEmailFormatException.class,
-                ()->CustomerBuilder.anyCustomer().withEmail(email).build());
+                ()-> UserBuilder.anyUser().withEmail(email).build());
 
         assertEquals("The email format is invalid", exceptionFormat1.getMessage());
 
         String anotherEmail = "stillawrong@format";
 
         Throwable exceptionFormat2 = assertThrows(InvalidEmailFormatException.class,
-                ()->CustomerBuilder.anyCustomer().withEmail(anotherEmail).build());
+                ()-> UserBuilder.anyUser().withEmail(anotherEmail).build());
 
         assertEquals("The email format is invalid", exceptionFormat2.getMessage());
 
         String evenAnotherEmail = "stillawrong.format";
 
         Throwable exceptionFormat3 = assertThrows(InvalidEmailFormatException.class,
-                ()->CustomerBuilder.anyCustomer().withEmail(evenAnotherEmail).build());
+                ()-> UserBuilder.anyUser().withEmail(evenAnotherEmail).build());
 
         assertEquals("The email format is invalid", exceptionFormat3.getMessage());
 
         String anotherWrongEmail = "@stillawrong.format";
 
         Throwable exceptionFormat4 = assertThrows(InvalidEmailFormatException.class,
-                ()->CustomerBuilder.anyCustomer().withEmail(anotherWrongEmail).build());
+                ()-> UserBuilder.anyUser().withEmail(anotherWrongEmail).build());
 
         assertEquals("The email format is invalid", exceptionFormat4.getMessage());
     }
 
+
+    @Test
+    public void aUserCanValidateIfItsTheSameUserAsTheOneGiven(){
+        String name = "Real";
+        String email = "current@email.com";
+        String password = "5678";
+
+        User user = UserBuilder.anyUser()
+                .withName(name)
+                .withEmail(email)
+                .withPassword(password)
+                .build();
+
+        assertDoesNotThrow(()->user.validate(user));
+
+        User anotherUser = UserBuilder.anyUser().build();
+
+        Throwable exception = assertThrows(InvalidUserException.class, ()->
+                user.validate(anotherUser));
+
+        assertEquals("The user, email or password are incorrect", exception.getMessage());
+    }
+
     @Test
     public void aCustomerHasLocationsAndCanAddMultipleLocations(){
-        Customer customer = CustomerBuilder.anyCustomer().build();
+        User user = UserBuilder.anyUser().build();
 
-        assertTrue(customer.getLocations().isEmpty());
+        assertTrue(user.getLocations().isEmpty());
 
         Location location1 = mock(Location.class);
         when(location1.getId()).thenReturn(1L);
-        customer.addLocation(location1);
+        user.addLocation(location1);
 
-        assertEquals(1, customer.getLocations().size());
-        assertTrue(customer.getLocations().contains(location1));
+        assertEquals(1, user.getLocations().size());
+        assertTrue(user.getLocations().contains(location1));
 
         Location location2 = mock(Location.class);
         when(location2.getId()).thenReturn(2L);
-        customer.addLocation(location2);
+        user.addLocation(location2);
 
-        assertEquals(2, customer.getLocations().size());
-        assertTrue(customer.getLocations().contains(location2));
+        assertEquals(2, user.getLocations().size());
+        assertTrue(user.getLocations().contains(location2));
     }
 
     @Test
     public void aCustomerCanRemoveALocationFromItsList(){
-        Customer customer = CustomerBuilder.anyCustomer().build();
+        User user = UserBuilder.anyUser().build();
 
-        assertTrue(customer.getLocations().isEmpty());
+        assertTrue(user.getLocations().isEmpty());
 
         Location location1 = mock(Location.class);
         when(location1.getId()).thenReturn(1L);
-        customer.addLocation(location1);
+        user.addLocation(location1);
 
-        assertEquals(1, customer.getLocations().size());
-        assertTrue(customer.getLocations().contains(location1));
+        assertEquals(1, user.getLocations().size());
+        assertTrue(user.getLocations().contains(location1));
 
-        customer.removeLocation(location1);
+        user.removeLocation(location1);
 
-        assertTrue(customer.getLocations().isEmpty());
+        assertTrue(user.getLocations().isEmpty());
     }
 
     @Test
     public void aCustomerCannotAddALocationThatItAlreadyContains(){
-        Customer customer = CustomerBuilder.anyCustomer().build();
+        User user = UserBuilder.anyUser().build();
 
         Location location1 = mock(Location.class);
         when(location1.getId()).thenReturn(1L);
-        customer.addLocation(location1);
+        user.addLocation(location1);
 
         Throwable exception = assertThrows(LocationAlreadyPresentException.class,
-                ()->customer.addLocation(location1));
+                ()->user.addLocation(location1));
 
         assertEquals("Location "+location1.getId()+" already exists",
                 exception.getMessage());
@@ -124,33 +147,33 @@ public class CustomerTests {
 
     @Test
     public void aCustomerCanAddAnActiveShoppingList(){
-        Customer customer = CustomerBuilder.anyCustomer().build();
+        User user = UserBuilder.anyUser().build();
 
         ShoppingList shoppingList = mock(ShoppingList.class);
 
-        customer.addActiveShoppingList(shoppingList);
+        user.addActiveShoppingList(shoppingList);
 
-        assertEquals(shoppingList, customer.getActiveShoppingList());
+        assertEquals(shoppingList, user.getActiveShoppingList());
     }
 
     @Test
     public void aCustomerCanAddHistoricShoppingLists(){
-        Customer customer = CustomerBuilder.anyCustomer().build();
+        User user = UserBuilder.anyUser().build();
 
         ShoppingList shoppingList1 = mock(ShoppingList.class);
 
-        customer.addHistoricShoppingList(shoppingList1);
+        user.addHistoricShoppingList(shoppingList1);
 
-        assertTrue(customer.getHistoricShoppingLists().contains(shoppingList1));
+        assertTrue(user.getHistoricShoppingLists().contains(shoppingList1));
     }
 
     @Test
     public void aCustomerCanSetProductTypeThresholdsAndTotalPurchaseThresholds(){
-        Customer customer = CustomerBuilder.anyCustomer().build();
+        User user = UserBuilder.anyUser().build();
 
-        customer.setTotalThreshold(BigDecimal.valueOf(200));
+        user.setTotalThreshold(BigDecimal.valueOf(200));
 
-        assertEquals(BigDecimal.valueOf(200), customer.getTotalThreshold());
+        assertEquals(BigDecimal.valueOf(200), user.getTotalThreshold());
 
         Map<ProductType, BigDecimal> typeList = new Hashtable<>();
 
@@ -158,20 +181,20 @@ public class CustomerTests {
             typeList.put(productType, BigDecimal.valueOf(1));
         }
 
-        customer.setTypesThreshold(typeList);
+        user.setTypesThreshold(typeList);
 
-        assertEquals(typeList, customer.getTypesThreshold());
+        assertEquals(typeList, user.getTypesThreshold());
     }
 
     @Test
     public void aCustomerCanReturnTheHistoricTypesMedianThreshold(){
-        Customer customer = CustomerBuilder.anyCustomer().build();
+        User user = UserBuilder.anyUser().build();
 
         ShoppingList shoppingList1 = mock(ShoppingList.class);
         ShoppingList shoppingList2 = mock(ShoppingList.class);
 
-        customer.addHistoricShoppingList(shoppingList1);
-        customer.addHistoricShoppingList(shoppingList2);
+        user.addHistoricShoppingList(shoppingList1);
+        user.addHistoricShoppingList(shoppingList2);
 
         when(shoppingList1.evaluateTotalFor(any())).thenReturn(BigDecimal.valueOf(0));
         when(shoppingList2.evaluateTotalFor(any())).thenReturn(BigDecimal.valueOf(0));
@@ -179,41 +202,6 @@ public class CustomerTests {
         when(shoppingList1.evaluateTotalFor(ProductType.Bazaar)).thenReturn(BigDecimal.valueOf(4));
         when(shoppingList2.evaluateTotalFor(ProductType.Bazaar)).thenReturn(BigDecimal.valueOf(6));
 
-        assertEquals(BigDecimal.valueOf(5), customer.evaluateHistoricTypeThresholds().get(ProductType.Bazaar));
-    }
-}
-
-class CustomerBuilder{
-    private String name;
-    private String password;
-    private String email;
-
-    public static CustomerBuilder anyCustomer(){
-        return new CustomerBuilder();
-    }
-
-    private CustomerBuilder(){
-        this.name = "Test";
-        this.email = "example@example.com";
-        this.password = "1111";
-    }
-
-    public Customer build() {
-        return new Customer(name, password, email);
-    }
-
-    public CustomerBuilder withName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public CustomerBuilder withPassword(String password) {
-        this.password = password;
-        return this;
-    }
-
-    public CustomerBuilder withEmail(String email) {
-        this.email = email;
-        return this;
+        assertEquals(BigDecimal.valueOf(5), user.evaluateHistoricTypeThresholds().get(ProductType.Bazaar));
     }
 }

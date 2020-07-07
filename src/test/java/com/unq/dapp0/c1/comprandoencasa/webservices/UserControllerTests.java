@@ -1,15 +1,15 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices;
 
-import com.unq.dapp0.c1.comprandoencasa.model.Customer;
 import com.unq.dapp0.c1.comprandoencasa.model.Location;
 import com.unq.dapp0.c1.comprandoencasa.model.LocationBuilder;
+import com.unq.dapp0.c1.comprandoencasa.model.User;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
-import com.unq.dapp0.c1.comprandoencasa.services.exceptions.CustomerDoesntExistException;
-import com.unq.dapp0.c1.comprandoencasa.services.CustomerService;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.UserService;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.FieldAlreadyExistsException;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.CustomerOkDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.UserOkDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.LocationDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +30,17 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@WebMvcTest(CustomerController.class)
-public class CustomerControllerTests extends AbstractRestTest{
+@WebMvcTest(UserController.class)
+public class UserControllerTests extends AbstractRestTest{
 
     @Autowired
-    private CustomerController controller;
+    private UserController controller;
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private CustomerService service;
+    private UserService service;
 
     @Test
     public void contextLoads() throws Exception {
@@ -53,11 +53,11 @@ public class CustomerControllerTests extends AbstractRestTest{
         String email = "hola@adios.com";
         String password = "1234";
 
-        Customer customer = mock(Customer.class);
+        User customer = mock(User.class);
         when(customer.getId()).thenReturn(1L);
         when(customer.getName()).thenReturn(name);
 
-        when(service.createCustomer(name, email, password)).thenReturn(customer);
+        when(service.createUser(name, email, password)).thenReturn(customer);
 
         MvcResult mvcResult = this.mockMvc.perform(
                 post("/api/customer")
@@ -70,7 +70,7 @@ public class CustomerControllerTests extends AbstractRestTest{
         assertEquals(201, status);
 
         String content = mvcResult.getResponse().getContentAsString();
-        CustomerOkDTO result = super.mapFromJson(content, CustomerOkDTO.class);
+        UserOkDTO result = super.mapFromJson(content, UserOkDTO.class);
         assertEquals(name, result.name);
         assertEquals(customer.getId(), result.id);
     }
@@ -106,7 +106,7 @@ public class CustomerControllerTests extends AbstractRestTest{
                 "Required String parameter 'password' is not present"
         );
 
-        when(service.createCustomer(generic, generic, generic)).thenThrow(new InvalidEmailFormatException());
+        when(service.createUser(generic, generic, generic)).thenThrow(new InvalidEmailFormatException());
 
         errorTestWith(
                 this.mockMvc.perform(
@@ -119,9 +119,9 @@ public class CustomerControllerTests extends AbstractRestTest{
                 "The email needs to follow the format: user@provider.com"
         );
 
-        when(service.createCustomer("", generic, generic)).thenThrow(new EmptyFieldException("name"));
-        when(service.createCustomer(generic, "", generic)).thenThrow(new EmptyFieldException("email"));
-        when(service.createCustomer(generic, generic, "")).thenThrow(new EmptyFieldException("password"));
+        when(service.createUser("", generic, generic)).thenThrow(new EmptyFieldException("name"));
+        when(service.createUser(generic, "", generic)).thenThrow(new EmptyFieldException("email"));
+        when(service.createUser(generic, generic, "")).thenThrow(new EmptyFieldException("password"));
 
         errorTestWith(
                 this.mockMvc.perform(
@@ -161,7 +161,7 @@ public class CustomerControllerTests extends AbstractRestTest{
     public void endpointPOSTCustomerReturnsForbiddenIfEmailOrNameAlreadyExist() throws Exception {
         String generic = "foo";
 
-        when(service.createCustomer(generic, generic, generic))
+        when(service.createUser(generic, generic, generic))
                 .thenThrow(new FieldAlreadyExistsException("name"))
                 .thenThrow(new FieldAlreadyExistsException("email"));
 
@@ -192,11 +192,11 @@ public class CustomerControllerTests extends AbstractRestTest{
     public void endpointGETCustomerReturnsOkIfValuesGivenValidateAnExistingCustomer() throws Exception {
         String generic = "foo";
 
-        Customer customer = mock(Customer.class);
+        User customer = mock(User.class);
         when(customer.getId()).thenReturn(1L);
         when(customer.getName()).thenReturn(generic);
 
-        when(service.validateCustomer(generic, generic)).thenReturn(customer);
+        when(service.validateUser(generic, generic)).thenReturn(customer);
 
         MvcResult mvcResult = this.mockMvc.perform(
                 get("/api/customer")
@@ -208,7 +208,7 @@ public class CustomerControllerTests extends AbstractRestTest{
         String content = mvcResult.getResponse().getContentAsString();
         assertEquals(200, status);
 
-        CustomerOkDTO result = super.mapFromJson(content, CustomerOkDTO.class);
+        UserOkDTO result = super.mapFromJson(content, UserOkDTO.class);
         assertEquals(generic, result.name);
         assertEquals(customer.getId(), result.id);
     }
@@ -234,7 +234,7 @@ public class CustomerControllerTests extends AbstractRestTest{
                 "Required String parameter 'password' is not present"
         );
 
-        when(service.validateCustomer(generic, generic)).thenThrow(new InvalidEmailFormatException());
+        when(service.validateUser(generic, generic)).thenThrow(new InvalidEmailFormatException());
 
         errorTestWith(
                 this.mockMvc.perform(
@@ -246,8 +246,8 @@ public class CustomerControllerTests extends AbstractRestTest{
                 "The email needs to follow the format: user@provider.com"
         );
 
-        when(service.validateCustomer("", generic)).thenThrow(new EmptyFieldException("email"));
-        when(service.validateCustomer(generic, "")).thenThrow(new EmptyFieldException("password"));
+        when(service.validateUser("", generic)).thenThrow(new EmptyFieldException("email"));
+        when(service.validateUser(generic, "")).thenThrow(new EmptyFieldException("password"));
 
         errorTestWith(
                 this.mockMvc.perform(
@@ -274,7 +274,7 @@ public class CustomerControllerTests extends AbstractRestTest{
     public void endpointGETCustomerReturnsForbiddenIfEmailOrNameAlreadyExist() throws Exception {
         String generic = "foo";
 
-        when(service.validateCustomer(generic, generic)).thenThrow(new InvalidUserException());
+        when(service.validateUser(generic, generic)).thenThrow(new InvalidUserException());
 
         errorTestWith(
                 this.mockMvc.perform(
@@ -342,7 +342,7 @@ public class CustomerControllerTests extends AbstractRestTest{
     public void endpointGETCustomerLocationsReturnsNotFoundIfNoCustomerIsFound() throws Exception {
         Long id = 1L;
 
-        when(service.getLocationsOf(id)).thenThrow(new CustomerDoesntExistException(id));
+        when(service.getLocationsOf(id)).thenThrow(new UserDoesntExistException(id));
 
         errorTestWith(
                 this.mockMvc.perform(
@@ -480,7 +480,7 @@ public class CustomerControllerTests extends AbstractRestTest{
         Long id = 1L;
 
         when(service.addLocationTo(id, generic, Double.valueOf(generic), Double.valueOf(generic)))
-                .thenThrow(new CustomerDoesntExistException(id));
+                .thenThrow(new UserDoesntExistException(id));
 
         errorTestWith(
                 this.mockMvc.perform(

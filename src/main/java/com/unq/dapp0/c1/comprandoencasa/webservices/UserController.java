@@ -1,20 +1,20 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices;
 
-import com.unq.dapp0.c1.comprandoencasa.model.Customer;
 import com.unq.dapp0.c1.comprandoencasa.model.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.User;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
-import com.unq.dapp0.c1.comprandoencasa.services.exceptions.CustomerDoesntExistException;
-import com.unq.dapp0.c1.comprandoencasa.services.CustomerService;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.UserService;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.FieldAlreadyExistsException;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.CustomerOkDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.UserOkDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.LocationDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.EmailFormatBadRequestException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.EmptyFieldsBadRequestException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.FieldAlreadyExistsForbiddenException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ValidationFailureForbiddenException;
-import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.CustomerNotFoundException;
+import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -29,19 +29,19 @@ import java.util.List;
 
 @RestController
 @EnableAutoConfiguration
-public class CustomerController {
+public class UserController {
 
     @Autowired
-    private CustomerService customerService;
+    private UserService userService;
 
     @CrossOrigin
     @PostMapping("/api/customer")
-    public ResponseEntity<CustomerOkDTO> createCustomer(@RequestParam(value = "name") String name,
-                                                        @RequestParam(value = "email") String email,
-                                                        @RequestParam(value = "password") String password) {
+    public ResponseEntity<UserOkDTO> createUser(@RequestParam(value = "name") String name,
+                                                    @RequestParam(value = "email") String email,
+                                                    @RequestParam(value = "password") String password) {
         try{
-            Customer customer = this.customerService.createCustomer(name, email, password);
-            return new ResponseEntity<>(new CustomerOkDTO(customer), HttpStatus.CREATED);
+            User user = this.userService.createUser(name, email, password);
+            return new ResponseEntity<>(new UserOkDTO(user), HttpStatus.CREATED);
         } catch (InvalidEmailFormatException exception){
             throw new EmailFormatBadRequestException();
         } catch (EmptyFieldException exception){
@@ -53,11 +53,11 @@ public class CustomerController {
 
     @CrossOrigin
     @GetMapping("/api/customer")
-    public CustomerOkDTO validateCustomer(@RequestParam(value = "email") String email,
-                                          @RequestParam(value = "password") String password) throws Exception {
+    public UserOkDTO validateUser(@RequestParam(value = "email") String email,
+                                      @RequestParam(value = "password") String password) throws Exception {
         try{
-            Customer customer = this.customerService.validateCustomer(email, password);
-            return new CustomerOkDTO(customer);
+            User user = this.userService.validateUser(email, password);
+            return new UserOkDTO(user);
         } catch (InvalidEmailFormatException exception){
             throw new EmailFormatBadRequestException();
         } catch (EmptyFieldException exception){
@@ -74,12 +74,12 @@ public class CustomerController {
             if (customerId.isEmpty()){
                 throw new EmptyFieldException("customerId");
             }
-            List<Location> locationList = this.customerService.getLocationsOf(Long.valueOf(customerId));
+            List<Location> locationList = this.userService.getLocationsOf(Long.valueOf(customerId));
             return new LocationDTO(Long.valueOf(customerId), locationList);
         } catch (EmptyFieldException exception){
             throw new EmptyFieldsBadRequestException(exception.getMessage());
-        } catch (CustomerDoesntExistException exception){
-            throw new CustomerNotFoundException(exception.getMessage());
+        } catch (UserDoesntExistException exception){
+            throw new UserNotFoundException(exception.getMessage());
         }
     }
 
@@ -94,15 +94,15 @@ public class CustomerController {
             checkField(address, "address");
             checkField(latitude, "latitude");
             checkField(longitude, "longitude");
-            Location location = this.customerService.addLocationTo(Long.valueOf(customerId),
+            Location location = this.userService.addLocationTo(Long.valueOf(customerId),
                     address,
                     Double.valueOf(latitude),
                     Double.valueOf(longitude));
             return new ResponseEntity<Location>(location, HttpStatus.CREATED);
         } catch (EmptyFieldException exception){
             throw new EmptyFieldsBadRequestException(exception.getMessage());
-        } catch (CustomerDoesntExistException exception){
-            throw new CustomerNotFoundException(exception.getMessage());
+        } catch (UserDoesntExistException exception){
+            throw new UserNotFoundException(exception.getMessage());
         }
     }
 

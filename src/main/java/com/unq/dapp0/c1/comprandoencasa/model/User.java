@@ -1,51 +1,47 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.LocationAlreadyPresentException;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
+import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Entity
 @Table
-public class Customer extends CECUser {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column
+    protected String name;
+    @Column
+    protected String password;
+    @Column
+    protected String email;
     @OneToMany
-    private final List<Location> locations;
-
+    private List<Location> locations;
     @Column
     private BigDecimal totalThreshold;
-
     @ElementCollection
     private Map<ProductType, BigDecimal> typesThreshold;
-
     @OneToOne
     private ShoppingList activeShoppingList;
-
     @OneToMany
-    private final List<ShoppingList> historicShoppingLists;
+    private List<ShoppingList> historicShoppingLists;
 
-    public Customer(String name, String password, String email) {
-        super(name, password, email);
+    public User() {}
+
+    public User(String name, String password, String email) {
+        this.checkNoEmpty(name, email, password);
+        this.checkEmailFormat(email);
+
+        this.name = name;
+        this.password = password;
+        this.email = email;
         this.locations = new ArrayList<>();
         this.historicShoppingLists = new ArrayList<>();
     }
@@ -58,8 +54,35 @@ public class Customer extends CECUser {
         this.id = id;
     }
 
+    private void checkNoEmpty(String name, String email, String password) {
+        if (name.isEmpty()){
+            throw new EmptyFieldException("name");
+        } else if (email.isEmpty()){
+            throw new EmptyFieldException("email");
+        } else if (password.isEmpty()){
+            throw new EmptyFieldException("password");
+        }
+    }
+
+    private void checkEmailFormat(String email) {
+        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+        if (!email.matches(regex)) {
+            throw new InvalidEmailFormatException();
+        }
+    }
+
     public void validate(String password, String email) throws Exception {
-        this.validate(password, email, new InvalidUserException());
+        if (!this.email.equals(email) || !this.password.equals(password)) {
+            throw new InvalidUserException();
+        }
+    }
+
+    public void validate(User user) throws Exception {
+        user.validate(this.password, this.email);
+    }
+
+    public String getName(){
+        return this.name;
     }
 
     public List<Location> getLocations() {

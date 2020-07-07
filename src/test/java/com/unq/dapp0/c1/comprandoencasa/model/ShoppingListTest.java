@@ -91,14 +91,14 @@ class ShoppingListTest {
     }
 
     @Test
-    public void aShoppingListKnowsItBelongsToACustomer(){
-        Customer customer = mock(Customer.class);
+    public void aShoppingListKnowsItBelongsToAUser(){
+        User user = mock(User.class);
 
         ShoppingList shoppingList = anyShoppingList()
-                .withCustomer(customer)
+                .withUser(user)
                 .build();
 
-        assertEquals(customer, shoppingList.getCustomer());
+        assertEquals(user, shoppingList.getUser());
     }
 
     @Test
@@ -126,7 +126,7 @@ class ShoppingListTest {
 
 class ShoppingListBuilder {
     private Location location;
-    private Customer customer;
+    private User user;
 
     public static ShoppingListBuilder anyShoppingList(){
         return new ShoppingListBuilder();
@@ -134,11 +134,11 @@ class ShoppingListBuilder {
 
     public ShoppingListBuilder() {
         this.location = mock(Location.class);
-        this.customer = mock(Customer.class);
+        this.user = mock(User.class);
     }
 
     public ShoppingList build() {
-        return new ShoppingList(this.location, this.customer);
+        return new ShoppingList(this.location, this.user);
     }
 
     public ShoppingListBuilder withLocation(Location location){
@@ -146,8 +146,8 @@ class ShoppingListBuilder {
         return this;
     }
 
-    public ShoppingListBuilder withCustomer(Customer customer) {
-        this.customer = customer;
+    public ShoppingListBuilder withUser(User user) {
+        this.user = user;
         return this;
     }
 }

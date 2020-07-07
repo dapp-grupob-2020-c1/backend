@@ -1,14 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
-import com.unq.dapp0.c1.comprandoencasa.model.Product;
-import com.unq.dapp0.c1.comprandoencasa.model.Shop;
-import com.unq.dapp0.c1.comprandoencasa.model.Location;
-import com.unq.dapp0.c1.comprandoencasa.model.LocationBuilder;
-import com.unq.dapp0.c1.comprandoencasa.model.ShopBuilder;
-import com.unq.dapp0.c1.comprandoencasa.model.Manager;
-import com.unq.dapp0.c1.comprandoencasa.model.ManagerBuilder;
-import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
-import com.unq.dapp0.c1.comprandoencasa.model.ProductBuilder;
+import com.unq.dapp0.c1.comprandoencasa.model.*;
 
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
@@ -41,7 +33,7 @@ public class ProductServiceTests {
     private ShopService shopService;
 
     @Autowired
-    private ManagerService managerService;
+    private UserService userService;
 
     @Test
     public void serviceCanSaveAndReturnAProduct(){
@@ -73,16 +65,16 @@ public class ProductServiceTests {
         Location farLocation2 = LocationBuilder.anyLocation()
                 .withCoordinates(-35.577200, -58.013928).build(); //Chascomus
 
-        Manager manager = ManagerBuilder.anyManager().build();
+        User manager = UserBuilder.anyUser().build();
 
         Shop shop1 = ShopBuilder.anyShop().withLocation(nearLocation1)
-                .withManager(manager).build();
+                .withUser(manager).build();
         Shop shop2 = ShopBuilder.anyShop().withLocation(nearLocation2)
-                .withManager(manager).build();
+                .withUser(manager).build();
         Shop shop3 = ShopBuilder.anyShop().withLocation(farLocation1)
-                .withManager(manager).build();
+                .withUser(manager).build();
         Shop shop4 = ShopBuilder.anyShop().withLocation(farLocation2)
-                .withManager(manager).build();
+                .withUser(manager).build();
 
         List<ProductType> validTypes1 = new ArrayList<>();
         validTypes1.add(ProductType.Bazaar);
@@ -119,7 +111,7 @@ public class ProductServiceTests {
                 .withTypes(validTypes2)
                 .withShop(shop4).build();
 
-        managerService.save(manager);
+        userService.save(manager);
 
         locationService.save(nearLocation1);
         locationService.save(nearLocation2);

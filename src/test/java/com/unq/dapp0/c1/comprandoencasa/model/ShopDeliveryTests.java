@@ -36,14 +36,14 @@ public class ShopDeliveryTests {
     }
 
     @Test
-    public void aDeliveryCanBeOfACustomer(){
-        Customer customer = mock(Customer.class);
+    public void aDeliveryCanBeOfAUser(){
+        User user = mock(User.class);
 
         ShopDelivery delivery = ShopDeliveryBuilder.anyDelivery()
-                .withCustomer(customer)
+                .withUser(user)
                 .build();
 
-        assertEquals(customer, delivery.getCustomer());
+        assertEquals(user, delivery.getUser());
     }
 
     @Test
@@ -73,7 +73,7 @@ public class ShopDeliveryTests {
 class ShopDeliveryBuilder{
     private Shop shop;
     private ArrayList<Product> products;
-    private Customer customer;
+    private User user;
     private Turn turn;
     private Location location;
 
@@ -84,15 +84,15 @@ class ShopDeliveryBuilder{
     private ShopDeliveryBuilder(){
         this.shop = mock(Shop.class);
         this.products = new ArrayList<>();
-        this.customer = mock(Customer.class);
+        this.user = mock(User.class);
         this.turn = mock(Turn.class);
     }
 
     public ShopDelivery build() {
         if (this.turn != null){
-            return new DeliveryAtShop(shop, products, customer, turn);
+            return new DeliveryAtShop(shop, products, user, turn);
         } else {
-            return new DeliveryAtHome(shop, products, customer, location);
+            return new DeliveryAtHome(shop, products, user, location);
         }
     }
 
@@ -106,8 +106,8 @@ class ShopDeliveryBuilder{
         return this;
     }
 
-    public ShopDeliveryBuilder withCustomer(Customer customer) {
-        this.customer = customer;
+    public ShopDeliveryBuilder withUser(User user) {
+        this.user = user;
         return this;
     }
 

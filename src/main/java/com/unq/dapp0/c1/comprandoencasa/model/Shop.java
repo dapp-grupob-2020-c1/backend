@@ -64,7 +64,7 @@ public class Shop {
                     CascadeType.MERGE,
                     CascadeType.REFRESH
             })
-    private Manager manager;
+    private User user;
 
     @OneToMany
     private List<Product> products;
@@ -86,7 +86,7 @@ public class Shop {
                 LocalTime closingHour,
                 List<PaymentMethod> paymentMethods,
                 Integer deliveryRadius,
-                Manager manager) {
+                User user) {
         this.name = name;
         this.shopCategories = shopCategories;
         this.location = location;
@@ -95,7 +95,7 @@ public class Shop {
         this.closingHour = closingHour;
         this.paymentMethods = paymentMethods;
         this.deliveryRadius = deliveryRadius;
-        this.manager = manager;
+        this.user = user;
         this.products = new ArrayList<>();
         this.discounts = new ArrayList<>();
         this.activeDeliveries = new ArrayList<>();
@@ -203,10 +203,10 @@ public class Shop {
      * Validates that the given manager is the same as the manager in charge of the Shop.
      * Delegates the verification to his own manager.
      *
-     * @param manager to validate
+     * @param user to validate
      */
-    public void validateManager(Manager manager) throws Exception {
-        this.manager.validate(manager);
+    public void validateManager(User user) throws Exception {
+        this.user.validate(user);
     }
 
     public List<Product> getProducts() {

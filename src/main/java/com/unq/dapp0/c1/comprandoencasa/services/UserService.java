@@ -1,13 +1,13 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
-import com.unq.dapp0.c1.comprandoencasa.model.Customer;
 import com.unq.dapp0.c1.comprandoencasa.model.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.User;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
-import com.unq.dapp0.c1.comprandoencasa.repositories.CustomerRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.UserRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.LocationRepository;
-import com.unq.dapp0.c1.comprandoencasa.services.exceptions.CustomerDoesntExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.FieldAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,27 +17,27 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CustomerService {
+public class UserService {
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private LocationRepository locationRepository;
 
     @Transactional
-    public Customer createCustomer(String name, String email, String password) {
+    public User createUser(String name, String email, String password) {
         checkIfExists(name, email);
-        Customer customer = new Customer(name, password, email);
-        customerRepository.save(customer);
-        return customer;
+        User user = new User(name, password, email);
+        userRepository.save(user);
+        return user;
     }
 
     private void checkIfExists(String name, String email) {
-        List<Customer> customerList = customerRepository.findByNameOrEmail(name, email);
-        if (!customerList.isEmpty()){
-            Customer customer = customerList.get(0);
-            if (customer.getName().equals(name)){
+        List<User> userList = userRepository.findByNameOrEmail(name, email);
+        if (!userList.isEmpty()){
+            User user = userList.get(0);
+            if (user.getName().equals(name)){
                 throw new FieldAlreadyExistsException("name");
             } else {
                 throw new FieldAlreadyExistsException("email");
@@ -46,25 +46,25 @@ public class CustomerService {
     }
 
     @Transactional
-    public Customer findCustomerById(Long id) {
-        Optional<Customer> result = customerRepository.findById(id);
+    public User findUserById(Long id) {
+        Optional<User> result = userRepository.findById(id);
         if (result.isPresent()){
             return result.get();
         } else {
-            throw new CustomerDoesntExistException(id);
+            throw new UserDoesntExistException(id);
         }
     }
 
     @Transactional
-    public Customer validateCustomer(String email, String password) throws Exception {
+    public User validateUser(String email, String password) throws Exception {
         checkParameter(email, "email");
         checkParameter(password, "password");
         checkEmailFormat(email);
-        Optional<Customer> result = customerRepository.findByEmail(email);
+        Optional<User> result = userRepository.findByEmail(email);
         if (result.isPresent()){
-            Customer customer = result.get();
-            customer.validate(password, email);
-            return customer;
+            User user = result.get();
+            user.validate(password, email);
+            return user;
         } else {
             throw new InvalidUserException();
         }
@@ -84,19 +84,24 @@ public class CustomerService {
     }
 
     @Transactional
-    public List<Location> getLocationsOf(Long customerId) {
-        Customer customer = findCustomerById(customerId);
-        return customer.getLocations();
+    public List<Location> getLocationsOf(Long userId) {
+        User user = findUserById(userId);
+        return user.getLocations();
     }
 
     @Transactional
     public Location addLocationTo(Long customerId, String address, Double latitude, Double longitude) {
         checkParameter(address, "address");
-        Customer customer = findCustomerById(customerId);
+        User user = findUserById(customerId);
         Location location = new Location(address, latitude, longitude);
-        customer.addLocation(location);
+        user.addLocation(location);
         locationRepository.save(location);
-        customerRepository.save(customer);
+        userRepository.save(user);
         return location;
+    }
+
+    @Transactional
+    public User save(User user) {
+        return userRepository.save(user);
     }
 }

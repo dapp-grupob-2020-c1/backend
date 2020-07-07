@@ -18,23 +18,24 @@ import java.util.List;
 public class ShoppingList {
 
     @OneToOne
-    private final Customer customer;
+    private User user;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToMany
-    private final List<ShoppingListEntry> entries;
+    private List<ShoppingListEntry> entries;
 
-    // ubicación hacia donde se debe hacer el envio, domicilio de comprador
     @OneToOne
     private Location deliveryLocation;
 
-    public ShoppingList(Location deliveryLocation, Customer customer) {
+    public ShoppingList(){}
+
+    public ShoppingList(Location deliveryLocation, User user) {
         this.entries = new ArrayList<>();
         this.deliveryLocation = deliveryLocation;
-        this.customer = customer;
+        this.user = user;
     }
 
     public Long getId() {
@@ -104,8 +105,8 @@ public class ShoppingList {
         this.deliveryLocation = aLocation;
     }
 
-    public Customer getCustomer() {
-        return this.customer;
+    public User getUser() {
+        return this.user;
     }
 
     public BigDecimal evaluateTotalFor(ProductType productType) {
