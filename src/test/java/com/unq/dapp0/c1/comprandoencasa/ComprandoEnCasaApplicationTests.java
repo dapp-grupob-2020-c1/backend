@@ -4,7 +4,8 @@ import com.unq.dapp0.c1.comprandoencasa.ComprandoEnCasaApplication;
 import com.unq.dapp0.c1.comprandoencasa.webservices.AbstractRestTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -14,7 +15,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@WebMvcTest(ComprandoEnCasaApplication.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ComprandoEnCasaApplicationTests extends AbstractRestTest {
 
     @Autowired
