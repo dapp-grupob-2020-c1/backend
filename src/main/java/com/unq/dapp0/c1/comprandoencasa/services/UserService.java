@@ -1,5 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
+import com.unq.dapp0.c1.comprandoencasa.model.AuthProvider;
 import com.unq.dapp0.c1.comprandoencasa.model.Location;
 import com.unq.dapp0.c1.comprandoencasa.model.User;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
@@ -28,7 +29,7 @@ public class UserService {
     @Transactional
     public User createUser(String name, String email, String password) {
         checkIfExists(name, email);
-        User user = new User(name, password, email);
+        User user = new User(name, password, email, AuthProvider.google);
         userRepository.save(user);
         return user;
     }

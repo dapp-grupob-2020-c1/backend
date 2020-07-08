@@ -23,4 +23,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
                                      @Param(value = "email") String email);
 
     Optional<User> findByEmail(String email);
+
+    Boolean existsByEmail(String email);
 }

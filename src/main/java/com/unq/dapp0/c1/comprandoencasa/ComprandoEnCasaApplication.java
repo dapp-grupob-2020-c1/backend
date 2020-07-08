@@ -1,7 +1,9 @@
 package com.unq.dapp0.c1.comprandoencasa;
 
+import com.unq.dapp0.c1.comprandoencasa.config.AppProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
+@EnableConfigurationProperties(AppProperties.class)
 public class ComprandoEnCasaApplication {
 
 	public static void main(String[] args) {

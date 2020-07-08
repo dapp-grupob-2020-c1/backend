@@ -16,7 +16,7 @@ public class UserBuilder {
     }
 
     public User build() {
-        return new User(name, password, email);
+        return new User(name, password, email, AuthProvider.google);
     }
 
     public UserBuilder withName(String name) {

@@ -5,9 +5,26 @@ import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatExcep
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.LocationAlreadyPresentException;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Entity
 @Table
@@ -16,32 +33,52 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+
+    @Column(nullable = false)
     protected String name;
-    @Column
+
     protected String password;
-    @Column
+
+    @Email
+    @Column(nullable = false)
     protected String email;
+
+    @Column(nullable = false)
+    private Boolean emailVerified = false;
+
+    private String imageUrl;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+    private String providerId;
+
     @OneToMany
     private List<Location> locations;
+
     @Column
     private BigDecimal totalThreshold;
+
     @ElementCollection
     private Map<ProductType, BigDecimal> typesThreshold;
+
     @OneToOne
     private ShoppingList activeShoppingList;
+
     @OneToMany
     private List<ShoppingList> historicShoppingLists;
 
     public User() {}
 
-    public User(String name, String password, String email) {
+    public User(String name, String password, String email, AuthProvider provider) {
         this.checkNoEmpty(name, email, password);
         this.checkEmailFormat(email);
 
         this.name = name;
         this.password = password;
         this.email = email;
+        this.provider = provider;
         this.locations = new ArrayList<>();
         this.historicShoppingLists = new ArrayList<>();
     }
@@ -79,10 +116,6 @@ public class User {
 
     public void validate(User user) throws Exception {
         user.validate(this.password, this.email);
-    }
-
-    public String getName(){
-        return this.name;
     }
 
     public List<Location> getLocations() {
@@ -160,5 +193,60 @@ public class User {
         } else {
             return BigDecimal.valueOf(0);
         }
+    }
+
+    public String getName(){
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public AuthProvider getProvider() {
+        return this.provider;
+    }
+
+    public void setProvider(AuthProvider provider) {
+        this.provider = provider;
+    }
+
+    public String getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(String id) {
+        this.providerId = id;
+    }
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Boolean getEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(Boolean emailVerified) {
+        this.emailVerified = emailVerified;
     }
 }
