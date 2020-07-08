@@ -20,7 +20,7 @@ public class ShopController {
     private ShopService shopService;
 
     @CrossOrigin
-    @GetMapping("/api/shop")
+    @GetMapping("/shop")
     public ShopDTO getShop(@RequestParam(value = "shopId") String shopId) {
         try{
             Shop shop = this.shopService.findShopById(Long.valueOf(shopId));

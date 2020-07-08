@@ -63,9 +63,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+        PasswordEncoder encoder = passwordEncoder();
+
         authenticationManagerBuilder
                 .userDetailsService(customUserDetailsService)
-                .passwordEncoder(passwordEncoder());
+                .passwordEncoder(encoder);
+
+        authenticationManagerBuilder.inMemoryAuthentication()
+                .passwordEncoder(encoder)
+                .withUser("spring")
+                .password(encoder.encode("secret"))
+                .roles("USER");
     }
 
     @Bean
@@ -111,6 +119,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers("/auth/**", "/oauth2/**")
                 .permitAll()
+                .antMatchers("/user/**",
+                        "/shop/**",
+                        "/product/**")
+                .authenticated()
                 .anyRequest()
                 .authenticated()
                 .and()

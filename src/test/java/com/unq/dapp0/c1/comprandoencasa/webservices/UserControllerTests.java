@@ -18,6 +18,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -290,6 +291,7 @@ public class UserControllerTests extends AbstractRestTest{
         );
     }
 
+    @WithMockUser("spring")
     @Test
     public void endpointGETCustomerLocationsReturnsOkWithAListOfLocations() throws Exception {
         Location location1 = LocationBuilder.anyLocation().build();
@@ -304,7 +306,7 @@ public class UserControllerTests extends AbstractRestTest{
         when(service.getLocationsOf(1L)).thenReturn(locations);
 
         MvcResult mvcResult = this.mockMvc.perform(
-                get("/api/customer/locations")
+                get("/user/locations")
                         .param("customerId", String.valueOf(1L))
                         .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
@@ -319,11 +321,12 @@ public class UserControllerTests extends AbstractRestTest{
         assertTrue(result.locations.stream().anyMatch(location -> location.getId().equals(location2.getId())));
     }
 
+    @WithMockUser("spring")
     @Test
     public void endpointGETCustomerLocationsReturnsBadRequestIfParameterCustomerIdIsEmptyOrMissing() throws Exception {
         errorTestWith(
                 this.mockMvc.perform(
-                        get("/api/customer/locations")
+                        get("/user/locations")
                                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn(),
                 400,
                 "Required String parameter 'customerId' is not present"
@@ -333,7 +336,7 @@ public class UserControllerTests extends AbstractRestTest{
 
         errorTestWith(
                 this.mockMvc.perform(
-                        get("/api/customer/locations")
+                        get("/user/locations")
                                 .param("customerId", emptyId)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn(),
                 400,
@@ -341,6 +344,7 @@ public class UserControllerTests extends AbstractRestTest{
         );
     }
 
+    @WithMockUser("spring")
     @Test
     public void endpointGETCustomerLocationsReturnsNotFoundIfNoCustomerIsFound() throws Exception {
         Long id = 1L;
@@ -349,7 +353,7 @@ public class UserControllerTests extends AbstractRestTest{
 
         errorTestWith(
                 this.mockMvc.perform(
-                        get("/api/customer/locations")
+                        get("/user/locations")
                                 .param("customerId", String.valueOf(id))
                                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn(),
                 404,
@@ -357,6 +361,7 @@ public class UserControllerTests extends AbstractRestTest{
         );
     }
 
+    @WithMockUser("spring")
     @Test
     public void endpointPOSTCustomerLocationReturnsCreated() throws Exception {
         Location location = LocationBuilder.anyLocation().build();
@@ -371,7 +376,7 @@ public class UserControllerTests extends AbstractRestTest{
         when(service.addLocationTo(Long.valueOf(customerId), address, latitude, longitude)).thenReturn(location);
 
         MvcResult mvcResult = this.mockMvc.perform(
-                post("/api/customer/location")
+                post("/user/location")
                         .param("customerId", customerId)
                         .param("address", address)
                         .param("latitude", String.valueOf(latitude))
@@ -386,13 +391,14 @@ public class UserControllerTests extends AbstractRestTest{
         assertEquals(location.getId(), result.getId());
     }
 
+    @WithMockUser("spring")
     @Test
     public void endpointPOSTCustomerLocationReturnsBadRequestIfThereIsAnyEmptyOrMissingParameter() throws Exception {
         String generic = "foo";
 
         errorTestWith(
                 this.mockMvc.perform(
-                post("/api/customer/location")
+                post("/user/location")
                         .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn(),
                 400,
                 "Required String parameter 'customerId' is not present"
@@ -400,7 +406,7 @@ public class UserControllerTests extends AbstractRestTest{
 
         errorTestWith(
                 this.mockMvc.perform(
-                        post("/api/customer/location")
+                        post("/user/location")
                                 .param("customerId", generic)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn(),
                 400,
@@ -409,7 +415,7 @@ public class UserControllerTests extends AbstractRestTest{
 
         errorTestWith(
                 this.mockMvc.perform(
-                        post("/api/customer/location")
+                        post("/user/location")
                                 .param("customerId", generic)
                                 .param("address", generic)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn(),
@@ -419,7 +425,7 @@ public class UserControllerTests extends AbstractRestTest{
 
         errorTestWith(
                 this.mockMvc.perform(
-                        post("/api/customer/location")
+                        post("/user/location")
                                 .param("customerId", generic)
                                 .param("address", generic)
                                 .param("latitude", generic)
@@ -430,7 +436,7 @@ public class UserControllerTests extends AbstractRestTest{
 
         errorTestWith(
                 this.mockMvc.perform(
-                        post("/api/customer/location")
+                        post("/user/location")
                                 .param("customerId", "")
                                 .param("address", generic)
                                 .param("latitude", generic)
@@ -442,7 +448,7 @@ public class UserControllerTests extends AbstractRestTest{
 
         errorTestWith(
                 this.mockMvc.perform(
-                        post("/api/customer/location")
+                        post("/user/location")
                                 .param("customerId", generic)
                                 .param("address", "")
                                 .param("latitude", generic)
@@ -454,7 +460,7 @@ public class UserControllerTests extends AbstractRestTest{
 
         errorTestWith(
                 this.mockMvc.perform(
-                        post("/api/customer/location")
+                        post("/user/location")
                                 .param("customerId", generic)
                                 .param("address", generic)
                                 .param("latitude", "")
@@ -466,7 +472,7 @@ public class UserControllerTests extends AbstractRestTest{
 
         errorTestWith(
                 this.mockMvc.perform(
-                        post("/api/customer/location")
+                        post("/user/location")
                                 .param("customerId", generic)
                                 .param("address", generic)
                                 .param("latitude", generic)
@@ -477,6 +483,7 @@ public class UserControllerTests extends AbstractRestTest{
         );
     }
 
+    @WithMockUser("spring")
     @Test
     public void endpointPOSTCustomerLocationReturnsNotFoundIfCustomerIdDoesntExist() throws Exception {
         String generic = "2";
@@ -487,7 +494,7 @@ public class UserControllerTests extends AbstractRestTest{
 
         errorTestWith(
                 this.mockMvc.perform(
-                        post("/api/customer/location")
+                        post("/user/location")
                                 .param("customerId", String.valueOf(id))
                                 .param("address", generic)
                                 .param("latitude", generic)

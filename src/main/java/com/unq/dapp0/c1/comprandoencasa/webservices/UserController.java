@@ -8,6 +8,7 @@ import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistExcep
 import com.unq.dapp0.c1.comprandoencasa.services.UserService;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.FieldAlreadyExistsException;
+import com.unq.dapp0.c1.comprandoencasa.services.security.UserPrincipal;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.UserOkDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.LocationDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.EmailFormatBadRequestException;
@@ -15,60 +16,33 @@ import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.EmptyFieldsBadReq
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.FieldAlreadyExistsForbiddenException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ValidationFailureForbiddenException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.UserNotFoundException;
+import com.unq.dapp0.c1.comprandoencasa.webservices.security.CurrentUser;
+import com.unq.dapp0.c1.comprandoencasa.webservices.security.user.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @EnableAutoConfiguration
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @CrossOrigin
-    @PostMapping("/api/customer")
-    public ResponseEntity<UserOkDTO> createUser(@RequestParam(value = "name") String name,
-                                                    @RequestParam(value = "email") String email,
-                                                    @RequestParam(value = "password") String password) {
-        try{
-            User user = this.userService.createUser(name, email, password);
-            return new ResponseEntity<>(new UserOkDTO(user), HttpStatus.CREATED);
-        } catch (InvalidEmailFormatException exception){
-            throw new EmailFormatBadRequestException();
-        } catch (EmptyFieldException exception){
-            throw new EmptyFieldsBadRequestException(exception.getMessage());
-        } catch (FieldAlreadyExistsException exception){
-            throw new FieldAlreadyExistsForbiddenException(exception.getMessage());
-        }
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('USER')")
+    public User getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+        return userService.findUserById(userPrincipal.getId());
     }
 
     @CrossOrigin
-    @GetMapping("/api/customer")
-    public UserOkDTO validateUser(@RequestParam(value = "email") String email,
-                                      @RequestParam(value = "password") String password) throws Exception {
-        try{
-            User user = this.userService.validateUser(email, password);
-            return new UserOkDTO(user);
-        } catch (InvalidEmailFormatException exception){
-            throw new EmailFormatBadRequestException();
-        } catch (EmptyFieldException exception){
-            throw new EmptyFieldsBadRequestException(exception.getMessage());
-        } catch (InvalidUserException exception){
-            throw new ValidationFailureForbiddenException();
-        }
-    }
-
-    @CrossOrigin
-    @GetMapping("/api/customer/locations")
+    @GetMapping("/locations")
     public LocationDTO getLocations(@RequestParam(value = "customerId") String customerId) {
         try{
             if (customerId.isEmpty()){
@@ -84,7 +58,7 @@ public class UserController {
     }
 
     @CrossOrigin
-    @PostMapping("/api/customer/location")
+    @PostMapping("/location")
     public ResponseEntity<Location> createLocation(@RequestParam(value = "customerId") String customerId,
                                                    @RequestParam(value = "address") String address,
                                                    @RequestParam(value = "latitude") String latitude,
