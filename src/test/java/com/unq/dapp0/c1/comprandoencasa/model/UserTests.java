@@ -151,7 +151,7 @@ public class UserTests {
 
         ShoppingList shoppingList = mock(ShoppingList.class);
 
-        user.addActiveShoppingList(shoppingList);
+        user.setActiveShoppingList(shoppingList);
 
         assertEquals(shoppingList, user.getActiveShoppingList());
     }

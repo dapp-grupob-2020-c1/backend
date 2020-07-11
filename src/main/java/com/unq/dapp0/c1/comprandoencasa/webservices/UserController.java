@@ -2,28 +2,26 @@ package com.unq.dapp0.c1.comprandoencasa.webservices;
 
 import com.unq.dapp0.c1.comprandoencasa.model.Location;
 import com.unq.dapp0.c1.comprandoencasa.model.User;
-import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
-import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.UserService;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
-import com.unq.dapp0.c1.comprandoencasa.services.exceptions.FieldAlreadyExistsException;
 import com.unq.dapp0.c1.comprandoencasa.services.security.UserPrincipal;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.UserOkDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.UserDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.LocationDTO;
-import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.EmailFormatBadRequestException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.EmptyFieldsBadRequestException;
-import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.FieldAlreadyExistsForbiddenException;
-import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ValidationFailureForbiddenException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.UserNotFoundException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.security.CurrentUser;
-import com.unq.dapp0.c1.comprandoencasa.webservices.security.user.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -37,8 +35,9 @@ public class UserController {
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public User getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
-        return userService.findUserById(userPrincipal.getId());
+    public UserDTO getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+        User user = userService.findUserById(userPrincipal.getId());
+        return new UserDTO(user);
     }
 
     @CrossOrigin
@@ -72,7 +71,7 @@ public class UserController {
                     address,
                     Double.valueOf(latitude),
                     Double.valueOf(longitude));
-            return new ResponseEntity<Location>(location, HttpStatus.CREATED);
+            return new ResponseEntity<>(location, HttpStatus.CREATED);
         } catch (EmptyFieldException exception){
             throw new EmptyFieldsBadRequestException(exception.getMessage());
         } catch (UserDoesntExistException exception){

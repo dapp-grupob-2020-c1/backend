@@ -1,27 +1,24 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices.security;
 
-import com.unq.dapp0.c1.comprandoencasa.model.AuthProvider;
 import com.unq.dapp0.c1.comprandoencasa.model.User;
 import com.unq.dapp0.c1.comprandoencasa.services.UserService;
-import com.unq.dapp0.c1.comprandoencasa.services.security.TokenProvider;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.FieldAlreadyExistsException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.payload.ApiResponse;
 import com.unq.dapp0.c1.comprandoencasa.webservices.payload.AuthResponse;
 import com.unq.dapp0.c1.comprandoencasa.webservices.payload.LoginRequest;
 import com.unq.dapp0.c1.comprandoencasa.webservices.payload.SignUpRequest;
 import com.unq.dapp0.c1.comprandoencasa.webservices.security.user.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -30,56 +27,41 @@ import java.net.URI;
 public class AuthController {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private TokenProvider tokenProvider;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
-                        loginRequest.getPassword()
-                )
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String token = tokenProvider.createToken(authentication);
+        String token = userService.authenticateUser(loginRequest.getEmail(), loginRequest.getPassword());
         return ResponseEntity.ok(new AuthResponse(token));
     }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        if(userService.existsByEmail(signUpRequest.getEmail())) {
-            throw new BadRequestException("Email address already in use.");
+        try{
+            User result = userService.registerUser(
+                    signUpRequest.getEmail(),
+                    signUpRequest.getName(),
+                    signUpRequest.getPassword()
+            );
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentContextPath().path("/user/me")
+                    .buildAndExpand(result.getId()).toUri();
+            return ResponseEntity.created(location)
+                    .body(new ApiResponse(true, "User registered successfully@"));
+        } catch (FieldAlreadyExistsException e){
+            throw new BadRequestException(e.getMessage());
         }
+    }
 
-        // Creating user's account
-        User user = new User();
-        user.setName(signUpRequest.getName());
-        user.setEmail(signUpRequest.getEmail());
-        user.setPassword(signUpRequest.getPassword());
-        user.setProvider(AuthProvider.local);
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        User result = userService.save(user);
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/user/me")
-                .buildAndExpand(result.getId()).toUri();
-
-        return ResponseEntity.created(location)
-                .body(new ApiResponse(true, "User registered successfully@"));
+    @ExceptionHandler(value = {HttpMessageNotReadableException.class})
+    public ModelAndView handleNoBodyBadRequest(HttpServletRequest req, Exception ex) {
+        String bodyOfResponse = "The body is empty or lacks some fields.";
+        HttpMessageNotReadableException exception = new HttpMessageNotReadableException(bodyOfResponse, ((HttpMessageNotReadableException)ex).getHttpInputMessage());
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("exception", exception);
+        mav.addObject("url", req.getRequestURL());
+        mav.setViewName("error");
+        return mav;
     }
 
 }

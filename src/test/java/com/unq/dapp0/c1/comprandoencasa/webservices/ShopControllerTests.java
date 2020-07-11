@@ -91,8 +91,6 @@ public class ShopControllerTests extends AbstractRestTest{
         int status = mvcResult.getResponse().getStatus();
         assertEquals(400, status);
 
-        String errorMessage = mvcResult.getResponse().getErrorMessage();
-        assertEquals("Required String parameter 'shopId' is not present", errorMessage);
     }
 
     @WithMockUser("spring")

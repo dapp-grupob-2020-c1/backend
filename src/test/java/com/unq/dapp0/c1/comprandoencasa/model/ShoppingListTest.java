@@ -35,7 +35,7 @@ class ShoppingListTest {
         Product aProduct = mock(Product.class);
 
         assertEquals(0, aShoppingList.countProducts());
-        aShoppingList.add(aProduct, 5);
+        aShoppingList.addProduct(aProduct, 5);
         assertEquals(1, aShoppingList.countProducts());
     }
 
@@ -45,7 +45,7 @@ class ShoppingListTest {
         Product aProduct = mock(Product.class);
 
         assertEquals(0, aShoppingList.countItems());
-        aShoppingList.add(aProduct, 5);
+        aShoppingList.addProduct(aProduct, 5);
         assertEquals(5, aShoppingList.countItems());
     }
 
@@ -66,7 +66,7 @@ class ShoppingListTest {
         when(discount.calculateFor(any())).thenReturn(new BigDecimal(100));
 
         assertEquals(new BigDecimal(0), aShoppingList.totalValue());
-        aShoppingList.add(aProduct, 2);
+        aShoppingList.addProduct(aProduct, 2);
         assertEquals(new BigDecimal(120), aShoppingList.totalValue());
     }
 
@@ -108,16 +108,17 @@ class ShoppingListTest {
         Product product1 = mock(Product.class);
         Product product2 = mock(Product.class);
 
-        when(product1.isType(any())).thenReturn(false);
-        when(product2.isType(any())).thenReturn(false);
+        when(product1.getId()).thenReturn(1L);
+        when(product2.getId()).thenReturn(2L);
+
         when(product1.isType(ProductType.Bazaar)).thenReturn(true);
         when(product2.isType(ProductType.Bazaar)).thenReturn(true);
 
         when(product1.getPrice()).thenReturn(BigDecimal.valueOf(1));
         when(product2.getPrice()).thenReturn(BigDecimal.valueOf(1));
 
-        shoppingList.add(product1, 1);
-        shoppingList.add(product2, 2);
+        shoppingList.addProduct(product1, 1);
+        shoppingList.addProduct(product2, 2);
 
         assertEquals(BigDecimal.valueOf(3), shoppingList.evaluateTotalFor(ProductType.Bazaar));
     }

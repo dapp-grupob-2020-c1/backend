@@ -1,6 +1,5 @@
 package com.unq.dapp0.c1.comprandoencasa.repositories;
 
-import com.unq.dapp0.c1.comprandoencasa.model.AuthProvider;
 import com.unq.dapp0.c1.comprandoencasa.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,7 @@ public class UserRepositoryTests {
         String email = "foo@foo.com";
         String password = "1234";
 
-        User user = new User(name, password, email, AuthProvider.google);
+        User user = new User(name, password, email);
         userRepository.save(user);
         Optional<User> result = userRepository.findById(user.getId());
         assertTrue(result.isPresent());
@@ -51,10 +50,10 @@ public class UserRepositoryTests {
         String email2 = "faa@foo.com";
         String password = "1234";
 
-        User user1 = new User(name1, password, email1, AuthProvider.google);
-        User user2 = new User(name1, password, email2, AuthProvider.google);
-        User user3 = new User(name2, password, email1, AuthProvider.google);
-        User user4 = new User(name2, password, email2, AuthProvider.google);
+        User user1 = new User(name1, password, email1);
+        User user2 = new User(name1, password, email2);
+        User user3 = new User(name2, password, email1);
+        User user4 = new User(name2, password, email2);
 
         userRepository.save(user1);
         userRepository.save(user2);
@@ -75,7 +74,7 @@ public class UserRepositoryTests {
         String email = "foo@foo.com";
         String password = "1234";
 
-        User user = new User(name, password, email, AuthProvider.google);
+        User user = new User(name, password, email);
         userRepository.save(user);
         Optional<User> result = userRepository.findByEmail(email);
         assertTrue(result.isPresent());

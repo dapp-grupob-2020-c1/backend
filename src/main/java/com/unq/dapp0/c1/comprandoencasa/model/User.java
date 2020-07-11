@@ -30,6 +30,8 @@ import java.util.Optional;
 @Table
 public class User {
 
+    public static ShoppingList emptyShoppingList = new ShoppingList();
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -71,16 +73,16 @@ public class User {
 
     public User() {}
 
-    public User(String name, String password, String email, AuthProvider provider) {
+    public User(String name, String password, String email) {
         this.checkNoEmpty(name, email, password);
         this.checkEmailFormat(email);
 
         this.name = name;
         this.password = password;
         this.email = email;
-        this.provider = provider;
         this.locations = new ArrayList<>();
         this.historicShoppingLists = new ArrayList<>();
+        this.provider = AuthProvider.local;
     }
 
     public Long getId() {
@@ -154,11 +156,14 @@ public class User {
         this.typesThreshold = typeList;
     }
 
-    public void addActiveShoppingList(ShoppingList shoppingList) {
+    public void setActiveShoppingList(ShoppingList shoppingList) {
         this.activeShoppingList = shoppingList;
     }
 
     public ShoppingList getActiveShoppingList() {
+        if (activeShoppingList == null){
+            return emptyShoppingList;
+        }
         return this.activeShoppingList;
     }
 

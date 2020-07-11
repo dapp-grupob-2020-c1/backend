@@ -45,7 +45,7 @@ public class UserServiceTests {
     public void serviceThrowsUserDoesntExistWhenTryingToFindByInexistentId(){
         UserDoesntExistException exception = assertThrows(UserDoesntExistException.class, ()-> userService.findUserById(0L));
         assertNotNull(exception);
-        assertEquals("Customer with id 0 does not exist", exception.getMessage());
+        assertEquals("User with id 0 does not exist", exception.getMessage());
     }
 
     @Test
@@ -195,7 +195,7 @@ public class UserServiceTests {
         UserDoesntExistException userDoesntExistException =
                 assertThrows(UserDoesntExistException.class, ()-> userService.addLocationTo(id, address, latitude, longitude));
         assertNotNull(userDoesntExistException);
-        assertEquals("Customer with id " + id + " does not exist", userDoesntExistException.getMessage());
+        assertEquals("User with id " + id + " does not exist", userDoesntExistException.getMessage());
     }
 
     @Test
@@ -205,7 +205,7 @@ public class UserServiceTests {
         UserDoesntExistException userDoesntExistException =
                 assertThrows(UserDoesntExistException.class, ()-> userService.getLocationsOf(id));
         assertNotNull(userDoesntExistException);
-        assertEquals("Customer with id " + id + " does not exist", userDoesntExistException.getMessage());
+        assertEquals("User with id " + id + " does not exist", userDoesntExistException.getMessage());
     }
 
 }

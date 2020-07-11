@@ -45,7 +45,7 @@ public class InitService {
         LocalTime opening = LocalTime.of(9, 30, 0, 0);
         LocalTime closing = LocalTime.of(18, 0, 0, 0);
 
-        User aShopManager = new User("Manager", "123456", "manager@example.com", AuthProvider.google);
+        User aShopManager = new User("Manager", "123456", "manager@example.com");
 
         Location aShopLocation = new Location("AAA 123", 1234d, 1234d);
 

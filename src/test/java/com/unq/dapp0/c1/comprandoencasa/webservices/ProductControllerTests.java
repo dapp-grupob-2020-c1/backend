@@ -101,8 +101,6 @@ public class ProductControllerTests extends AbstractRestTest {
         int status = mvcResult.getResponse().getStatus();
         assertEquals(400, status);
 
-        String errorMessage = mvcResult.getResponse().getErrorMessage();
-        assertEquals("Required String parameter 'productId' is not present", errorMessage);
     }
 
     @WithMockUser("spring")
@@ -204,8 +202,6 @@ public class ProductControllerTests extends AbstractRestTest {
         int noLocStatus = noLocResult.getResponse().getStatus();
         assertEquals(400, noLocStatus);
 
-        String noLocError = noLocResult.getResponse().getErrorMessage();
-        assertEquals("Required String parameter 'locationId' is not present", noLocError);
 
         MvcResult invalidCatResult = this.mockMvc.perform(
                 get("/product/search")
@@ -216,8 +212,6 @@ public class ProductControllerTests extends AbstractRestTest {
         int invCatStatus = invalidCatResult.getResponse().getStatus();
         assertEquals(400, invCatStatus);
 
-        String invCatError = invalidCatResult.getResponse().getErrorMessage();
-        assertEquals("Product type category not found", invCatError);
 
         MvcResult correctCatResult = this.mockMvc.perform(
                 get("/product/search")
