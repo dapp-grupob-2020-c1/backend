@@ -1,6 +1,7 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 
 @Entity(name = "DeliveryAtHome")

@@ -1,9 +1,22 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
-import com.unq.dapp0.c1.comprandoencasa.model.*;
+import com.unq.dapp0.c1.comprandoencasa.model.Discount;
+import com.unq.dapp0.c1.comprandoencasa.model.DiscountByCategory;
+import com.unq.dapp0.c1.comprandoencasa.model.DiscountByMultiple;
+import com.unq.dapp0.c1.comprandoencasa.model.DiscountBySingle;
+import com.unq.dapp0.c1.comprandoencasa.model.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.PaymentMethod;
+import com.unq.dapp0.c1.comprandoencasa.model.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
+import com.unq.dapp0.c1.comprandoencasa.model.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.ShopCategory;
+import com.unq.dapp0.c1.comprandoencasa.model.User;
 
-import com.unq.dapp0.c1.comprandoencasa.repositories.*;
-
+import com.unq.dapp0.c1.comprandoencasa.repositories.DiscountRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.LocationRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.ShopRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

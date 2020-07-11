@@ -1,7 +1,14 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
-import com.unq.dapp0.c1.comprandoencasa.model.*;
-
+import com.unq.dapp0.c1.comprandoencasa.model.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.LocationBuilder;
+import com.unq.dapp0.c1.comprandoencasa.model.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.ProductBuilder;
+import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
+import com.unq.dapp0.c1.comprandoencasa.model.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.ShopBuilder;
+import com.unq.dapp0.c1.comprandoencasa.model.User;
+import com.unq.dapp0.c1.comprandoencasa.model.UserBuilder;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
 import org.junit.jupiter.api.Test;

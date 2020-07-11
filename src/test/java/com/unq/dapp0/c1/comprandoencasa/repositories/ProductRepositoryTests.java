@@ -1,7 +1,14 @@
 package com.unq.dapp0.c1.comprandoencasa.repositories;
 
-import com.unq.dapp0.c1.comprandoencasa.model.*;
-
+import com.unq.dapp0.c1.comprandoencasa.model.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.LocationBuilder;
+import com.unq.dapp0.c1.comprandoencasa.model.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.ProductBuilder;
+import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
+import com.unq.dapp0.c1.comprandoencasa.model.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.ShopBuilder;
+import com.unq.dapp0.c1.comprandoencasa.model.User;
+import com.unq.dapp0.c1.comprandoencasa.model.UserBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
