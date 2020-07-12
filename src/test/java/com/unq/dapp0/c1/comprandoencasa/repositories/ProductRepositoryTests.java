@@ -80,14 +80,10 @@ public class ProductRepositoryTests {
 
         User manager = UserBuilder.anyUser().build();
 
-        Shop shop1 = ShopBuilder.anyShop().withLocation(nearLocation1)
-                .withUser(manager).build();
-        Shop shop2 = ShopBuilder.anyShop().withLocation(nearLocation2)
-                .withUser(manager).build();
-        Shop shop3 = ShopBuilder.anyShop().withLocation(farLocation1)
-                .withUser(manager).build();
-        Shop shop4 = ShopBuilder.anyShop().withLocation(farLocation2)
-                .withUser(manager).build();
+        Shop shop1 = ShopBuilder.anyShop().withLocation(nearLocation1).build();
+        Shop shop2 = ShopBuilder.anyShop().withLocation(nearLocation2).build();
+        Shop shop3 = ShopBuilder.anyShop().withLocation(farLocation1).build();
+        Shop shop4 = ShopBuilder.anyShop().withLocation(farLocation2).build();
 
         List<ProductType> validTypes1 = new ArrayList<>();
         validTypes1.add(ProductType.Bazaar);
@@ -143,6 +139,16 @@ public class ProductRepositoryTests {
         productRepository.save(product5);
         productRepository.save(product6);
         productRepository.save(product7);
+
+        shop1.setUser(manager);
+        shop2.setUser(manager);
+        shop3.setUser(manager);
+        shop4.setUser(manager);
+
+        shopRepository.save(shop1);
+        shopRepository.save(shop2);
+        shopRepository.save(shop3);
+        shopRepository.save(shop4);
 
         String keyword = "lata";
         List<ProductType> categories = new ArrayList<>();

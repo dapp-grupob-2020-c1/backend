@@ -1,6 +1,10 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
-import com.unq.dapp0.c1.comprandoencasa.model.exceptions.*;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.LocationAlreadyPresentException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.ShopAlreadyExistsException;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;

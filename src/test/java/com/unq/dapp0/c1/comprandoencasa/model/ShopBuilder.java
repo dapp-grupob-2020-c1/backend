@@ -47,6 +47,7 @@ public class ShopBuilder {
                 deliveryRadius
         );
         products.forEach(shop::addProduct);
+        shop.setUser(user);
         return shop;
     }
     public ShopBuilder withCategories(ArrayList<ShopCategory> shopCategories){

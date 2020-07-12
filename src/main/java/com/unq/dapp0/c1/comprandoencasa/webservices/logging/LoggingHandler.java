@@ -18,7 +18,7 @@ import java.util.Arrays;
 @Component
 public class LoggingHandler {
 
-    Logger log = LogManager.getLogger(this.getClass());
+    private Logger log = LogManager.getLogger(this.getClass());
 
     @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)")
     public void controller() {

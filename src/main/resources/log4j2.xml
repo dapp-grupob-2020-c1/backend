@@ -22,20 +22,16 @@
     </Appenders>
 
     <Loggers>
-        <Logger name="com.unq.dapp0.c1.comprandoencasa" level="debug" additivity="false">
+        <Logger name="com.unq.dapp0.c1.comprandoencasa.webservices.logging.LoggingHandler" level="error" additivity="false">
             <AppenderRef ref="ConsoleAppender" />
         </Logger>
-        <Logger name="com.unq.dapp0.c1.comprandoencasa" level="error" additivity="false">
-            <AppenderRef ref="ConsoleAppender" />
-        </Logger>
-        <Logger name="com.unq.dapp0.c1.comprandoencasa.webservices" level="info" additivity="false">
+        <Logger name="com.unq.dapp0.c1.comprandoencasa.webservices.logging.LoggingHandler" level="info" additivity="false">
             <AppenderRef ref="FileAppender" />
         </Logger>
 
 
         <Root level="info">
             <AppenderRef ref="ConsoleAppender" />
-            <AppenderRef ref="FileAppender" />
         </Root>
     </Loggers>
 
