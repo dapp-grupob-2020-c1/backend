@@ -20,4 +20,6 @@ public class DeliveryAtShop extends ShopDelivery {
     public Turn getTurn() {
         return this.turn;
     }
+
+    public void setTurn(Turn turn){this.turn = turn;}
 }

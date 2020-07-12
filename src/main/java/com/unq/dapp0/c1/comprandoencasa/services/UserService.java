@@ -2,15 +2,18 @@ package com.unq.dapp0.c1.comprandoencasa.services;
 
 import com.unq.dapp0.c1.comprandoencasa.model.AuthProvider;
 import com.unq.dapp0.c1.comprandoencasa.model.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.Shop;
 import com.unq.dapp0.c1.comprandoencasa.model.User;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
 import com.unq.dapp0.c1.comprandoencasa.repositories.UserRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.LocationRepository;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.FieldAlreadyExistsException;
 import com.unq.dapp0.c1.comprandoencasa.services.security.TokenProvider;
+import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -158,5 +161,34 @@ public class UserService {
     @Transactional
     public Optional<User> findUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Transactional
+    public Location removeLocationOf(Long userId, Long locationId) {
+        User user = findUserById(userId);
+        Optional<Location> location = user.getLocations().stream().filter(loc -> loc.getId().equals(locationId)).findFirst();
+        if (location.isPresent()){
+            user.removeLocation(location.get());
+            return location.get();
+        } else {
+            throw new LocationDoesNotExistException(locationId);
+        }
+    }
+
+    @Transactional
+    public List<Shop> getShopsFrom(Long userId) {
+        User user = findUserById(userId);
+        return user.getShops();
+    }
+
+    @Transactional
+    public Shop getShopFrom(Long userId, long shopId) {
+        List<Shop> shops = getShopsFrom(userId);
+        Optional<Shop> result = shops.stream().filter(shop -> shop.getId().equals(shopId)).findFirst();
+        if (result.isPresent()){
+            return result.get();
+        } else {
+            throw new ShopDoesntExistException(shopId);
+        }
     }
 }

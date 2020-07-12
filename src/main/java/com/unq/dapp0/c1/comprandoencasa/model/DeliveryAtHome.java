@@ -19,4 +19,6 @@ public class DeliveryAtHome extends ShopDelivery {
     public Location getLocation() {
         return this.location;
     }
+
+    public void setLocation(Location location){this.location = location;}
 }

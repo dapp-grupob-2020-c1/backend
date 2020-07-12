@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.unq.dapp0.c1.comprandoencasa.model.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.PaymentMethod;
 import com.unq.dapp0.c1.comprandoencasa.model.Shop;
 import com.unq.dapp0.c1.comprandoencasa.model.ShopCategory;
 
@@ -27,6 +28,7 @@ public class ShopDTO {
     public Integer deliveryRadius;
     public List<ProductSmallDTO> products;
     public List<DiscountDTO> discounts;
+    public List<PaymentMethod> paymentMethods;
 
     public ShopDTO(){}
 
@@ -41,5 +43,6 @@ public class ShopDTO {
         this.deliveryRadius = shop.getDeliveryRadius();
         this.products = ProductSmallDTO.createProducts(shop.getProducts());
         this.discounts = DiscountDTO.createDiscounts(shop.getActiveDiscounts());
+        this.paymentMethods = shop.getPaymentMethods();
     }
 }

@@ -34,4 +34,12 @@ public class ProductSmallDTO {
         }
         return productSmallDTOList;
     }
+
+    public static List<Long> createProductsById(List<Product> products) {
+        List<Long> returnList = new ArrayList<>();
+        for (Product product : products){
+            returnList.add(product.getId());
+        }
+        return returnList;
+    }
 }

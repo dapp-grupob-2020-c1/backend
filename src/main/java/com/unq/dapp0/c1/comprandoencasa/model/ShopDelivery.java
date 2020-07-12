@@ -33,15 +33,25 @@ public abstract class ShopDelivery {
         this.user = user;
     }
 
+    public Long getId(){return this.id;}
+
+    public void setId(Long id){this.id = id;}
+
     public Shop getShop() {
         return this.shop;
     }
+
+    public void setShop(Shop shop) {this.shop = shop;}
 
     public List<Product> getProducts() {
         return this.products;
     }
 
+    public void setProducts(List<Product> products){this.products = products;}
+
     public User getUser() {
         return this.user;
     }
+
+    public void setUser(User user){this.user = user;}
 }

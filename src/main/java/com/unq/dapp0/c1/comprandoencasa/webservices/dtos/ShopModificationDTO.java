@@ -6,41 +6,38 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.unq.dapp0.c1.comprandoencasa.model.Location;
 import com.unq.dapp0.c1.comprandoencasa.model.PaymentMethod;
-import com.unq.dapp0.c1.comprandoencasa.model.Shop;
 import com.unq.dapp0.c1.comprandoencasa.model.ShopCategory;
 
+import javax.validation.constraints.NotNull;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
 
-public class ShopSmallDTO {
+public class ShopModificationDTO {
+
+    @NotNull
     public Long id;
+    @NotNull
     public String name;
+    @NotNull
     public List<ShopCategory> categories;
+    @NotNull
     public Location location;
+    @NotNull
     public List<DayOfWeek> days;
+    @NotNull
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @JsonSerialize(using = LocalTimeSerializer.class)
     public LocalTime openingHour;
+    @NotNull
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @JsonSerialize(using = LocalTimeSerializer.class)
     public LocalTime closingHour;
-    public Integer deliveryRadius;
-    public List<DiscountDTO> discounts;
+    @NotNull
     public List<PaymentMethod> paymentMethods;
+    @NotNull
+    public Integer deliveryRadius;
 
-    public ShopSmallDTO(){}
+    public ShopModificationDTO(){}
 
-    public ShopSmallDTO(Shop shop) {
-        this.id = shop.getId();
-        this.name = shop.getName();
-        this.categories = shop.getShopCategories();
-        this.location = shop.getLocation();
-        this.days = shop.getDays();
-        this.openingHour = shop.getOpeningHour();
-        this.closingHour = shop.getClosingHour();
-        this.deliveryRadius = shop.getDeliveryRadius();
-        this.discounts = DiscountDTO.createDiscounts(shop.getActiveDiscounts());
-        this.paymentMethods = shop.getPaymentMethods();
-    }
 }

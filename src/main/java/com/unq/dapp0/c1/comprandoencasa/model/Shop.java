@@ -277,4 +277,20 @@ public class Shop {
         }
         return turns;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setShopCategories(List<ShopCategory> categories) {
+        this.shopCategories = categories;
+    }
+
+    public void setDays(List<DayOfWeek> days) {
+        this.days = days;
+    }
+
+    public void setPaymentMethods(List<PaymentMethod> paymentMethods) {
+        this.paymentMethods = paymentMethods;
+    }
 }
