@@ -8,7 +8,6 @@ import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistExcep
 import com.unq.dapp0.c1.comprandoencasa.services.UserService;
 import com.unq.dapp0.c1.comprandoencasa.services.security.UserPrincipal;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.UserDTO;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.LocationDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.payload.ApiResponse;
 import com.unq.dapp0.c1.comprandoencasa.webservices.payload.SignUpRequest;
 import com.unq.dapp0.c1.comprandoencasa.webservices.security.AuthController;
@@ -29,6 +28,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -364,61 +364,43 @@ public class UserControllerTests extends AbstractRestTest{
         locations.add(location1);
         locations.add(location2);
 
-        when(service.getLocationsOf(1L)).thenReturn(locations);
+        String generic = "test";
+
+        UserPrincipal userDetails = new UserPrincipal(1L, generic, generic, new ArrayList<>());
+
+        when(service.getLocationsOf(userDetails.getId())).thenReturn(locations);
 
         MvcResult mvcResult = this.mockMvc.perform(
                 get("/user/locations")
-                        .param("customerId", String.valueOf(1L))
+                        .with(user(userDetails))
                         .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
         assertEquals(200, status);
 
         String content = mvcResult.getResponse().getContentAsString();
-        LocationDTO result = super.mapFromJson(content, LocationDTO.class);
-        assertEquals(1L, result.customerId);
-        assertEquals(2, result.locations.size());
-        assertTrue(result.locations.stream().anyMatch(location -> location.getId().equals(location1.getId())));
-        assertTrue(result.locations.stream().anyMatch(location -> location.getId().equals(location2.getId())));
-    }
-
-    @WithMockUser("spring")
-    @Test
-    public void endpointGETUserLocationsReturnsBadRequestIfParameterUserIdIsEmptyOrMissing() throws Exception {
-        errorTestWith(
-                this.mockMvc.perform(
-                        get("/user/locations")
-                                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn(),
-                400,
-                "Required String parameter 'customerId' is not present"
-        );
-
-        String emptyId = "";
-
-        errorTestWith(
-                this.mockMvc.perform(
-                        get("/user/locations")
-                                .param("customerId", emptyId)
-                                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn(),
-                400,
-                "The field customerId is empty"
-        );
+        Location[] result = super.mapFromJson(content, Location[].class);
+        assertEquals(2, result.length);
+        assertTrue(Arrays.stream(result).anyMatch(location -> location.getId().equals(location1.getId())));
+        assertTrue(Arrays.stream(result).anyMatch(location -> location.getId().equals(location2.getId())));
     }
 
     @WithMockUser("spring")
     @Test
     public void endpointGETUserLocationsReturnsNotFoundIfNoUserIsFound() throws Exception {
-        Long id = 1L;
+        String generic = "test";
 
-        when(service.getLocationsOf(id)).thenThrow(new UserDoesntExistException(id));
+        UserPrincipal userDetails = new UserPrincipal(1L, generic, generic, new ArrayList<>());
+
+        when(service.getLocationsOf(userDetails.getId())).thenThrow(new UserDoesntExistException(userDetails.getId()));
 
         errorTestWith(
                 this.mockMvc.perform(
                         get("/user/locations")
-                                .param("customerId", String.valueOf(id))
+                                .with(user(userDetails))
                                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn(),
                 404,
-                "User with id " + id + " does not exist"
+                "User with id " + userDetails.getId() + " does not exist"
         );
     }
 
@@ -432,13 +414,15 @@ public class UserControllerTests extends AbstractRestTest{
         Double latitude = location.getLatitude();
         Double longitude = location.getLongitude();
 
-        String customerId = "1";
+        String generic = "test";
 
-        when(service.addLocationTo(Long.valueOf(customerId), address, latitude, longitude)).thenReturn(location);
+        UserPrincipal userDetails = new UserPrincipal(1L, generic, generic, new ArrayList<>());
+
+        when(service.addLocationTo(userDetails.getId(), address, latitude, longitude)).thenReturn(location);
 
         MvcResult mvcResult = this.mockMvc.perform(
                 post("/user/location")
-                        .param("customerId", customerId)
+                        .with(user(userDetails))
                         .param("address", address)
                         .param("latitude", String.valueOf(latitude))
                         .param("longitude", String.valueOf(longitude))
@@ -462,22 +446,12 @@ public class UserControllerTests extends AbstractRestTest{
                 post("/user/location")
                         .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn(),
                 400,
-                "Required String parameter 'customerId' is not present"
-        );
-
-        errorTestWith(
-                this.mockMvc.perform(
-                        post("/user/location")
-                                .param("customerId", generic)
-                                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn(),
-                400,
                 "Required String parameter 'address' is not present"
         );
 
         errorTestWith(
                 this.mockMvc.perform(
                         post("/user/location")
-                                .param("customerId", generic)
                                 .param("address", generic)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn(),
                 400,
@@ -487,7 +461,6 @@ public class UserControllerTests extends AbstractRestTest{
         errorTestWith(
                 this.mockMvc.perform(
                         post("/user/location")
-                                .param("customerId", generic)
                                 .param("address", generic)
                                 .param("latitude", generic)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn(),
@@ -498,19 +471,6 @@ public class UserControllerTests extends AbstractRestTest{
         errorTestWith(
                 this.mockMvc.perform(
                         post("/user/location")
-                                .param("customerId", "")
-                                .param("address", generic)
-                                .param("latitude", generic)
-                                .param("longitude", generic)
-                                .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn(),
-                400,
-                "The field customerId is empty"
-        );
-
-        errorTestWith(
-                this.mockMvc.perform(
-                        post("/user/location")
-                                .param("customerId", generic)
                                 .param("address", "")
                                 .param("latitude", generic)
                                 .param("longitude", generic)
@@ -522,7 +482,6 @@ public class UserControllerTests extends AbstractRestTest{
         errorTestWith(
                 this.mockMvc.perform(
                         post("/user/location")
-                                .param("customerId", generic)
                                 .param("address", generic)
                                 .param("latitude", "")
                                 .param("longitude", generic)
@@ -548,21 +507,22 @@ public class UserControllerTests extends AbstractRestTest{
     @Test
     public void endpointPOSTUserLocationReturnsNotFoundIfUserIdDoesntExist() throws Exception {
         String generic = "2";
-        Long id = 1L;
 
-        when(service.addLocationTo(id, generic, Double.valueOf(generic), Double.valueOf(generic)))
-                .thenThrow(new UserDoesntExistException(id));
+        UserPrincipal userDetails = new UserPrincipal(1L, generic, generic, new ArrayList<>());
+
+        when(service.addLocationTo(userDetails.getId(), generic, Double.valueOf(generic), Double.valueOf(generic)))
+                .thenThrow(new UserDoesntExistException(userDetails.getId()));
 
         errorTestWith(
                 this.mockMvc.perform(
                         post("/user/location")
-                                .param("customerId", String.valueOf(id))
+                                .with(user(userDetails))
                                 .param("address", generic)
                                 .param("latitude", generic)
                                 .param("longitude", generic)
                                 .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn(),
                 404,
-                "User with id " + id + " does not exist"
+                "User with id " + userDetails.getId() + " does not exist"
         );
     }
 }

@@ -7,7 +7,6 @@ import com.unq.dapp0.c1.comprandoencasa.services.UserService;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
 import com.unq.dapp0.c1.comprandoencasa.services.security.UserPrincipal;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.UserDTO;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.LocationDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.EmptyFieldsBadRequestException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.UserNotFoundException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.security.CurrentUser;
@@ -42,13 +41,10 @@ public class UserController {
 
     @CrossOrigin
     @GetMapping("/locations")
-    public LocationDTO getLocations(@RequestParam(value = "customerId") String customerId) {
+    public ResponseEntity<List<Location>> getLocations(@CurrentUser UserPrincipal userPrincipal) {
         try{
-            if (customerId.isEmpty()){
-                throw new EmptyFieldException("customerId");
-            }
-            List<Location> locationList = this.userService.getLocationsOf(Long.valueOf(customerId));
-            return new LocationDTO(Long.valueOf(customerId), locationList);
+            List<Location> locationList = this.userService.getLocationsOf(userPrincipal.getId());
+            return new ResponseEntity<>(locationList, HttpStatus.OK);
         } catch (EmptyFieldException exception){
             throw new EmptyFieldsBadRequestException(exception.getMessage());
         } catch (UserDoesntExistException exception){
@@ -58,16 +54,15 @@ public class UserController {
 
     @CrossOrigin
     @PostMapping("/location")
-    public ResponseEntity<Location> createLocation(@RequestParam(value = "customerId") String customerId,
+    public ResponseEntity<Location> createLocation(@CurrentUser UserPrincipal userPrincipal,
                                                    @RequestParam(value = "address") String address,
                                                    @RequestParam(value = "latitude") String latitude,
                                                    @RequestParam(value = "longitude") String longitude) {
         try{
-            checkField(customerId, "customerId");
             checkField(address, "address");
             checkField(latitude, "latitude");
             checkField(longitude, "longitude");
-            Location location = this.userService.addLocationTo(Long.valueOf(customerId),
+            Location location = this.userService.addLocationTo(userPrincipal.getId(),
                     address,
                     Double.valueOf(latitude),
                     Double.valueOf(longitude));
