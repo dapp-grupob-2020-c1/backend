@@ -1,9 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
-import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
-import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
-import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
-import com.unq.dapp0.c1.comprandoencasa.model.exceptions.LocationAlreadyPresentException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.*;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -70,6 +67,9 @@ public class User {
 
     @OneToMany
     private List<ShoppingList> historicShoppingLists;
+
+    @OneToMany
+    private List<Shop> shops = new ArrayList<>();
 
     public User() {}
 
@@ -253,5 +253,27 @@ public class User {
 
     public void setEmailVerified(Boolean emailVerified) {
         this.emailVerified = emailVerified;
+    }
+
+    public List<Shop> getShops() {
+        return this.shops;
+    }
+
+    public void addShop(Shop shop){
+        Optional<Shop> exists = findShop(shop.getId());
+        if (exists.isPresent()){
+            throw new ShopAlreadyExistsException(shop);
+        } else {
+            this.shops.add(shop);
+        }
+    }
+
+    public void removeShop(Shop shop){
+        Optional<Shop> exists = findShop(shop.getId());
+        exists.ifPresent(value -> this.shops.remove(value));
+    }
+
+    private Optional<Shop> findShop(Long id) {
+        return this.shops.stream().filter(shop -> shop.getId().equals(id)).findFirst();
     }
 }

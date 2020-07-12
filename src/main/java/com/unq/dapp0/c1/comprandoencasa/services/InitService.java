@@ -59,6 +59,7 @@ public class InitService {
         LocalTime closing = LocalTime.of(18, 0, 0, 0);
 
         User aShopManager = new User("Manager", "123456", "manager@example.com");
+        this.userRepository.save(aShopManager);
 
         Location aShopLocation = new Location("AAA 123", 1234d, 1234d);
 
@@ -70,8 +71,7 @@ public class InitService {
                 opening,
                 closing,
                 new ArrayList<PaymentMethod>(),
-                10,
-                aShopManager
+                10
         );
 
         Product aProduct = new Product(
@@ -131,8 +131,7 @@ public class InitService {
                 opening,
                 closing,
                 regularPay,
-                20,
-                aShopManager
+                20
         );
 
         Shop piaveBernalShop = new Shop(
@@ -143,8 +142,7 @@ public class InitService {
                 opening,
                 closing,
                 regularPay,
-                10,
-                aShopManager
+                10
         );
 
         Shop outletQuilShop = new Shop(
@@ -155,8 +153,7 @@ public class InitService {
                 opening,
                 closing,
                 regularPay,
-                5,
-                aShopManager
+                5
         );
 
         Shop bkBeraShop = new Shop(
@@ -167,8 +164,7 @@ public class InitService {
                 opening,
                 closing,
                 regularPay,
-                20,
-                aShopManager
+                20
         );
 
         Shop piaveHudsonShop = new Shop(
@@ -179,8 +175,7 @@ public class InitService {
                 opening,
                 closing,
                 regularPay,
-                20,
-                aShopManager
+                20
         );
 
         Shop clubMilaPlataShop = new Shop(
@@ -191,8 +186,7 @@ public class InitService {
                 opening,
                 closing,
                 regularPay,
-                10,
-                aShopManager
+                10
         );
 
         Shop queimadaPlataShop = new Shop(
@@ -203,8 +197,7 @@ public class InitService {
                 opening,
                 closing,
                 regularPay,
-                10,
-                aShopManager
+                10
         );
 
         Shop contiBestHeladosShop = new Shop(
@@ -215,8 +208,7 @@ public class InitService {
                 opening,
                 closing,
                 regularPay,
-                20,
-                aShopManager
+                20
         );
 
         List<ProductType> bookTypes = new ArrayList<>();
@@ -332,7 +324,6 @@ public class InitService {
 
 
         //Saving initial elements
-        this.userRepository.save(aShopManager);
 
         this.locationRepository.save(aShopLocation);
         this.locationRepository.save(unqLocation);
@@ -419,6 +410,18 @@ public class InitService {
         unqShop.addDiscount(randomUNQDiscount);
         piaveBernalShop.addDiscount(randomPiaveDiscount);
         clubMilaPlataShop.addDiscount(randomMilaDiscount);
+
+        aShop.setUser(aShopManager);
+        unqShop.setUser(aShopManager);
+        piaveBernalShop.setUser(aShopManager);
+        outletQuilShop.setUser(aShopManager);
+        bkBeraShop.setUser(aShopManager);
+        piaveHudsonShop.setUser(aShopManager);
+        clubMilaPlataShop.setUser(aShopManager);
+        queimadaPlataShop.setUser(aShopManager);
+        contiBestHeladosShop.setUser(aShopManager);
+
+        this.userRepository.save(aShopManager);
 
         this.shopRepository.save(aShop);
         this.shopRepository.save(unqShop);

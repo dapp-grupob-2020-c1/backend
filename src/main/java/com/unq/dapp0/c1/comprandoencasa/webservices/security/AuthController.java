@@ -10,16 +10,12 @@ import com.unq.dapp0.c1.comprandoencasa.webservices.payload.SignUpRequest;
 import com.unq.dapp0.c1.comprandoencasa.webservices.security.user.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -52,17 +48,6 @@ public class AuthController {
         } catch (FieldAlreadyExistsException e){
             throw new BadRequestException(e.getMessage());
         }
-    }
-
-    @ExceptionHandler(value = {HttpMessageNotReadableException.class})
-    public ModelAndView handleNoBodyBadRequest(HttpServletRequest req, Exception ex) {
-        String bodyOfResponse = "The body is empty or lacks some fields.";
-        HttpMessageNotReadableException exception = new HttpMessageNotReadableException(bodyOfResponse, ((HttpMessageNotReadableException)ex).getHttpInputMessage());
-        ModelAndView mav = new ModelAndView();
-        mav.addObject("exception", exception);
-        mav.addObject("url", req.getRequestURL());
-        mav.setViewName("error");
-        return mav;
     }
 
 }

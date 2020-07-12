@@ -44,8 +44,8 @@ public class ShopBuilder {
                 openingHour,
                 closingHour,
                 paymentMethods,
-                deliveryRadius,
-                user);
+                deliveryRadius
+        );
         products.forEach(shop::addProduct);
         return shop;
     }
