@@ -1,6 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.repositories;
 
-import com.unq.dapp0.c1.comprandoencasa.model.Customer;
+import com.unq.dapp0.c1.comprandoencasa.model.User;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -12,15 +12,17 @@ import java.util.Optional;
 
 @Configuration
 @Repository
-public interface CustomerRepository extends CrudRepository<Customer, Long> {
+public interface UserRepository extends CrudRepository<User, Long> {
 
-    Optional<Customer> findById(Long id);
+    Optional<User> findById(Long id);
 
-    @Query(value = "select c from Customer c " +
-            "where c.name = :name " +
-            "or c.email = :email ")
-    List<Customer> findByNameOrEmail(@Param(value = "name") String name,
+    @Query(value = "select u from User u " +
+            "where u.name = :name " +
+            "or u.email = :email ")
+    List<User> findByNameOrEmail(@Param(value = "name") String name,
                                      @Param(value = "email") String email);
 
-    Optional<Customer> findByEmail(String email);
+    Optional<User> findByEmail(String email);
+
+    Boolean existsByEmail(String email);
 }

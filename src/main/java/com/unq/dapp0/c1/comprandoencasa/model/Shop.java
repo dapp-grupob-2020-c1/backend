@@ -13,8 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.OneToOne;
-import javax.persistence.FetchType;
-import javax.persistence.CascadeType;
 import javax.persistence.OneToMany;
 
 import java.time.DayOfWeek;
@@ -59,12 +57,8 @@ public class Shop {
     @Column
     private Integer deliveryRadius;
 
-    @OneToOne(fetch = FetchType.EAGER,
-            cascade = {
-                    CascadeType.MERGE,
-                    CascadeType.REFRESH
-            })
-    private Manager manager;
+    @OneToOne()
+    private User user;
 
     @OneToMany
     private List<Product> products;
@@ -85,8 +79,7 @@ public class Shop {
                 LocalTime openingHour,
                 LocalTime closingHour,
                 List<PaymentMethod> paymentMethods,
-                Integer deliveryRadius,
-                Manager manager) {
+                Integer deliveryRadius) {
         this.name = name;
         this.shopCategories = shopCategories;
         this.location = location;
@@ -95,10 +88,18 @@ public class Shop {
         this.closingHour = closingHour;
         this.paymentMethods = paymentMethods;
         this.deliveryRadius = deliveryRadius;
-        this.manager = manager;
         this.products = new ArrayList<>();
         this.discounts = new ArrayList<>();
         this.activeDeliveries = new ArrayList<>();
+    }
+
+    public void setUser(User user){
+        user.addShop(this);
+        this.user = user;
+    }
+
+    public User getUser(){
+        return this.user;
     }
 
     public Long getId() {
@@ -203,10 +204,10 @@ public class Shop {
      * Validates that the given manager is the same as the manager in charge of the Shop.
      * Delegates the verification to his own manager.
      *
-     * @param manager to validate
+     * @param user to validate
      */
-    public void validateManager(Manager manager) throws Exception {
-        this.manager.validate(manager);
+    public void validateManager(User user) throws Exception {
+        this.user.validate(user);
     }
 
     public List<Product> getProducts() {

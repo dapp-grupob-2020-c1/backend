@@ -9,9 +9,11 @@ import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -25,7 +27,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-@WebMvcTest(ShopController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ShopControllerTests extends AbstractRestTest{
 
     @Autowired
@@ -42,6 +45,7 @@ public class ShopControllerTests extends AbstractRestTest{
         assertThat(controller).isNotNull();
     }
 
+    @WithMockUser("spring")
     @Test
     public void endpointGETShopReturnsDataOfASingleShop() throws Exception {
         List<Product> products = new ArrayList<>();
@@ -64,7 +68,7 @@ public class ShopControllerTests extends AbstractRestTest{
         ShopDTO expectedProduct = new ShopDTO(shopMock);
 
         MvcResult mvcResult = this.mockMvc.perform(
-                get("/api/shop")
+                get("/shop")
                         .param("shopId", String.valueOf(shopMock.getId()))
                         .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
@@ -76,19 +80,19 @@ public class ShopControllerTests extends AbstractRestTest{
         assertEquals(expectedProduct.id, productResult.id);
     }
 
+    @WithMockUser("spring")
     @Test
     public void endpointGETShopReturnsBadRequestIfMissingShopId() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-                get("/api/shop")
+                get("/shop")
                         .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
         assertEquals(400, status);
 
-        String errorMessage = mvcResult.getResponse().getErrorMessage();
-        assertEquals("Required String parameter 'shopId' is not present", errorMessage);
     }
 
+    @WithMockUser("spring")
     @Test
     public void endpointGETProductReturnsNotFoundIfProductDoesntExist() throws Exception {
         Long id = 0L;
@@ -96,7 +100,7 @@ public class ShopControllerTests extends AbstractRestTest{
         when(service.findShopById(id)).thenThrow(new ShopDoesntExistException(id));
 
         MvcResult mvcResult = this.mockMvc.perform(
-                get("/api/shop")
+                get("/shop")
                         .param("shopId", String.valueOf(id))
                         .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 

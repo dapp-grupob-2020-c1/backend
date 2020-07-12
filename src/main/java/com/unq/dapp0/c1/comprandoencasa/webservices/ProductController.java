@@ -29,7 +29,7 @@ public class ProductController {
     private ProductService productService;
 
     @CrossOrigin
-    @GetMapping("/api/product")
+    @GetMapping("/product")
     public ProductDTO getProduct(@RequestParam(value = "productId") String productId) {
         try{
             Product product = this.productService.findProductById(Long.valueOf(productId));
@@ -40,7 +40,7 @@ public class ProductController {
     }
 
     @CrossOrigin
-    @GetMapping("/api/search")
+    @GetMapping("/product/search")
     public List<ProductDTO> searchProducts(@RequestParam(value = "keyword", defaultValue = "") String keyword,
                                            @RequestParam(value = "categories", defaultValue = "") List<String> categories,
                                            @RequestParam(value = "locationId") String locationId,

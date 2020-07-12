@@ -2,7 +2,7 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.DayAlreadyExistsException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.DiscountAlreadyExistsException;
-import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidManagerException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.PaymentMethodAlreadyExistsException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.ProductAlreadyPresentException;
 import org.junit.jupiter.api.Test;
@@ -320,17 +320,17 @@ public class ShopTests {
 
     @Test
     public void aShopHasAManagerWithWhichToValidate() throws Exception {
-        Manager manager = mock(Manager.class);
-        Manager anotherManager = mock(Manager.class);
+        User user = mock(User.class);
+        User anotherUser = mock(User.class);
 
-        doThrow(InvalidManagerException.class).when(manager).validate(anotherManager);
+        doThrow(InvalidUserException.class).when(user).validate(anotherUser);
 
         Shop shop = ShopBuilder.anyShop()
-                .withManager(manager)
+                .withUser(user)
                 .build();
 
-        assertDoesNotThrow(()-> shop.validateManager(manager));
-        assertThrows(InvalidManagerException.class, ()-> shop.validateManager(anotherManager));
+        assertDoesNotThrow(()-> shop.validateManager(user));
+        assertThrows(InvalidUserException.class, ()-> shop.validateManager(anotherUser));
     }
 
     @Test

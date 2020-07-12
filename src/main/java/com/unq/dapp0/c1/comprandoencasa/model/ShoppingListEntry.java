@@ -22,6 +22,8 @@ public class ShoppingListEntry {
     @Column
     private Integer quantity;
 
+    public ShoppingListEntry(){}
+
     public ShoppingListEntry(Product aProduct, Integer aQuantity) {
         this.product = aProduct;
         this.quantity = aQuantity;

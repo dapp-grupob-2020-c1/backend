@@ -11,6 +11,7 @@ import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,16 +28,14 @@ public abstract class AbstractRestTest {
 
     protected <T> T mapFromJson(String json, Class<T> clazz)
             throws JsonParseException, JsonMappingException, IOException {
-
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(json, clazz);
     }
 
-    protected void errorTestWith(MvcResult mvcResult, int expectedStatus, String expectedMessage) {
+    protected void errorTestWith(MvcResult mvcResult, int expectedStatus, String expectedMessage) throws UnsupportedEncodingException {
         int status = mvcResult.getResponse().getStatus();
-        assertEquals(expectedStatus, status);
-
         String errorMessage = mvcResult.getResponse().getErrorMessage();
+        assertEquals(expectedStatus, status);
         assertEquals(expectedMessage, errorMessage);
     }
 }

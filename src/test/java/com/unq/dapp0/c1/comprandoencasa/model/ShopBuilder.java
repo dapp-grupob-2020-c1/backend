@@ -15,7 +15,7 @@ public class ShopBuilder {
     private LocalTime closingHour;
     private ArrayList<PaymentMethod> paymentMethods;
     private Integer deliveryRadius;
-    private Manager manager;
+    private User user;
     private ArrayList<Product> products;
 
     public static ShopBuilder anyShop(){
@@ -31,7 +31,7 @@ public class ShopBuilder {
         this.closingHour = LocalTime.of(17,0);
         this.paymentMethods = new ArrayList<>();
         this.deliveryRadius = 1;
-        this.manager = mock(Manager.class);
+        this.user = mock(User.class);
         this.products = new ArrayList<>();
     }
 
@@ -44,9 +44,10 @@ public class ShopBuilder {
                 openingHour,
                 closingHour,
                 paymentMethods,
-                deliveryRadius,
-                manager);
+                deliveryRadius
+        );
         products.forEach(shop::addProduct);
+        shop.setUser(user);
         return shop;
     }
     public ShopBuilder withCategories(ArrayList<ShopCategory> shopCategories){
@@ -77,8 +78,8 @@ public class ShopBuilder {
         this.deliveryRadius = deliveryRadius;
         return this;
     }
-    public ShopBuilder withManager(Manager manager) {
-        this.manager = manager;
+    public ShopBuilder withUser(User user) {
+        this.user = user;
         return this;
     }
 

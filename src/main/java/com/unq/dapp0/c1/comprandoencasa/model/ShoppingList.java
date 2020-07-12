@@ -12,29 +12,31 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table
 public class ShoppingList {
 
     @OneToOne
-    private final Customer customer;
+    private User user;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToMany
-    private final List<ShoppingListEntry> entries;
+    private List<ShoppingListEntry> entries;
 
-    // ubicación hacia donde se debe hacer el envio, domicilio de comprador
     @OneToOne
     private Location deliveryLocation;
 
-    public ShoppingList(Location deliveryLocation, Customer customer) {
+    public ShoppingList(){}
+
+    public ShoppingList(Location deliveryLocation, User user) {
         this.entries = new ArrayList<>();
         this.deliveryLocation = deliveryLocation;
-        this.customer = customer;
+        this.user = user;
     }
 
     public Long getId() {
@@ -45,11 +47,18 @@ public class ShoppingList {
         this.id = id;
     }
 
-    public void add(Product aProduct, int aQuantity) {
-        // TODO: chequeo errores, tiro exceptions
+    public void addProduct(Product aProduct, int aQuantity) {
+        Optional<ShoppingListEntry> entry = getEntryFor(aProduct);
+        if (entry.isPresent()){
+            entry.get().setQuantity(aQuantity);
+        } else {
+            ShoppingListEntry newEntry = new ShoppingListEntry(aProduct, aQuantity);
+            entries.add(newEntry);
+        }
+    }
 
-        ShoppingListEntry newEntry = new ShoppingListEntry(aProduct, aQuantity);
-        entries.add(newEntry);
+    private Optional<ShoppingListEntry> getEntryFor(Product product) {
+        return this.entries.stream().filter(entry -> entry.getProduct().getId().equals(product.getId())).findFirst();
     }
 
     public int countProducts() {
@@ -93,10 +102,16 @@ public class ShoppingList {
     }
 
     public List<ShoppingListEntry> getEntriesList() {
+        if (entries == null){
+            return new ArrayList<>();
+        }
         return this.entries;
     }
 
     public Location getDeliveryLocation() {
+        if (deliveryLocation == null){
+            return new Location();
+        }
         return this.deliveryLocation;
     }
 
@@ -104,8 +119,11 @@ public class ShoppingList {
         this.deliveryLocation = aLocation;
     }
 
-    public Customer getCustomer() {
-        return this.customer;
+    public User getUser() {
+        if (user == null){
+            return new User();
+        }
+        return this.user;
     }
 
     public BigDecimal evaluateTotalFor(ProductType productType) {

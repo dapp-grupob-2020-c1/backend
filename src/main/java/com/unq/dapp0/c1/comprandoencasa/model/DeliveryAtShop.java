@@ -1,11 +1,18 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 
+@Entity(name = "DeliveryAtShop")
 public class DeliveryAtShop extends ShopDelivery {
-    private final Turn turn;
 
-    public DeliveryAtShop(Shop shop, ArrayList<Product> products, Customer customer, Turn turn) {
+    @OneToOne
+    private Turn turn;
+
+    public DeliveryAtShop(){}
+
+    public DeliveryAtShop(Shop shop, ArrayList<Product> products, User customer, Turn turn) {
         super(shop, products, customer);
         this.turn = turn;
     }

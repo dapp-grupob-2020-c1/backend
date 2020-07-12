@@ -10,9 +10,11 @@ import com.unq.dapp0.c1.comprandoencasa.services.ProductService;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -24,14 +26,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-@WebMvcTest(ProductController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ProductControllerTests extends AbstractRestTest {
 
     @Autowired
@@ -48,6 +50,7 @@ public class ProductControllerTests extends AbstractRestTest {
         assertThat(controller).isNotNull();
     }
 
+    @WithMockUser("spring")
     @Test
     public void endpointGETProductReturnsDataOfASingleProduct() throws Exception {
         List<ProductType> categories = new ArrayList<>();
@@ -76,7 +79,7 @@ public class ProductControllerTests extends AbstractRestTest {
         ProductDTO expectedProduct = new ProductDTO(productMock);
 
         MvcResult mvcResult = this.mockMvc.perform(
-                get("/api/product")
+                get("/product")
                         .param("productId", String.valueOf(productMock.getId()))
                         .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
@@ -88,19 +91,19 @@ public class ProductControllerTests extends AbstractRestTest {
         assertEquals(expectedProduct.id, productResult.id);
     }
 
+    @WithMockUser("spring")
     @Test
     public void endpointGETProductReturnsBadRequestIfMissingProductId() throws Exception {
         MvcResult mvcResult = this.mockMvc.perform(
-                get("/api/product")
+                get("/product")
                         .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
         assertEquals(400, status);
 
-        String errorMessage = mvcResult.getResponse().getErrorMessage();
-        assertEquals("Required String parameter 'productId' is not present", errorMessage);
     }
 
+    @WithMockUser("spring")
     @Test
     public void endpointGETProductReturnsNotFoundIfProductDoesntExist() throws Exception {
         Long id = 0L;
@@ -108,7 +111,7 @@ public class ProductControllerTests extends AbstractRestTest {
         when(service.findProductById(id)).thenThrow(new ProductDoesntExistException(id));
 
         MvcResult mvcResult = this.mockMvc.perform(
-                get("/api/product")
+                get("/product")
                         .param("productId", String.valueOf(id))
                         .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
@@ -119,6 +122,7 @@ public class ProductControllerTests extends AbstractRestTest {
         assertEquals("Product with id " + id + " does not exist", errorMessage);
     }
 
+    @WithMockUser("spring")
     @Test
     public void endpointGETSearchReturnsAListOfProductsWithAGivenKeywordAndOrCategory() throws Exception{
         String keyword = "foo";
@@ -165,7 +169,7 @@ public class ProductControllerTests extends AbstractRestTest {
         List<ProductDTO> expected = ProductController.parseProducts(expectedProducts);
 
         MvcResult mvcResult = this.mockMvc.perform(
-                get("/api/search")
+                get("/product/search")
                         .param("keyword", keyword)
                         .param("categories", categories.get(0).toString())
                         .param("locationId", String.valueOf(locationId))
@@ -188,20 +192,19 @@ public class ProductControllerTests extends AbstractRestTest {
         assertTrue(result);
     }
 
+    @WithMockUser("spring")
     @Test
     public void endpointGETSearchReturnsBadRequestIfLocationIdIsMissingOrIfItContainsInvalidCategories() throws Exception {
         MvcResult noLocResult = this.mockMvc.perform(
-                get("/api/search"))
+                get("/product/search"))
                 .andReturn();
 
         int noLocStatus = noLocResult.getResponse().getStatus();
         assertEquals(400, noLocStatus);
 
-        String noLocError = noLocResult.getResponse().getErrorMessage();
-        assertEquals("Required String parameter 'locationId' is not present", noLocError);
 
         MvcResult invalidCatResult = this.mockMvc.perform(
-                get("/api/search")
+                get("/product/search")
                         .param("categories", "foo")
                         .param("locationId", "1"))
                 .andReturn();
@@ -209,11 +212,9 @@ public class ProductControllerTests extends AbstractRestTest {
         int invCatStatus = invalidCatResult.getResponse().getStatus();
         assertEquals(400, invCatStatus);
 
-        String invCatError = invalidCatResult.getResponse().getErrorMessage();
-        assertEquals("Product type category not found", invCatError);
 
         MvcResult correctCatResult = this.mockMvc.perform(
-                get("/api/search")
+                get("/product/search")
                         .param("categories", ProductType.Bazaar.toString())
                         .param("locationId", "1"))
                 .andReturn();
@@ -222,7 +223,7 @@ public class ProductControllerTests extends AbstractRestTest {
         assertEquals(200, correctCatStatus);
 
         MvcResult onlyLocResult = this.mockMvc.perform(
-                get("/api/search")
+                get("/product/search")
                         .param("locationId", "1"))
                 .andReturn();
 
@@ -230,6 +231,7 @@ public class ProductControllerTests extends AbstractRestTest {
         assertEquals(200, onlyLocStatus);
     }
 
+    @WithMockUser("spring")
     @Test
     public void endpointGETSearchReturnsNotFoundIfLocationDoesNotExist() throws Exception {
         Long id = 0L;
@@ -242,7 +244,7 @@ public class ProductControllerTests extends AbstractRestTest {
                 "idDesc")).thenThrow(new LocationDoesNotExistException(id));
 
         MvcResult mvcResult = this.mockMvc.perform(
-                get("/api/search")
+                get("/product/search")
                         .param("locationId", String.valueOf(id))
                         .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
