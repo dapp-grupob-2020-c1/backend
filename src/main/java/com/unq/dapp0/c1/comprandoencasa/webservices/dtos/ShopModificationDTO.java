@@ -38,6 +38,4 @@ public class ShopModificationDTO {
     @NotNull
     public Integer deliveryRadius;
 
-    public ShopModificationDTO(){}
-
 }

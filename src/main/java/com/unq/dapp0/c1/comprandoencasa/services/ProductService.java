@@ -1,10 +1,14 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
-import com.unq.dapp0.c1.comprandoencasa.model.*;
+import com.unq.dapp0.c1.comprandoencasa.model.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
+import com.unq.dapp0.c1.comprandoencasa.model.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.User;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
 
-import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductBatchDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductSmallDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +18,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.List;
 import java.util.Arrays;
@@ -77,15 +80,19 @@ public class ProductService {
     @Transactional
     public Product createModifyProduct(Long userId, ProductSmallDTO productSmallDTO) {
         User user = this.userService.findUserById(userId);
-        Optional<Shop> result = user.getShops().stream().filter(shop1 -> shop1.getId().equals(productSmallDTO.shopId)).findFirst();
+        Shop shop = getShopFromUser(user, productSmallDTO.shopId);
+        Product product = createModifyForShop(shop, productSmallDTO);
+        this.productRepository.save(product);
+        this.shopService.save(shop);
+        return product;
+    }
+
+    private Shop getShopFromUser(User user, Long shopId) {
+        Optional<Shop> result = user.getShops().stream().filter(shop1 -> shop1.getId().equals(shopId)).findFirst();
         if (result.isPresent()){
-            Shop shop = result.get();
-            Product product = createModifyForShop(shop, productSmallDTO);
-            this.productRepository.save(product);
-            this.shopService.save(shop);
-            return product;
+            return result.get();
         } else {
-            throw new ShopDoesntExistException(productSmallDTO.shopId);
+            throw new ShopDoesntExistException(shopId);
         }
     }
 
@@ -111,16 +118,43 @@ public class ProductService {
     }
 
     private Product modifyProduct(Shop shop, ProductSmallDTO productSmallDTO) {
-        Optional<Product> result = shop.getProducts().stream().filter(product1 -> product1.getId().equals(productSmallDTO.id)).findFirst();
+        Product product = getProductFromShop(shop, productSmallDTO.id);
+        product.setName(productSmallDTO.name);
+        product.setBrand(productSmallDTO.brand);
+        product.setImage(productSmallDTO.image);
+        product.setPrice(productSmallDTO.price);
+        return product;
+    }
+
+    private Product getProductFromShop(Shop shop, Long productId) {
+        Optional<Product> result = shop.getProducts().stream().filter(product1 -> product1.getId().equals(productId)).findFirst();
         if (result.isPresent()){
-            Product product = result.get();
-            product.setName(productSmallDTO.name);
-            product.setBrand(productSmallDTO.brand);
-            product.setImage(productSmallDTO.image);
-            product.setPrice(productSmallDTO.price);
-            return product;
+            return result.get();
         } else {
-            throw new ProductDoesntExistException(productSmallDTO.id);
+            throw new ProductDoesntExistException(productId);
         }
+    }
+
+    @Transactional
+    public Product deleteProduct(Long userId, long shopId, long productId) {
+        User user = this.userService.findUserById(userId);
+        Shop shop = getShopFromUser(user, shopId);
+        Product product = getProductFromShop(shop, productId);
+        shop.removeProduct(product);
+        this.productRepository.delete(product);
+        this.shopService.save(shop);
+        return product;
+    }
+
+    @Transactional
+    public List<Product> createModifyProductList(Long userId, ProductBatchDTO productBatchDTO) {
+        User user = this.userService.findUserById(userId);
+        Shop shop = this.shopService.findShopById(productBatchDTO.shopId);
+        for (ProductSmallDTO productSmallDTO : productBatchDTO.productList){
+            Product product = createModifyForShop(shop, productSmallDTO);
+            this.productRepository.save(product);
+        }
+        this.shopService.save(shop);
+        return shop.getProducts();
     }
 }

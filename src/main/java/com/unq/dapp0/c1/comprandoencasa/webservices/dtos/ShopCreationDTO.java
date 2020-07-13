@@ -6,7 +6,6 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.unq.dapp0.c1.comprandoencasa.model.Location;
 import com.unq.dapp0.c1.comprandoencasa.model.PaymentMethod;
-import com.unq.dapp0.c1.comprandoencasa.model.Shop;
 import com.unq.dapp0.c1.comprandoencasa.model.ShopCategory;
 
 import javax.validation.constraints.NotNull;
@@ -36,7 +35,5 @@ public class ShopCreationDTO {
     public List<PaymentMethod> paymentMethods;
     @NotNull
     public Integer deliveryRadius;
-
-    public ShopCreationDTO(){}
 
 }
