@@ -13,7 +13,6 @@ public class ModelArchitectureTests {
 
     @ArchTest
     static final ArchRule rule = classes().that().areNotInterfaces().and().areNotEnums()
-                .should().beAnnotatedWith(Entity.class)
-            .andShould().fiel;
+                .should().beAnnotatedWith(Entity.class);
 
 }
