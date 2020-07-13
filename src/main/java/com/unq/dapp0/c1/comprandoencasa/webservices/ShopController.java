@@ -2,6 +2,7 @@ package com.unq.dapp0.c1.comprandoencasa.webservices;
 
 import com.unq.dapp0.c1.comprandoencasa.model.Discount;
 import com.unq.dapp0.c1.comprandoencasa.model.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.ShopDelivery;
 import com.unq.dapp0.c1.comprandoencasa.services.ShopService;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.*;
 import com.unq.dapp0.c1.comprandoencasa.services.security.UserPrincipal;
@@ -103,7 +104,8 @@ public class ShopController {
     public ResponseEntity<DiscountDTO> createDiscount(@CurrentUser UserPrincipal userPrincipal,
                                                       @RequestBody DiscountCreateDTO discountCreateDTO){
         try {
-            if (discountCreateDTO.productId == null && discountCreateDTO.productsIds == null && discountCreateDTO.productType == null){
+            if (discountCreateDTO.productId == null && discountCreateDTO.productsIds == null
+                    && discountCreateDTO.productType == null){
                 throw new BadRequestException("Request body should have at least one of the following fields: productId, productsIds or productType");
             }
             Discount discount = this.shopService.createDiscount(userPrincipal.getId(), discountCreateDTO);
@@ -122,7 +124,8 @@ public class ShopController {
     public ResponseEntity<DiscountDTO> modifyDiscount(@CurrentUser UserPrincipal userPrincipal,
                                                       @RequestBody DiscountModifyDTO discountModifyDTO){
         try {
-            if (discountModifyDTO.productId == null && discountModifyDTO.productsIds == null && discountModifyDTO.productType == null){
+            if (discountModifyDTO.productId == null && discountModifyDTO.productsIds == null
+                    && discountModifyDTO.productType == null){
                 throw new BadRequestException("Request body should have at least one of the following fields: productId, productsIds or productType");
             }
             Discount discount = this.shopService.modifyDiscount(userPrincipal.getId(), discountModifyDTO);
@@ -146,7 +149,8 @@ public class ShopController {
                                                       @RequestParam(value = "shopId") String shopId,
                                                       @RequestParam(value = "discountId") String discountId){
         try {
-            Discount discount = this.shopService.deleteDiscount(userPrincipal.getId(), Long.parseLong(shopId), Long.parseLong(discountId));
+            Discount discount = this.shopService.deleteDiscount(
+                    userPrincipal.getId(), Long.parseLong(shopId), Long.parseLong(discountId));
             return new ResponseEntity<>(new DiscountDTO(discount), HttpStatus.OK);
         } catch (UserDoesntExistException exception){
             throw new UserNotFoundException(exception.getMessage());
@@ -154,6 +158,39 @@ public class ShopController {
             throw new ShopNotFoundException(shopId);
         } catch (DiscountDoesntExistException exception){
             throw new DiscountNotFoundException(exception.getMessage());
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/shop/deliveries")
+    public ResponseEntity<List<ShopDeliveryDTO>> getDeliveries(@CurrentUser UserPrincipal userPrincipal,
+                                                         @RequestParam(value = "shopId") String shopId){
+        try {
+            List<ShopDelivery> deliveries = this.shopService.getDeliveries(
+                    userPrincipal.getId(), Long.parseLong(shopId));
+            return new ResponseEntity<>(ShopDeliveryDTO.createDeliveries(deliveries), HttpStatus.OK);
+        } catch (UserDoesntExistException exception){
+            throw new UserNotFoundException(exception.getMessage());
+        } catch (ShopDoesntExistException exception){
+            throw new ShopNotFoundException(shopId);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping("/shop/delivery")
+    public ResponseEntity<ShopDeliveryDTO> removeDelivery(@CurrentUser UserPrincipal userPrincipal,
+                                                          @RequestParam(value = "shopId") String shopId,
+                                                          @RequestParam(value = "deliveryId") String deliveryId){
+        try {
+            ShopDelivery delivery = this.shopService.removeDelivery(
+                    userPrincipal.getId(), Long.parseLong(shopId), Long.parseLong(deliveryId));
+            return new ResponseEntity<>(new ShopDeliveryDTO(delivery), HttpStatus.OK);
+        } catch (UserDoesntExistException exception){
+            throw new UserNotFoundException(exception.getMessage());
+        } catch (ShopDoesntExistException exception){
+            throw new ShopNotFoundException(shopId);
+        } catch (DeliveryDoesntExistException exception){
+            throw new DeliveryNotFound(exception.getMessage());
         }
     }
 }

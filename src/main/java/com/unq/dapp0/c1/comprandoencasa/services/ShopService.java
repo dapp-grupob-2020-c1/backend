@@ -13,14 +13,8 @@ import com.unq.dapp0.c1.comprandoencasa.repositories.DiscountRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ShopRepository;
 
-import com.unq.dapp0.c1.comprandoencasa.services.exceptions.DiscountArgumentsMismatchException;
-import com.unq.dapp0.c1.comprandoencasa.services.exceptions.DiscountDoesntExistException;
-import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
-import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ShopHasActiveDeliveriesException;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.DiscountCreateDTO;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.DiscountModifyDTO;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopCreationDTO;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopModificationDTO;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.*;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.*;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,7 +43,8 @@ public class ShopService {
     @Autowired
     private LocationService locationService;
 
-
+    @Autowired
+    private DeliveryService deliveryService;
 
     @Transactional
     public Shop save(Shop model) {
@@ -257,5 +252,29 @@ public class ShopService {
         this.discountRepository.delete(discount);
         this.repository.save(shop);
         return discount;
+    }
+
+    @Transactional
+    public List<ShopDelivery> getDeliveries(Long userId, Long shopId) {
+        User user = this.userService.findUserById(userId);
+        Shop shop = getShopFromUser(user, shopId);
+        return shop.getActiveDeliveries();
+    }
+
+    @Transactional
+    public ShopDelivery removeDelivery(Long userId, Long shopId, Long deliveryId) {
+        User user = this.userService.findUserById(userId);
+        Shop shop = getShopFromUser(user, shopId);
+        Optional<ShopDelivery> result = shop.getActiveDeliveries().stream()
+                .filter(shopDelivery -> shopDelivery.getId().equals(deliveryId)).findFirst();
+        if (result.isPresent()){
+            ShopDelivery delivery = result.get();
+            shop.removeActiveDelivery(delivery);
+            this.deliveryService.delete(delivery);
+            this.save(shop);
+            return delivery;
+        } else {
+            throw new DeliveryDoesntExistException(deliveryId);
+        }
     }
 }

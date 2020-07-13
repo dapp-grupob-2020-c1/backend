@@ -293,4 +293,8 @@ public class Shop {
     public void setPaymentMethods(List<PaymentMethod> paymentMethods) {
         this.paymentMethods = paymentMethods;
     }
+
+    public void removeActiveDelivery(ShopDelivery delivery) {
+        this.activeDeliveries.remove(delivery);
+    }
 }
