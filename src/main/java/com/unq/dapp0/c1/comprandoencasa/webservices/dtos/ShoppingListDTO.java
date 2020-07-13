@@ -1,8 +1,8 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices.dtos;
 
-import com.unq.dapp0.c1.comprandoencasa.model.Location;
-import com.unq.dapp0.c1.comprandoencasa.model.ShoppingList;
-import com.unq.dapp0.c1.comprandoencasa.model.ShoppingListEntry;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingList;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingListEntry;
 
 import java.util.ArrayList;
 import java.util.List;

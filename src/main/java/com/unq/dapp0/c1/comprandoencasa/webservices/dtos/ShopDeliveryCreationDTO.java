@@ -1,7 +1,7 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices.dtos;
 
-import com.unq.dapp0.c1.comprandoencasa.model.Location;
-import com.unq.dapp0.c1.comprandoencasa.model.Turn;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Turn;
 
 import javax.validation.constraints.NotBlank;
 import java.util.List;

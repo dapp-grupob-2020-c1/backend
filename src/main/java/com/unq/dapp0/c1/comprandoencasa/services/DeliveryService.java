@@ -1,6 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
-import com.unq.dapp0.c1.comprandoencasa.model.ShopDelivery;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShopDelivery;
 import com.unq.dapp0.c1.comprandoencasa.repositories.DeliveryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

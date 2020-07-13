@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import com.unq.dapp0.c1.comprandoencasa.model.Location;
-import com.unq.dapp0.c1.comprandoencasa.model.PaymentMethod;
-import com.unq.dapp0.c1.comprandoencasa.model.ShopCategory;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.PaymentMethod;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShopCategory;
 
 import javax.validation.constraints.NotNull;
 import java.time.DayOfWeek;

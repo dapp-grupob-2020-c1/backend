@@ -2,6 +2,7 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidDiscountDatesException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.MultipleDiscountWithSingleItemException;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.*;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

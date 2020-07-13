@@ -1,7 +1,7 @@
 package com.unq.dapp0.c1.comprandoencasa.services.security;
 
-import com.unq.dapp0.c1.comprandoencasa.model.AuthProvider;
-import com.unq.dapp0.c1.comprandoencasa.model.User;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.AuthProvider;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import com.unq.dapp0.c1.comprandoencasa.repositories.UserRepository;
 import com.unq.dapp0.c1.comprandoencasa.webservices.security.user.OAuth2AuthenticationProcessingException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.security.user.OAuth2UserInfo;

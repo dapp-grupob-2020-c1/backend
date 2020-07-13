@@ -1,13 +1,13 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
-import com.unq.dapp0.c1.comprandoencasa.model.Discount;
-import com.unq.dapp0.c1.comprandoencasa.model.DiscountByMultiple;
-import com.unq.dapp0.c1.comprandoencasa.model.DiscountBySingle;
-import com.unq.dapp0.c1.comprandoencasa.model.Location;
-import com.unq.dapp0.c1.comprandoencasa.model.Product;
-import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
-import com.unq.dapp0.c1.comprandoencasa.model.Shop;
-import com.unq.dapp0.c1.comprandoencasa.model.User;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Discount;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountByMultiple;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountBySingle;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
 
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;

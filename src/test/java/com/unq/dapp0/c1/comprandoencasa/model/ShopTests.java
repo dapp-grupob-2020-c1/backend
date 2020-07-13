@@ -5,6 +5,7 @@ import com.unq.dapp0.c1.comprandoencasa.model.exceptions.DiscountAlreadyExistsEx
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.PaymentMethodAlreadyExistsException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.ProductAlreadyPresentException;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.*;
 import org.junit.jupiter.api.Test;
 
 import java.time.DayOfWeek;

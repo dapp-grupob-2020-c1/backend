@@ -1,6 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.services.exceptions;
 
-import com.unq.dapp0.c1.comprandoencasa.model.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
 
 public class ProductIsInDiscountException extends RuntimeException {
     public ProductIsInDiscountException(Product product) {

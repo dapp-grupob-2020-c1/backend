@@ -1,6 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.services.exceptions;
 
-import com.unq.dapp0.c1.comprandoencasa.model.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
 
 public class ShopHasActiveDeliveriesException extends RuntimeException {
     public ShopHasActiveDeliveriesException(Shop shop) {

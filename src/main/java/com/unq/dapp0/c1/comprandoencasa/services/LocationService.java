@@ -1,6 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
-import com.unq.dapp0.c1.comprandoencasa.model.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
 import com.unq.dapp0.c1.comprandoencasa.repositories.LocationRepository;
 
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;

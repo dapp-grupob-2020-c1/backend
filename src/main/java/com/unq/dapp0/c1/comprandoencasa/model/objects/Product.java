@@ -1,4 +1,4 @@
-package com.unq.dapp0.c1.comprandoencasa.model;
+package com.unq.dapp0.c1.comprandoencasa.model.objects;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;

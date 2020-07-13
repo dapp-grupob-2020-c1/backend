@@ -140,7 +140,12 @@
             <version>3.0.11.RELEASE</version>
         </dependency>
 
-
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5</artifactId>
+            <version>0.14.1</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 

@@ -1,8 +1,9 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
 import org.junit.jupiter.api.Test;
 
-import static com.unq.dapp0.c1.comprandoencasa.model.Location.deg2rad;
+import static com.unq.dapp0.c1.comprandoencasa.model.objects.Location.deg2rad;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LocationTests {

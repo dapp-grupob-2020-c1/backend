@@ -1,6 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.model.exceptions;
 
-import com.unq.dapp0.c1.comprandoencasa.model.PaymentMethod;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.PaymentMethod;
 
 public class PaymentMethodAlreadyExistsException extends RuntimeException {
     public PaymentMethodAlreadyExistsException(PaymentMethod paymentMethod) {

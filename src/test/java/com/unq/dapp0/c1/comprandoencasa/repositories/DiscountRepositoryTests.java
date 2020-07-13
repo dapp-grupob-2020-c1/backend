@@ -1,12 +1,12 @@
 package com.unq.dapp0.c1.comprandoencasa.repositories;
 
-import com.unq.dapp0.c1.comprandoencasa.model.Product;
-import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
-import com.unq.dapp0.c1.comprandoencasa.model.Discount;
-import com.unq.dapp0.c1.comprandoencasa.model.Shop;
-import com.unq.dapp0.c1.comprandoencasa.model.DiscountByCategory;
-import com.unq.dapp0.c1.comprandoencasa.model.DiscountByMultiple;
-import com.unq.dapp0.c1.comprandoencasa.model.DiscountBySingle;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Discount;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountByCategory;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountByMultiple;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountBySingle;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.services.exceptions;
 
-import com.unq.dapp0.c1.comprandoencasa.model.Discount;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Discount;
 
 public class DiscountArgumentsMismatchException extends RuntimeException {
     public DiscountArgumentsMismatchException(Discount discount) {

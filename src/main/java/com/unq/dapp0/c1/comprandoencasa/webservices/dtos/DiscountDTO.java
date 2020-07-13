@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.unq.dapp0.c1.comprandoencasa.model.Product;
-import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
-import com.unq.dapp0.c1.comprandoencasa.model.Discount;
-import com.unq.dapp0.c1.comprandoencasa.model.DiscountBySingle;
-import com.unq.dapp0.c1.comprandoencasa.model.DiscountByCategory;
-import com.unq.dapp0.c1.comprandoencasa.model.DiscountByMultiple;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Discount;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountBySingle;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountByCategory;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountByMultiple;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;

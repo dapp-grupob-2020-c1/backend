@@ -1,8 +1,8 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices;
 
-import com.unq.dapp0.c1.comprandoencasa.model.Discount;
-import com.unq.dapp0.c1.comprandoencasa.model.Shop;
-import com.unq.dapp0.c1.comprandoencasa.model.ShopDelivery;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Discount;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShopDelivery;
 import com.unq.dapp0.c1.comprandoencasa.services.ShopService;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.DeliveryDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.DiscountArgumentsMismatchException;
