@@ -5,7 +5,6 @@ import com.unq.dapp0.c1.comprandoencasa.model.DeliveryAtShop;
 import com.unq.dapp0.c1.comprandoencasa.model.Location;
 import com.unq.dapp0.c1.comprandoencasa.model.ShopDelivery;
 import com.unq.dapp0.c1.comprandoencasa.model.Turn;
-import jdk.internal.jline.internal.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +14,7 @@ public class ShopDeliveryDTO {
     public Long shopId;
     public List<Long> products;
     public UserPublicDTO user;
-    @Nullable
     public Turn turn;
-    @Nullable
     public Location location;
 
     public ShopDeliveryDTO(ShopDelivery delivery) {

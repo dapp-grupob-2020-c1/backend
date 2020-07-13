@@ -21,6 +21,9 @@ public class ShopService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private LocationService locationService;
+
     @Transactional
     public Shop save(Shop model) {
         return this.repository.save(model);
@@ -39,10 +42,11 @@ public class ShopService {
     @Transactional
     public Shop createShop(Long userId, ShopCreationDTO shopData) {
         User user = this.userService.findUserById(userId);
+        Location location = this.locationService.save(shopData.location);
         Shop shop = new Shop(
                 shopData.name,
                 shopData.categories,
-                shopData.location,
+                location,
                 shopData.days,
                 shopData.openingHour,
                 shopData.closingHour,
@@ -62,9 +66,14 @@ public class ShopService {
         Optional<Shop> result = getShopFromUser(user, shopData.id);
         if(result.isPresent()){
             Shop shop = result.get();
+            Location oldLocation = shop.getLocation();
+            if (shopData.location.getId() != null && !oldLocation.getId().equals(shopData.location.getId())){
+                this.locationService.save(shopData.location);
+                shop.setLocation(shopData.location);
+                this.locationService.delete(oldLocation);
+            }
             shop.setName(shopData.name);
             shop.setShopCategories(shopData.categories);
-            shop.setLocation(shopData.location);
             shop.setDays(shopData.days);
             shop.setOpeningHour(shopData.openingHour);
             shop.setClosingHour(shopData.closingHour);

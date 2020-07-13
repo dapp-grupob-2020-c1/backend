@@ -9,6 +9,7 @@ import java.util.Collection;
 public class ProductDTO {
     public Long id;
     public String name;
+    public String brand;
     public String image;
     public BigDecimal price;
     public Collection<ProductType> types;
@@ -19,6 +20,7 @@ public class ProductDTO {
     public ProductDTO(Product product) {
         this.id = product.getId();
         this.name = product.getName();
+        this.brand = product.getBrand();
         this.image = product.getImage();
         this.price = product.getPrice();
         this.types = product.getTypes();

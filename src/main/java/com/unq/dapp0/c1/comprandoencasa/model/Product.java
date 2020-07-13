@@ -42,7 +42,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String brand, String image, BigDecimal price, Shop shop, List<ProductType> types) {
+    public Product(String name, String brand, String image, BigDecimal price, Shop shop, Collection<ProductType> types) {
         this.name = name;
         this.brand = brand;
         this.image = image;

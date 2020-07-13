@@ -5,16 +5,17 @@ import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.ProductService;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.security.UserPrincipal;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductDTO;
-import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.LocationNotFoundException;
-import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ProductNotFoundException;
-import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ProductTypeBadRequestException;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductSmallDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.*;
+import com.unq.dapp0.c1.comprandoencasa.webservices.security.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +56,22 @@ public class ProductController {
             throw new ProductTypeBadRequestException();
         } catch (LocationDoesNotExistException e){
             throw new LocationNotFoundException(locationId);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping("/product")
+    public ResponseEntity<ProductSmallDTO> createModifyProduct(@CurrentUser UserPrincipal userPrincipal,
+                                                               @RequestBody ProductSmallDTO productSmallDTO){
+        try{
+            Product product = this.productService.createModifyProduct(userPrincipal.getId(), productSmallDTO);
+            return new ResponseEntity<>(new ProductSmallDTO(product), HttpStatus.CREATED);
+        } catch (UserDoesntExistException exception){
+            throw new UserNotFoundException(exception.getMessage());
+        } catch (ShopDoesntExistException exception){
+            throw new ShopNotFoundException(String.valueOf(productSmallDTO.shopId));
+        } catch (ProductDoesntExistException exception){
+            throw new ProductNotFoundException(String.valueOf(productSmallDTO.id));
         }
     }
 
