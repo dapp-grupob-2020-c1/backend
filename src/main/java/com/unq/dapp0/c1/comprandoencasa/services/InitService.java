@@ -18,6 +18,7 @@ import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ShopRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -49,6 +50,9 @@ public class InitService {
     @Autowired
     private DiscountRepository discountRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PostConstruct
     @Transactional
     public void initialize() {
@@ -59,6 +63,7 @@ public class InitService {
         LocalTime closing = LocalTime.of(18, 0, 0, 0);
 
         User aShopManager = new User("Manager", "123456", "manager@example.com");
+        aShopManager.setPassword(passwordEncoder.encode(aShopManager.getPassword()));
         this.userRepository.save(aShopManager);
 
         Location aShopLocation = new Location("AAA 123", 1234d, 1234d);
