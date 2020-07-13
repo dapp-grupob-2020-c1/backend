@@ -7,7 +7,6 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -24,9 +23,6 @@ public class MailService {
 
     @Autowired
     private JavaMailSender sender;
-
-
-
 
     public void sendASynchronousMail(String toEmail,String subject,String text) throws MailException,RuntimeException{
         logger.info("Sending email to " + toEmail + " with subject " + subject);
