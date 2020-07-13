@@ -10,6 +10,7 @@ import com.unq.dapp0.c1.comprandoencasa.model.objects.Turn;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -84,6 +85,7 @@ class ShopDeliveryBuilder{
     private User user;
     private Turn turn;
     private Location location;
+    private LocalDateTime time;
 
     public static ShopDeliveryBuilder anyDelivery() {
         return new ShopDeliveryBuilder();
@@ -94,13 +96,14 @@ class ShopDeliveryBuilder{
         this.products = new ArrayList<>();
         this.user = mock(User.class);
         this.turn = mock(Turn.class);
+        this.time = LocalDateTime.now();
     }
 
     public ShopDelivery build() {
         if (this.turn != null){
             return new DeliveryAtShop(shop, products, user, turn);
         } else {
-            return new DeliveryAtHome(shop, products, user, location);
+            return new DeliveryAtHome(shop, products, user, location, time);
         }
     }
 

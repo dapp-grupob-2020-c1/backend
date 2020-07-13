@@ -137,4 +137,8 @@ public class ShoppingList {
         }
         return total;
     }
+
+    public void removeEntry(ShoppingListEntry entry) {
+        this.entries.remove(entry);
+    }
 }

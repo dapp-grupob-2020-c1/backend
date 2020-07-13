@@ -1,18 +1,12 @@
 package com.unq.dapp0.c1.comprandoencasa.model.objects;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 import java.util.List;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@DiscriminatorColumn(name="Type")
+@Inheritance(strategy=InheritanceType.JOINED)
 public abstract class ShopDelivery {
 
     @Id

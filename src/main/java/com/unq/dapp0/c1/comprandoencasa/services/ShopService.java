@@ -10,7 +10,6 @@ import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.ShopDelivery;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import com.unq.dapp0.c1.comprandoencasa.repositories.DiscountRepository;
-import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ShopRepository;
 
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.DeliveryDoesntExistException;
@@ -42,7 +41,7 @@ public class ShopService {
     private DiscountRepository discountRepository;
 
     @Autowired
-    private ProductRepository productRepository;
+    private ProductService productService;
 
     @Autowired
     private UserService userService;
@@ -126,8 +125,7 @@ public class ShopService {
     private void deleteProductsFromShop(Shop shop) {
         List<Product> products = shop.getProducts();
         for (Product product : products){
-            shop.removeProduct(product);
-            this.productRepository.delete(product);
+            this.productService.deleteProduct(shop, product);
         }
     }
 

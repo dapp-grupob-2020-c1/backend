@@ -1,12 +1,11 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
-import com.unq.dapp0.c1.comprandoencasa.model.objects.AuthProvider;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.*;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
+import com.unq.dapp0.c1.comprandoencasa.repositories.ShoppingListEntryRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.ShoppingListRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.UserRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.LocationRepository;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
@@ -43,6 +42,12 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ShoppingListEntryRepository shoppingListEntryRepository;
+
+    @Autowired
+    private ShoppingListRepository shoppingListRepository;
 
     @Transactional
     public User createUser(String name, String email, String password) {
@@ -190,5 +195,25 @@ public class UserService {
         } else {
             throw new ShopDoesntExistException(shopId);
         }
+    }
+
+    @Transactional
+    public void removeProductFromShoppingLists(User deliveryUser, Product product) {
+        List<ShoppingList> historicPurchases = deliveryUser.getHistoricShoppingLists();
+        for (ShoppingList shoppingList : historicPurchases){
+            this.removeProductFromShoppingList(shoppingList, product);
+        }
+        this.removeProductFromShoppingList(deliveryUser.getActiveShoppingList(), product);
+    }
+
+    private void removeProductFromShoppingList(ShoppingList shoppingList, Product product) {
+        List<ShoppingListEntry> listEntries = shoppingList.getEntriesList();
+        for (ShoppingListEntry entry : listEntries){
+            if (entry.getProduct().getId().equals(product.getId())){
+                shoppingList.removeEntry(entry);
+                this.shoppingListEntryRepository.delete(entry);
+            }
+        }
+        this.shoppingListRepository.save(shoppingList);
     }
 }

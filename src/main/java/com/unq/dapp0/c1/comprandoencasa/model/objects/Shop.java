@@ -69,6 +69,9 @@ public class Shop {
     @OneToMany
     private List<ShopDelivery> activeDeliveries;
 
+    @OneToMany
+    private List<ShopDelivery> historicDeliveries;
+
     public Shop() {
     }
 
@@ -91,6 +94,7 @@ public class Shop {
         this.products = new ArrayList<>();
         this.discounts = new ArrayList<>();
         this.activeDeliveries = new ArrayList<>();
+        this.historicDeliveries = new ArrayList<>();
     }
 
     public void setUser(User user){
@@ -297,4 +301,10 @@ public class Shop {
     public void removeActiveDelivery(ShopDelivery delivery) {
         this.activeDeliveries.remove(delivery);
     }
+
+    public List<ShopDelivery> getHistoricDeliveries() {
+        return this.historicDeliveries;
+    }
+
+    public void setHistoricDeliveries(List<ShopDelivery> deliveries){this.historicDeliveries = deliveries;}
 }

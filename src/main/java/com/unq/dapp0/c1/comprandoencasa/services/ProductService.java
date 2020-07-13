@@ -1,13 +1,7 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
-import com.unq.dapp0.c1.comprandoencasa.model.objects.Discount;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountByMultiple;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountBySingle;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.*;
+import com.unq.dapp0.c1.comprandoencasa.repositories.DeliveryRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
 
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
@@ -42,6 +36,9 @@ public class ProductService {
 
     @Autowired
     private ShopService shopService;
+
+    @Autowired
+    private DeliveryRepository deliveryRepository;
 
     @Transactional
     public Product save(Product model) {
@@ -145,10 +142,7 @@ public class ProductService {
         Shop shop = getShopFromUser(user, shopId);
         Product product = getProductFromShop(shop, productId);
         checkIfProductIsInDiscount(shop, product);
-        shop.removeProduct(product);
-        this.shopService.save(shop);
-        this.productRepository.delete(product);
-        return product;
+        return deleteProduct(shop, product);
     }
 
     private void checkIfProductIsInDiscount(Shop shop, Product product) {
@@ -176,5 +170,22 @@ public class ProductService {
         }
         this.shopService.save(shop);
         return shop.getProducts();
+    }
+
+    @Transactional
+    public Product deleteProduct(Shop shop, Product product) {
+        List<ShopDelivery> historicDeliveries = shop.getHistoricDeliveries();
+        for (ShopDelivery delivery : historicDeliveries){
+            List<Product> deliveryProducts = delivery.getProducts().stream()
+                    .filter(prod -> !prod.getId().equals(product.getId())).collect(Collectors.toList());
+            delivery.setProducts(deliveryProducts);
+            User deliveryUser = delivery.getUser();
+            this.userService.removeProductFromShoppingLists(deliveryUser, product);
+        }
+        this.deliveryRepository.saveAll(historicDeliveries);
+        shop.removeProduct(product);
+        this.shopService.save(shop);
+        this.productRepository.delete(product);
+        return product;
     }
 }

@@ -1,10 +1,12 @@
 package com.unq.dapp0.c1.comprandoencasa.model.objects;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import java.util.ArrayList;
 
-@Entity(name = "DeliveryAtShop")
+@Entity
+@DiscriminatorValue("A")
 public class DeliveryAtShop extends ShopDelivery {
 
     @OneToOne
