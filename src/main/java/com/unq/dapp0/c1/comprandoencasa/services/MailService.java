@@ -14,24 +14,19 @@ import java.util.concurrent.ScheduledExecutorService;
 
 @Service
 public class MailService {
-
-    @Autowired
-    private JavaMailSender sender;
-
-    @Autowired
-    private TemplateEngine templateEngine;
-
-    private static final Logger logger = LogManager.getLogger(MailService.class);
-
-    public MailService(){}
-
     public static int noOfQuickServiceThreads = 20;
-
+    private static final Logger logger = LogManager.getLogger(MailService.class);
     /**
      * this statement create a thread pool of twenty threads
      * here we are assigning send mail task using ScheduledExecutorService.submit();
      */
     private ScheduledExecutorService quickService = Executors.newScheduledThreadPool(noOfQuickServiceThreads); // Creates a thread pool that reuses fixed number of threads(as specified by noOfThreads in this case).
+
+    @Autowired
+    private JavaMailSender sender;
+
+
+
 
     public void sendASynchronousMail(String toEmail,String subject,String text) throws MailException,RuntimeException{
         logger.info("Sending email to " + toEmail + " with subject " + subject);

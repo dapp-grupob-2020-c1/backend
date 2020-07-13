@@ -2,7 +2,14 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidDiscountDatesException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.MultipleDiscountWithSingleItemException;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.*;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Discount;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountByCategory;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountByMultiple;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountBySingle;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingListEntry;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

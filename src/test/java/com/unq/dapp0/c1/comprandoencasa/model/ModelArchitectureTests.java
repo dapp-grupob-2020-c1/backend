@@ -12,7 +12,7 @@ import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 public class ModelArchitectureTests {
 
     @ArchTest
-    static final ArchRule rule = classes().that().areNotInterfaces().and().areNotEnums()
+    public static final ArchRule rule = classes().that().areNotInterfaces().and().areNotEnums()
                 .should().beAnnotatedWith(Entity.class);
 
 }

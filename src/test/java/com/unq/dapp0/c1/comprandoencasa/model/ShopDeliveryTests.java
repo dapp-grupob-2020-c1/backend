@@ -1,6 +1,13 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
-import com.unq.dapp0.c1.comprandoencasa.model.objects.*;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DeliveryAtHome;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DeliveryAtShop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShopDelivery;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Turn;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
