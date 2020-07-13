@@ -1,10 +1,24 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
+import com.unq.dapp0.c1.comprandoencasa.model.Discount;
+import com.unq.dapp0.c1.comprandoencasa.model.DiscountByCategory;
+import com.unq.dapp0.c1.comprandoencasa.model.DiscountByMultiple;
+import com.unq.dapp0.c1.comprandoencasa.model.DiscountBySingle;
 import com.unq.dapp0.c1.comprandoencasa.model.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.Product;
 import com.unq.dapp0.c1.comprandoencasa.model.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.ShopDelivery;
 import com.unq.dapp0.c1.comprandoencasa.model.User;
+import com.unq.dapp0.c1.comprandoencasa.repositories.DiscountRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ShopRepository;
 
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.DiscountArgumentsMismatchException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.DiscountDoesntExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ShopHasActiveDeliveriesException;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.DiscountCreateDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.DiscountModifyDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopCreationDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopModificationDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistException;
@@ -12,6 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,10 +38,18 @@ public class ShopService {
     private ShopRepository repository;
 
     @Autowired
+    private DiscountRepository discountRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
     private LocationService locationService;
+
+
 
     @Transactional
     public Shop save(Shop model) {
@@ -65,47 +90,172 @@ public class ShopService {
     @Transactional
     public Shop modifyShop(Long userId, ShopModificationDTO shopData) {
         User user = this.userService.findUserById(userId);
-        Optional<Shop> result = getShopFromUser(user, shopData.id);
-        if(result.isPresent()){
-            Shop shop = result.get();
-            Location oldLocation = shop.getLocation();
-            if (shopData.location.getId() != null && !oldLocation.getId().equals(shopData.location.getId())){
-                this.locationService.save(shopData.location);
-                shop.setLocation(shopData.location);
-                this.locationService.delete(oldLocation);
-            }
-            shop.setName(shopData.name);
-            shop.setShopCategories(shopData.categories);
-            shop.setDays(shopData.days);
-            shop.setOpeningHour(shopData.openingHour);
-            shop.setClosingHour(shopData.closingHour);
-            shop.setPaymentMethods(shopData.paymentMethods);
-            shop.setDeliveryRadius(shopData.deliveryRadius);
-            this.repository.save(shop);
-            return shop;
-        } else {
-            throw new ShopDoesntExistException(shopData.id);
+        Shop shop = getShopFromUser(user, shopData.id);
+        Location oldLocation = shop.getLocation();
+        if (shopData.location.getId() != null && !oldLocation.getId().equals(shopData.location.getId())){
+            this.locationService.save(shopData.location);
+            shop.setLocation(shopData.location);
+            this.locationService.delete(oldLocation);
         }
+        shop.setName(shopData.name);
+        shop.setShopCategories(shopData.categories);
+        shop.setDays(shopData.days);
+        shop.setOpeningHour(shopData.openingHour);
+        shop.setClosingHour(shopData.closingHour);
+        shop.setPaymentMethods(shopData.paymentMethods);
+        shop.setDeliveryRadius(shopData.deliveryRadius);
+        this.repository.save(shop);
+        return shop;
     }
 
     @Transactional
     public Shop deleteShop(Long userId, long shopId) {
         User user = this.userService.findUserById(userId);
-        Optional<Shop> result = getShopFromUser(user, shopId);
-        if(result.isPresent()){
-            Shop shop = result.get();
-            user.removeShop(shop);
-            this.userService.save(user);
-            this.repository.delete(shop);
-            return shop;
+        Shop shop = getShopFromUser(user, shopId);
+        checkNoDeliveriesPending(shop);
+        deleteDiscountsFromShop(shop);
+        deleteProductsFromShop(shop);
+        user.removeShop(shop);
+        this.userService.save(user);
+        this.repository.delete(shop);
+        return shop;
+    }
+
+    private void deleteProductsFromShop(Shop shop) {
+        List<Product> products = shop.getProducts();
+        for (Product product : products){
+            shop.removeProduct(product);
+            this.productRepository.delete(product);
+        }
+    }
+
+    private void deleteDiscountsFromShop(Shop shop) {
+        List<Discount> discounts = shop.getDiscounts();
+        for (Discount discount : discounts){
+            shop.removeDiscount(discount);
+            this.discountRepository.delete(discount);
+        }
+    }
+
+    private void checkNoDeliveriesPending(Shop shop) {
+        List<ShopDelivery> deliveryList = shop.getActiveDeliveries();
+        if (!deliveryList.isEmpty()){
+            throw new ShopHasActiveDeliveriesException(shop);
+        }
+    }
+
+    private Shop getShopFromUser(User user, long shopId) {
+        Optional<Shop> result = user.getShops().stream().filter(sh -> sh.getId().equals(shopId)).findFirst();
+        if (result.isPresent()){
+            return result.get();
         } else {
             throw new ShopDoesntExistException(shopId);
         }
     }
 
-    private Optional<Shop> getShopFromUser(User user, long shopId) {
-        return user.getShops().stream().filter(sh -> sh.getId().equals(shopId)).findFirst();
+
+    @Transactional
+    public List<Discount> getDiscounts(Long userId, long shopId) {
+        User user = this.userService.findUserById(userId);
+        Shop shop = getShopFromUser(user, shopId);
+        return shop.getDiscounts();
     }
 
+    @Transactional
+    public Discount createDiscount(Long userId, DiscountCreateDTO discountCreateDTO) {
+        User user = this.userService.findUserById(userId);
+        Shop shop = getShopFromUser(user, discountCreateDTO.shopId);
+        Discount discount;
+        if (discountCreateDTO.productId != null){
+            Product product = this.getProductFromShop(shop, discountCreateDTO.productId);
+            discount = new DiscountBySingle(
+                    discountCreateDTO.percentage,
+                    discountCreateDTO.startingDate,
+                    discountCreateDTO.endingDate,
+                    shop,
+                    product
+            );
+        } else if (discountCreateDTO.productsIds != null){
+            List<Product> products = this.getProductsFromShop(shop, discountCreateDTO.productsIds);
+            discount = new DiscountByMultiple(
+                    discountCreateDTO.percentage,
+                    discountCreateDTO.startingDate,
+                    discountCreateDTO.endingDate,
+                    shop,
+                    products
+            );
+        } else {
+            discount = new DiscountByCategory(
+                    discountCreateDTO.percentage,
+                    discountCreateDTO.startingDate,
+                    discountCreateDTO.endingDate,
+                    shop,
+                    discountCreateDTO.productType
+            );
+        }
+        shop.addDiscount(discount);
+        this.discountRepository.save(discount);
+        this.save(shop);
+        return discount;
+    }
 
+    private List<Product> getProductsFromShop(Shop shop, Collection<Long> productsIds) {
+        List<Product> returnList = new ArrayList<>();
+        for (Long productId : productsIds){
+            returnList.add(this.getProductFromShop(shop, productId));
+        }
+        return returnList;
+    }
+
+    private Product getProductFromShop(Shop shop, Long productId) {
+        Optional<Product> result = shop.getProducts().stream().filter(product -> product.getId().equals(productId)).findFirst();
+        if (result.isPresent()){
+            return result.get();
+        } else {
+            throw new ProductDoesntExistException(productId);
+        }
+    }
+
+    @Transactional
+    public Discount modifyDiscount(Long userId, DiscountModifyDTO discountModifyDTO) {
+        User user = this.userService.findUserById(userId);
+        Shop shop = getShopFromUser(user, discountModifyDTO.shopId);
+        Discount discount = getDiscountFromShop(shop, discountModifyDTO.id);
+        discount.setStartingDate(discountModifyDTO.startingDate);
+        discount.setEndingDate(discountModifyDTO.endingDate);
+        discount.setPercentage(discountModifyDTO.percentage);
+        if (discount.isTypeSingle() && discountModifyDTO.productId != null){
+            Product product = this.getProductFromShop(shop, discountModifyDTO.productId);
+            ((DiscountBySingle) discount).setProduct(product);
+        } else if (discount.isTypeMultiple() && discountModifyDTO.productsIds != null){
+            List<Product> products = this.getProductsFromShop(shop, discountModifyDTO.productsIds);
+            ((DiscountByMultiple) discount).setProducts(products);
+        } else if (discount.isTypeCategory() && discountModifyDTO.productType != null){
+            ((DiscountByCategory) discount).setProductType(discountModifyDTO.productType);
+        } else {
+            throw new DiscountArgumentsMismatchException(discount);
+        }
+        this.discountRepository.save(discount);
+        return discount;
+    }
+
+    private Discount getDiscountFromShop(Shop shop, Long discountId) {
+        Optional<Discount> result = shop.getDiscounts().stream().filter(discount -> discount.getId().equals(discountId)).findFirst();
+        if (result.isPresent()){
+            return result.get();
+        } else {
+            throw new DiscountDoesntExistException(discountId);
+        }
+    }
+
+    @Transactional
+    public Discount deleteDiscount(Long userId, Long shopId, Long discountId) {
+        User user = this.userService.findUserById(userId);
+        Shop shop = getShopFromUser(user, shopId);
+        Discount discount = getDiscountFromShop(shop, discountId);
+        shop.removeDiscount(discount);
+        this.discountRepository.delete(discount);
+        this.repository.save(shop);
+        return discount;
+    }
 }

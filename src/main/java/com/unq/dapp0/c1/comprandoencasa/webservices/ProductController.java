@@ -5,6 +5,7 @@ import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.ProductService;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductIsInDiscountException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.security.UserPrincipal;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductBatchDTO;
@@ -17,6 +18,7 @@ import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistEx
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopNotFoundException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.UserNotFoundException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.security.CurrentUser;
+import com.unq.dapp0.c1.comprandoencasa.webservices.security.user.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -102,6 +104,8 @@ public class ProductController {
             throw new ShopNotFoundException(shopId);
         } catch (ProductDoesntExistException exception){
             throw new ProductNotFoundException(Long.valueOf(productId));
+        } catch (ProductIsInDiscountException exception){
+            throw new BadRequestException(exception.getMessage());
         }
     }
 

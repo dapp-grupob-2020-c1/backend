@@ -57,7 +57,7 @@ public class Shop {
     @Column
     private Integer deliveryRadius;
 
-    @OneToOne()
+    @OneToOne
     private User user;
 
     @OneToMany

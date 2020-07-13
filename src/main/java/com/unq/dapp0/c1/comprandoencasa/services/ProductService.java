@@ -1,5 +1,8 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
+import com.unq.dapp0.c1.comprandoencasa.model.Discount;
+import com.unq.dapp0.c1.comprandoencasa.model.DiscountByMultiple;
+import com.unq.dapp0.c1.comprandoencasa.model.DiscountBySingle;
 import com.unq.dapp0.c1.comprandoencasa.model.Location;
 import com.unq.dapp0.c1.comprandoencasa.model.Product;
 import com.unq.dapp0.c1.comprandoencasa.model.ProductType;
@@ -8,6 +11,7 @@ import com.unq.dapp0.c1.comprandoencasa.model.User;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
 
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductIsInDiscountException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductBatchDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductSmallDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistException;
@@ -140,16 +144,32 @@ public class ProductService {
         User user = this.userService.findUserById(userId);
         Shop shop = getShopFromUser(user, shopId);
         Product product = getProductFromShop(shop, productId);
+        checkIfProductIsInDiscount(shop, product);
         shop.removeProduct(product);
-        this.productRepository.delete(product);
         this.shopService.save(shop);
+        this.productRepository.delete(product);
         return product;
+    }
+
+    private void checkIfProductIsInDiscount(Shop shop, Product product) {
+        List<Discount> discounts = shop.getDiscounts();
+        boolean isPresent = discounts.stream().anyMatch(discount ->
+                (discount.isTypeSingle()
+                        && ((DiscountBySingle) discount).getProduct().getId().equals(product.getId()))
+                || (discount.isTypeMultiple()
+                        && ((DiscountByMultiple) discount).getProducts().stream()
+                        .anyMatch(prod -> prod.getId().equals(product.getId())))
+        );
+        if (isPresent){
+            throw new ProductIsInDiscountException(product);
+        }
+
     }
 
     @Transactional
     public List<Product> createModifyProductList(Long userId, ProductBatchDTO productBatchDTO) {
         User user = this.userService.findUserById(userId);
-        Shop shop = this.shopService.findShopById(productBatchDTO.shopId);
+        Shop shop = this.getShopFromUser(user, productBatchDTO.shopId);
         for (ProductSmallDTO productSmallDTO : productBatchDTO.productList){
             Product product = createModifyForShop(shop, productSmallDTO);
             this.productRepository.save(product);

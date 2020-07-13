@@ -28,6 +28,8 @@ public class DiscountByMultiple extends Discount {
         return true;
     }
 
+    public void setProducts(Collection<Product> products){this.products = products;}
+
     public Collection<Product> getProducts() {
         return this.products;
     }
