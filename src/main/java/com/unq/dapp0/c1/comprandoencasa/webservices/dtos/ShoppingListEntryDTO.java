@@ -1,6 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices.dtos;
 
-import com.unq.dapp0.c1.comprandoencasa.model.ShoppingListEntry;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingListEntry;
 
 public class ShoppingListEntryDTO {
     public ProductSmallDTO product;

@@ -1,5 +1,6 @@
-package com.unq.dapp0.c1.comprandoencasa.model;
+package com.unq.dapp0.c1.comprandoencasa.model.objects;
 
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,7 +13,8 @@ import javax.persistence.OneToOne;
 import java.util.List;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@DiscriminatorColumn(name="Type")
+@Inheritance(strategy=InheritanceType.JOINED)
 public abstract class ShopDelivery {
 
     @Id
@@ -33,15 +35,25 @@ public abstract class ShopDelivery {
         this.user = user;
     }
 
+    public Long getId(){return this.id;}
+
+    public void setId(Long id){this.id = id;}
+
     public Shop getShop() {
         return this.shop;
     }
+
+    public void setShop(Shop shop) {this.shop = shop;}
 
     public List<Product> getProducts() {
         return this.products;
     }
 
+    public void setProducts(List<Product> products){this.products = products;}
+
     public User getUser() {
         return this.user;
     }
+
+    public void setUser(User user){this.user = user;}
 }

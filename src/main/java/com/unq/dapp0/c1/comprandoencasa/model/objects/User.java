@@ -1,4 +1,4 @@
-package com.unq.dapp0.c1.comprandoencasa.model;
+package com.unq.dapp0.c1.comprandoencasa.model.objects;
 
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
@@ -73,6 +73,12 @@ public class User {
     private List<ShoppingList> historicShoppingLists;
 
     @OneToMany
+    private List<ShopDelivery> activeDeliveries;
+
+    @OneToMany
+    private List<ShopDelivery> historicDeliveries;
+
+    @OneToMany
     private List<Shop> shops = new ArrayList<>();
 
     public User() {}
@@ -86,6 +92,8 @@ public class User {
         this.email = email;
         this.locations = new ArrayList<>();
         this.historicShoppingLists = new ArrayList<>();
+        this.activeDeliveries = new ArrayList<>();
+        this.historicDeliveries = new ArrayList<>();
         this.provider = AuthProvider.local;
     }
 
@@ -279,5 +287,21 @@ public class User {
 
     private Optional<Shop> findShop(Long id) {
         return this.shops.stream().filter(shop -> shop.getId().equals(id)).findFirst();
+    }
+
+    public List<ShopDelivery> getActiveDeliveries() {
+        return activeDeliveries;
+    }
+
+    public void setActiveDeliveries(List<ShopDelivery> activeDeliveries) {
+        this.activeDeliveries = activeDeliveries;
+    }
+
+    public List<ShopDelivery> getHistoricDeliveries() {
+        return historicDeliveries;
+    }
+
+    public void setHistoricDeliveries(List<ShopDelivery> historicDeliveries) {
+        this.historicDeliveries = historicDeliveries;
     }
 }

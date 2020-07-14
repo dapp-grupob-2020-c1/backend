@@ -28,7 +28,12 @@
         <Logger name="com.unq.dapp0.c1.comprandoencasa.webservices.logging.LoggingHandler" level="info" additivity="false">
             <AppenderRef ref="FileAppender" />
         </Logger>
-
+        <Logger name="com.unq.dapp0.c1.comprandoencasa.services.MailService" level="error" additivity="false">
+            <AppenderRef ref="ConsoleAppender" />
+        </Logger>
+        <Logger name="com.unq.dapp0.c1.comprandoencasa.services.MailService" level="info" additivity="false">
+            <AppenderRef ref="FileAppender" />
+        </Logger>
 
         <Root level="info">
             <AppenderRef ref="ConsoleAppender" />

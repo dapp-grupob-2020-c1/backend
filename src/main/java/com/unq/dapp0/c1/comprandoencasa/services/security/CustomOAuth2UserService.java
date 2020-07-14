@@ -1,8 +1,8 @@
 package com.unq.dapp0.c1.comprandoencasa.services.security;
 
-import com.unq.dapp0.c1.comprandoencasa.model.AuthProvider;
-import com.unq.dapp0.c1.comprandoencasa.model.User;
-import com.unq.dapp0.c1.comprandoencasa.services.UserService;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.AuthProvider;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
+import com.unq.dapp0.c1.comprandoencasa.repositories.UserRepository;
 import com.unq.dapp0.c1.comprandoencasa.webservices.security.user.OAuth2AuthenticationProcessingException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.security.user.OAuth2UserInfo;
 import com.unq.dapp0.c1.comprandoencasa.webservices.security.user.OAuth2UserInfoFactory;
@@ -22,7 +22,7 @@ import java.util.Optional;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
@@ -44,7 +44,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
         }
 
-        Optional<User> userOptional = userService.findUserByEmail(oAuth2UserInfo.getEmail());
+        Optional<User> userOptional = userRepository.findByEmail(oAuth2UserInfo.getEmail());
         User user;
         if(userOptional.isPresent()) {
             user = userOptional.get();
@@ -69,13 +69,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         user.setName(oAuth2UserInfo.getName());
         user.setEmail(oAuth2UserInfo.getEmail());
         user.setImageUrl(oAuth2UserInfo.getImageUrl());
-        return userService.save(user);
+        return userRepository.save(user);
     }
 
     private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
         existingUser.setName(oAuth2UserInfo.getName());
         existingUser.setImageUrl(oAuth2UserInfo.getImageUrl());
-        return userService.save(existingUser);
+        return userRepository.save(existingUser);
     }
 
 }

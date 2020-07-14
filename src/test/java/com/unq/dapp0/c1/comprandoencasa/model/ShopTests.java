@@ -5,6 +5,16 @@ import com.unq.dapp0.c1.comprandoencasa.model.exceptions.DiscountAlreadyExistsEx
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.PaymentMethodAlreadyExistsException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.ProductAlreadyPresentException;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DeliveryAtHome;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DeliveryAtShop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Discount;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.PaymentMethod;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShopCategory;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Turn;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import org.junit.jupiter.api.Test;
 
 import java.time.DayOfWeek;

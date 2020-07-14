@@ -1,6 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices.dtos;
 
-import com.unq.dapp0.c1.comprandoencasa.model.User;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 
 public class UserOkDTO {
     public Long id;

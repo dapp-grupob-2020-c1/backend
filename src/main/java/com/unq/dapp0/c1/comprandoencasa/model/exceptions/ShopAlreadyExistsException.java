@@ -1,6 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.model.exceptions;
 
-import com.unq.dapp0.c1.comprandoencasa.model.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
 
 public class ShopAlreadyExistsException extends RuntimeException {
     public ShopAlreadyExistsException(Shop shop) {

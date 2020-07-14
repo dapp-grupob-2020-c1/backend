@@ -1,6 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.model.exceptions;
 
-import com.unq.dapp0.c1.comprandoencasa.model.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
 
 public class MultipleDiscountWithSingleItemException extends RuntimeException {
     public MultipleDiscountWithSingleItemException(Product product) {

@@ -1,5 +1,7 @@
 package com.unq.dapp0.c1.comprandoencasa.model;
 
+import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
+
 public class UserBuilder {
     private String name;
     private String password;

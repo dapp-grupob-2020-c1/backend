@@ -1,4 +1,4 @@
-package com.unq.dapp0.c1.comprandoencasa.model;
+package com.unq.dapp0.c1.comprandoencasa.model.objects;
 
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.MultipleDiscountWithSingleItemException;
 
@@ -27,6 +27,8 @@ public class DiscountByMultiple extends Discount {
     public boolean isTypeMultiple() {
         return true;
     }
+
+    public void setProducts(Collection<Product> products){this.products = products;}
 
     public Collection<Product> getProducts() {
         return this.products;

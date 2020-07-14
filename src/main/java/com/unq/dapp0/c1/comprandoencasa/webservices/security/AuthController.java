@@ -1,6 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices.security;
 
-import com.unq.dapp0.c1.comprandoencasa.model.User;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import com.unq.dapp0.c1.comprandoencasa.services.UserService;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.FieldAlreadyExistsException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.payload.ApiResponse;

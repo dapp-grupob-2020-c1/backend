@@ -1,4 +1,4 @@
-package com.unq.dapp0.c1.comprandoencasa.model;
+package com.unq.dapp0.c1.comprandoencasa.model.objects;
 
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.DayAlreadyExistsException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.DiscountAlreadyExistsException;
@@ -57,7 +57,7 @@ public class Shop {
     @Column
     private Integer deliveryRadius;
 
-    @OneToOne()
+    @OneToOne
     private User user;
 
     @OneToMany
@@ -68,6 +68,9 @@ public class Shop {
 
     @OneToMany
     private List<ShopDelivery> activeDeliveries;
+
+    @OneToMany
+    private List<ShopDelivery> historicDeliveries;
 
     public Shop() {
     }
@@ -91,6 +94,7 @@ public class Shop {
         this.products = new ArrayList<>();
         this.discounts = new ArrayList<>();
         this.activeDeliveries = new ArrayList<>();
+        this.historicDeliveries = new ArrayList<>();
     }
 
     public void setUser(User user){
@@ -277,4 +281,30 @@ public class Shop {
         }
         return turns;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setShopCategories(List<ShopCategory> categories) {
+        this.shopCategories = categories;
+    }
+
+    public void setDays(List<DayOfWeek> days) {
+        this.days = days;
+    }
+
+    public void setPaymentMethods(List<PaymentMethod> paymentMethods) {
+        this.paymentMethods = paymentMethods;
+    }
+
+    public void removeActiveDelivery(ShopDelivery delivery) {
+        this.activeDeliveries.remove(delivery);
+    }
+
+    public List<ShopDelivery> getHistoricDeliveries() {
+        return this.historicDeliveries;
+    }
+
+    public void setHistoricDeliveries(List<ShopDelivery> deliveries){this.historicDeliveries = deliveries;}
 }

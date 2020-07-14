@@ -4,9 +4,10 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import com.unq.dapp0.c1.comprandoencasa.model.Location;
-import com.unq.dapp0.c1.comprandoencasa.model.Shop;
-import com.unq.dapp0.c1.comprandoencasa.model.ShopCategory;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.PaymentMethod;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShopCategory;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -27,6 +28,7 @@ public class ShopDTO {
     public Integer deliveryRadius;
     public List<ProductSmallDTO> products;
     public List<DiscountDTO> discounts;
+    public List<PaymentMethod> paymentMethods;
 
     public ShopDTO(){}
 
@@ -41,5 +43,6 @@ public class ShopDTO {
         this.deliveryRadius = shop.getDeliveryRadius();
         this.products = ProductSmallDTO.createProducts(shop.getProducts());
         this.discounts = DiscountDTO.createDiscounts(shop.getActiveDiscounts());
+        this.paymentMethods = shop.getPaymentMethods();
     }
 }

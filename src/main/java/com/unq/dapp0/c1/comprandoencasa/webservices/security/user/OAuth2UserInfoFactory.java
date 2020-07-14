@@ -1,6 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices.security.user;
 
-import com.unq.dapp0.c1.comprandoencasa.model.AuthProvider;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.AuthProvider;
 
 import java.util.Map;
 
