@@ -16,14 +16,17 @@ NOTES:
 * CSV-based product update is not working front-end side.
 * Lacking proper unit-test support for most new controllers and services.
 * Lacking proper architecture tests for all project packages.
-* Product search presentation is still lacking some information so the user can make a conscious selection.
+* Product search presentation is still lacking some information so the user can make a conscious selection, like shop distance, delivery type available, payment methods and discounts available.
 * Location-based search has some errors regarding Location creation and selection, and the search is case-sensitive.
 * Some unstability on the Search page as it lacks shopping cart creation.
 * Shop modification and manipulation is lacking some styling and modification features.
+* Front-end location creation doesn't cover auto-generation based on a given address or pin-point map location.
+* Front-end doesn't have support for CDM of Discounts.
 * Multi-language text and codification is supported, but currently only ESP is partially implemented.
 
 KNOWN ISSUES:
 * Some fallback errors server-side for some requests.
+* Some errors on the Google Maps API.
 
 ---------------------------------------------------------------------
 TAG SEGUNDA-ENTREGA-2.0
