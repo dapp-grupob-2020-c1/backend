@@ -1,4 +1,28 @@
 ---------------------------------------------------------------------
+TAG TERCERA-ENTREGA-3.0
+---------------------------------------------------------------------
+NEW FEATURES:
+* Added support for JWT-based security and OAuth2 authentication with Google.
+* Improved User creation and authentication support, eliminating the restriction for user-type model for a generic one so it can either buy or sell with the same account.
+* Incorporated happy-path for Shop administration, including CDM of Shops, Products, and Discounts.
+* Incorporated path for product search if the user wants to buy, including CDM of Locations, and locations-based search using Google Maps.
+* Incorporated a generic asynchronous mail sender service.
+* Added a scheduler for routine scan (Mail sending for deliveries).
+* Added a logger service for the webservice layer and the mail sender.
+* Added support for architecture tests.
+
+NOTES:
+* Path for adding products to a cart, buying and setting up deliveries and turns is a stub.
+* CSV-based product update is not working front-end side.
+* Lacking proper unit-test support for most new controllers and services.
+* Lacking proper architecture tests for all project packages.
+* Product search presentation is still lacking some information so the user can make a conscious selection.
+* Multi-language text and codification is supported, but currently only ESP is fully implemented.
+
+KNOWN ISSUES:
+* Some fallback errors server-side for some requests.
+
+---------------------------------------------------------------------
 TAG SEGUNDA-ENTREGA-2.0
 ---------------------------------------------------------------------
 NEW FEATURES:
