@@ -4,8 +4,8 @@ TAG TERCERA-ENTREGA-3.0
 NEW FEATURES:
 * Added support for JWT-based security and OAuth2 authentication with Google.
 * Improved User creation and authentication support, eliminating the restriction for user-type model for a generic one so it can either buy or sell with the same account.
-* Incorporated happy-path for Shop administration, including CDM of Shops, Products, and Discounts.
-* Incorporated path for product search if the user wants to buy, including CDM of Locations, and locations-based search using Google Maps.
+* Incorporated happy-path for Shop administration, including creation and deletion of Shops and Products.
+* Incorporated path for product search if the user wants to buy, including creation and deletion of Locations, and locations-based search using Google Maps.
 * Incorporated a generic asynchronous mail sender service.
 * Added a scheduler for routine scan (Mail sending for deliveries).
 * Added a logger service for the webservice layer and the mail sender.
