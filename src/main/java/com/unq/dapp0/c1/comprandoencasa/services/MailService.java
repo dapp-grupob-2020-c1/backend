@@ -27,7 +27,7 @@ public class MailService {
     public void sendASynchronousMail(String toEmail,String subject,String text) throws MailException,RuntimeException{
         logger.info("Sending email to " + toEmail + " with subject " + subject);
         SimpleMailMessage mail=new SimpleMailMessage();
-        mail.setFrom("dapp2020grupoc@gmail.com");
+        mail.setFrom("grupobdapp2020@gmail.com");
         mail.setTo(toEmail);
         mail.setSubject(subject);
         mail.setText(text);
