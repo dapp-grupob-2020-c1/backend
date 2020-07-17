@@ -494,8 +494,7 @@ public class DiscountTests {
         entries.add(new ShoppingListEntry(productOfAnotherShop, 1));
 
         assertEquals(2, entries.size());
-        assertEquals(new BigDecimal("9.900"), discount.calculateFor(entries));
-        assertEquals(1, entries.size());
+        assertEquals(new BigDecimal("4.950"), discount.calculateFor(entries.get(0), entries));
     }
 
 
@@ -521,8 +520,7 @@ public class DiscountTests {
         entries.add(new ShoppingListEntry(productOfAnotherShop, 1));
 
         assertEquals(2, entries.size());
-        assertEquals(new BigDecimal("9.900"), discount.calculateFor(entries));
-        assertEquals(1, entries.size());
+        assertEquals(new BigDecimal("4.950"), discount.calculateFor(entries.get(0), entries));
     }
 
 
@@ -553,8 +551,7 @@ public class DiscountTests {
         entries.add(new ShoppingListEntry(productOfAnotherShop, 1));
 
         assertEquals(3, entries.size());
-        assertEquals(new BigDecimal("11.880"), discount.calculateFor(entries));
-        assertEquals(2, entries.size());
+        assertEquals(new BigDecimal("4.950"), discount.calculateFor(entries.get(0), entries));
     }
 }
 

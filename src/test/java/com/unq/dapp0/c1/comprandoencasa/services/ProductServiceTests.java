@@ -1,16 +1,13 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
-import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.*;
 import com.unq.dapp0.c1.comprandoencasa.model.LocationBuilder;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
 import com.unq.dapp0.c1.comprandoencasa.model.ProductBuilder;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
 import com.unq.dapp0.c1.comprandoencasa.model.ShopBuilder;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import com.unq.dapp0.c1.comprandoencasa.model.UserBuilder;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -149,12 +146,11 @@ public class ProductServiceTests {
         categories.add(ProductType.Bazaar);
         categories.add(ProductType.FoodsAndDrinks);
 
-        Location searchLocation = LocationBuilder.anyLocation()
-                .withCoordinates(-34.706519, -58.278026).build(); //UNQ
+        Location searchLocation = userService.addLocationTo(manager.getId(), "any", -34.706519, -58.278026); //UNQ
 
-        locationService.save(searchLocation);
+        userService.createShoppingList(manager.getId(), searchLocation.getId());
 
-        List<Product> result = productService.searchBy(keyword, categories, searchLocation.getId(), 0, 3, "priceAsc");
+        List<Product> result = productService.searchBy(manager.getId(), keyword, categories, 0, 3, "priceAsc");
         assertEquals(3, result.size());
         assertEquals(result.get(0).getId(), product1.getId());
         assertEquals(result.get(1).getId(), product2.getId());
@@ -162,14 +158,14 @@ public class ProductServiceTests {
     }
 
     @Test
-    public void serviceThrowsLocationDoesNotExistExceptionIfTheLocationIdUsedForSearchByIsInvalid(){
+    public void serviceThrowsUserDoesNotExistExceptionIfTheUserIdUsedForSearchByIsInvalid(){
         List<ProductType> categories = new ArrayList<>();
-        Long locationId = 0L;
-        Exception exception = assertThrows(LocationDoesNotExistException.class, ()-> productService.searchBy("", categories, locationId, 0, 3, "priceAsc"));
+        Long userId = 0L;
+        Exception exception = assertThrows(UserDoesntExistException.class, ()-> productService.searchBy(userId,"", categories, 0, 3, "priceAsc"));
 
         assertNotNull(exception);
 
-        String expected = "Location with the id " + locationId + " does not exist";
+        String expected = "User with id " + userId + " does not exist";
 
         assertEquals(expected, exception.getMessage());
     }

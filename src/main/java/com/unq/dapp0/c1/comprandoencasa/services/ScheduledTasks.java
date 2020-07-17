@@ -25,4 +25,9 @@ public class ScheduledTasks {
             log.error("There has been an error during mail notification, with the following message: "+ e.getLocalizedMessage());
         }
     }
+
+    @Scheduled(fixedRate = 86400000)
+    public void calculateSuggestedThresholds(){
+        //TODO: Implementar
+    }
 }

@@ -8,9 +8,7 @@ import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistExcep
 import com.unq.dapp0.c1.comprandoencasa.services.UserService;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
 import com.unq.dapp0.c1.comprandoencasa.services.security.UserPrincipal;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopFullDTO;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopSmallDTO;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.UserDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.*;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.EmptyFieldsBadRequestException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.LocationNotFoundException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistException;
@@ -22,13 +20,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +35,9 @@ public class UserController {
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public UserDTO getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+    public ResponseEntity<UserDTO> getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
         User user = userService.findUserById(userPrincipal.getId());
-        return new UserDTO(user);
+        return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
     }
 
     @CrossOrigin
@@ -105,15 +97,7 @@ public class UserController {
     @GetMapping("/myshops")
     public ResponseEntity<List<ShopSmallDTO>> getMyShops(@CurrentUser UserPrincipal userPrincipal){
         List<Shop> shops = this.userService.getShopsFrom(userPrincipal.getId());
-        return new ResponseEntity<>(generateShopSmallDTOList(shops), HttpStatus.OK);
-    }
-
-    private List<ShopSmallDTO> generateShopSmallDTOList(List<Shop> shops) {
-        List<ShopSmallDTO> returnList = new ArrayList<>();
-        for (Shop shop : shops){
-            returnList.add(new ShopSmallDTO(shop));
-        }
-        return returnList;
+        return new ResponseEntity<>(ShopSmallDTO.generateShopSmallDTOList(shops), HttpStatus.OK);
     }
 
     @CrossOrigin
@@ -136,4 +120,26 @@ public class UserController {
             throw new EmptyFieldException(fieldName);
         }
     }
+
+    /*
+    @CrossOrigin
+    @GetMapping("/thresholds")
+    public ResponseEntity<UserThresholdsDTO> getUserThresholds(@CurrentUser UserPrincipal userPrincipal){
+
+    }
+
+    @CrossOrigin
+    @PostMapping("/threshold/type")
+    public ResponseEntity<UserThresholdsDTO> setUserTypeThreshold(@CurrentUser UserPrincipal userPrincipal,
+                                                                  @RequestBody ThresholdDTO thresholdDTO){
+
+    }
+
+    @CrossOrigin
+    @PostMapping("/threshold/total")
+    public ResponseEntity<UserThresholdsDTO> setUserTotalThreshold(@CurrentUser UserPrincipal userPrincipal,
+                                                                   @RequestParam(value = "threshold") String threshold){
+
+    }*/
+
 }

@@ -8,27 +8,23 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShoppingListDTO {
+public class ShoppingListActiveDTO {
     public Long id;
     public Location location;
     public List<ShoppingListEntryDTO> entries;
     public BigDecimal total;
+    public BigDecimal totalThreshold;
+    public List<ThresholdDTO> thresholdsByType;
 
-    public ShoppingListDTO(){}
+    public ShoppingListActiveDTO(){}
 
-    public ShoppingListDTO(ShoppingList shoppingList) {
+    public ShoppingListActiveDTO(ShoppingList shoppingList, BigDecimal totalThreshold, List<ThresholdDTO> thresholdDTOList) {
         this.id = shoppingList.getId();
         this.location = shoppingList.getDeliveryLocation();
         this.entries = parseEntries(shoppingList.getEntriesList());
         this.total = shoppingList.totalValue();
-    }
-
-    public static List<ShoppingListDTO> parseList(List<ShoppingList> shoppingLists) {
-        List<ShoppingListDTO> returnList = new ArrayList<>();
-        for (ShoppingList list : shoppingLists){
-            returnList.add(new ShoppingListDTO(list));
-        }
-        return returnList;
+        this.totalThreshold = totalThreshold;
+        this.thresholdsByType = thresholdDTOList;
     }
 
     private List<ShoppingListEntryDTO> parseEntries(List<ShoppingListEntry> entriesList) {

@@ -3,13 +3,7 @@ package com.unq.dapp0.c1.comprandoencasa.services;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.AuthProvider;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingList;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingListEntry;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.*;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ShoppingListEntryRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ShoppingListRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.UserRepository;
@@ -18,6 +12,8 @@ import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExist
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.FieldAlreadyExistsException;
 import com.unq.dapp0.c1.comprandoencasa.services.security.TokenProvider;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShoppingListActiveDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ThresholdDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +24,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -221,5 +220,49 @@ public class UserService {
             }
         }
         this.shoppingListRepository.save(shoppingList);
+    }
+
+    @Transactional
+    public List<ShoppingList> getHistoricCarts(Long userId) {
+        User user = findUserById(userId);
+        return user.getHistoricShoppingLists();
+    }
+
+    @Transactional
+    public ShoppingListActiveDTO getActiveCart(Long userId) {
+        User user = findUserById(userId);
+        ShoppingList shoppingList = user.getActiveShoppingList();
+        Map<ProductType, BigDecimal> typeThresholds = user.getTypeThresholds();
+        List<ThresholdDTO> thresholdDTOList = new ArrayList<>();
+        for (ProductType productType : typeThresholds.keySet()){
+            thresholdDTOList.add(
+                    new ThresholdDTO(
+                            productType,
+                            typeThresholds.get(productType),
+                            shoppingList.evaluateTotalFor(productType)
+                    ));
+        }
+        return new ShoppingListActiveDTO(shoppingList, user.getTotalThreshold(), thresholdDTOList);
+    }
+
+    @Transactional
+    public ShoppingList createShoppingList(Long userId, Long locationId) {
+        User user = findUserById(userId);
+        Location location = getLocationOf(user, locationId);
+        ShoppingList shoppingList = new ShoppingList(location, user);
+        this.shoppingListRepository.save(shoppingList);
+        user.setActiveShoppingList(shoppingList);
+        this.userRepository.save(user);
+        return shoppingList;
+    }
+
+    private Location getLocationOf(User user, Long locationId) {
+        Optional<Location> location = user.getLocations().stream()
+                .filter(loc -> loc.getId().equals(locationId)).findFirst();
+        if (location.isPresent()){
+            return location.get();
+        } else {
+            throw new LocationDoesNotExistException(locationId);
+        }
     }
 }

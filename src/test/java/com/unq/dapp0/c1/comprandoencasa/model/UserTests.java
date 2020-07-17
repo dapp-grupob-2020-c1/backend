@@ -185,9 +185,9 @@ public class UserTests {
             typeList.put(productType, BigDecimal.valueOf(1));
         }
 
-        user.setTypesThreshold(typeList);
+        user.setTypeThresholds(typeList);
 
-        assertEquals(typeList, user.getTypesThreshold());
+        assertEquals(typeList, user.getTypeThresholds());
     }
 
     @Test

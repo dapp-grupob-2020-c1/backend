@@ -1,11 +1,13 @@
 package com.unq.dapp0.c1.comprandoencasa.model.objects;
 
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.MultipleDiscountWithSingleItemException;
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.ProductIsInvalidForDiscount;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -64,33 +66,45 @@ public class DiscountByMultiple extends Discount {
     }
 
     @Override
-    public BigDecimal calculateFor(List<ShoppingListEntry> entries) {
-        BigDecimal total = new BigDecimal(0);
-        boolean isValid = this.products.stream().allMatch(product -> this.mapListContains(product, entries));
-        if (isValid) {
-            for (ShoppingListEntry entry : entries) {
-                Product product = entry.getProduct();
-                if (this.findProduct(product).isPresent()) {
-                    BigDecimal discount = BigDecimal.valueOf(this.percentage).multiply(BigDecimal.valueOf(0.01)).multiply(product.getPrice());
-                    total = total.add(product.getPrice().subtract(discount).multiply(BigDecimal.valueOf(entry.getQuantity())));
-                    if (entry.getQuantity() > 1) {
-                        entry.setQuantity(entry.getQuantity() - 1);
-                    } else {
-                        entries.remove(entry);
-                    }
-                }
-            }
+    public BigDecimal calculateFor(ShoppingListEntry entry, List<ShoppingListEntry> entries) {
+        Product product = entry.getProduct();
+        boolean isValid = mapListContains(entries);
+        if (isValid){
+            BigDecimal perc = BigDecimal.valueOf(this.percentage).multiply(BigDecimal.valueOf(0.01));
+            BigDecimal finalPerc = BigDecimal.valueOf(1).subtract(perc);
+            BigDecimal total = product.getPrice().multiply(finalPerc);
+            return total;
+        } else {
+            throw new ProductIsInvalidForDiscount(product, this);
         }
-        return total;
     }
 
-    private boolean mapListContains(Product product, List<ShoppingListEntry> entries) {
-        for (ShoppingListEntry entry : entries) {
-            Product key = entry.getProduct();
-            if (key.getId().equals(product.getId())) {
-                return true;
+    @Override
+    public boolean isValidFor(Product product, List<ShoppingListEntry> entries, int amountEvaluated) {
+        List<ShoppingListEntry> matchingEntries = new ArrayList<>();
+        for (Product prod : products){
+            Optional<ShoppingListEntry> filterEntry = entries.stream()
+                    .filter(entry -> entry.getProduct().getId().equals(prod.getId())).findFirst();
+            if (filterEntry.isPresent()){
+                matchingEntries.add(filterEntry.get());
+            } else {
+                return false;
             }
         }
-        return false;
+        for (ShoppingListEntry entry : matchingEntries){
+            if (entry.getQuantity() <= amountEvaluated){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean mapListContains(List<ShoppingListEntry> entries) {
+        boolean returnValue = true;
+        for (Product prod : products){
+            returnValue = returnValue && entries.stream()
+                    .anyMatch(entry -> entry.getProduct().getId().equals(prod.getId()));
+        }
+        return returnValue;
     }
 }

@@ -73,34 +73,6 @@ public class ShoppingList {
         return sum;
     }
 
-    public BigDecimal totalValue() {
-        HashSet<Shop> shops = new HashSet<>();
-        this.entries.forEach(shoppingListEntry -> {
-            Shop productShop = shoppingListEntry.getProduct().getShop();
-            shops.add(productShop);
-        });
-
-        ArrayList<Discount> discounts = new ArrayList<>();
-        shops.forEach(shop -> discounts.addAll(shop.getActiveDiscounts()));
-
-        discounts.sort(Discount::compare);
-
-        BigDecimal total = new BigDecimal(0);
-        List<ShoppingListEntry> products = new ArrayList<>(this.entries);
-
-        for (Discount discount : discounts) {
-            total = discount.calculateFor(products);
-        }
-
-        for (ShoppingListEntry shoppingListEntry : entries) {
-            BigDecimal productCalculatedPrice = shoppingListEntry.getProduct().getPrice();
-            BigDecimal entryQuantity = BigDecimal.valueOf(shoppingListEntry.getQuantity());
-            total = total.add(productCalculatedPrice.multiply(entryQuantity));
-        }
-
-        return total;
-    }
-
     public List<ShoppingListEntry> getEntriesList() {
         if (entries == null){
             return new ArrayList<>();
@@ -126,16 +98,48 @@ public class ShoppingList {
         return this.user;
     }
 
+    public BigDecimal totalValue() {
+        BigDecimal total = new BigDecimal(0);
+        for (ProductType type : ProductType.values()){
+            total = total.add(evaluateTotalFor(type));
+        }
+        return total;
+    }
+
     public BigDecimal evaluateTotalFor(ProductType productType) {
         BigDecimal total = new BigDecimal(0);
         for (ShoppingListEntry entry : this.entries) {
             Product product = entry.getProduct();
             if (product.isType(productType)) {
-                Integer quantity = entry.getQuantity();
-                total = total.add(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+                total = total.add(calculateFor(entry, entries));
             }
         }
         return total;
+    }
+
+    private BigDecimal calculateFor(ShoppingListEntry entry, List<ShoppingListEntry> entries) {
+        BigDecimal total = new BigDecimal(0);
+        Product product = entry.getProduct();
+        List<Discount> discounts = product.getShop().getActiveDiscounts();
+        discounts.sort(Discount::compare);
+        for (int amountEvaluated=0; amountEvaluated < entry.getQuantity(); amountEvaluated++){
+            Optional<Discount> currentDiscount = findDiscount(product, entries, amountEvaluated, discounts);
+            if (currentDiscount.isPresent()){
+                total = total.add(currentDiscount.get().calculateFor(entry, entries));
+            } else {
+                total = total.add(product.getPrice());
+            }
+        }
+        return total;
+    }
+
+    private Optional<Discount> findDiscount(Product product, List<ShoppingListEntry> entries, int amountEvaluated, List<Discount> discounts) {
+        for (Discount discount : discounts){
+            if (discount.isValidFor(product, entries, amountEvaluated)){
+                return Optional.of(discount);
+            }
+        }
+        return Optional.empty();
     }
 
     public void removeEntry(ShoppingListEntry entry) {

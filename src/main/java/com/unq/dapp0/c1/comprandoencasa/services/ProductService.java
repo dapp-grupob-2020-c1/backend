@@ -12,6 +12,8 @@ import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import com.unq.dapp0.c1.comprandoencasa.repositories.DeliveryRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
 
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.NoActiveShoppingListException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductIsInDiscountException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductBatchDTO;
@@ -64,8 +66,12 @@ public class ProductService {
     }
 
     @Transactional
-    public List<Product> searchBy(String keyword, List<ProductType> categories, Long locationId, Integer page, Integer size, String order) {
-        Location location = locationService.findById(locationId);
+    public List<Product> searchBy(Long userId, String keyword, List<ProductType> categories, Integer page, Integer size, String order) {
+        User user = userService.findUserById(userId);
+        Location location = user.getActiveShoppingList().getDeliveryLocation();
+        if (location.getId() == null){
+            throw new NoActiveShoppingListException(userId);
+        }
         Sort sort = determineSort(order);
         Pageable pageable = PageRequest.of(page, size, sort);
         List<ProductType> cat = (categories.size() > 0) ? categories : Arrays.stream(ProductType.values()).collect(Collectors.toCollection(ArrayList::new));

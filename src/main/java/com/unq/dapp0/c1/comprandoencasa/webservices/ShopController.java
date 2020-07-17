@@ -53,10 +53,10 @@ public class ShopController {
 
     @CrossOrigin
     @GetMapping("/shop")
-    public ShopDTO getShop(@RequestParam(value = "shopId") String shopId) {
+    public ResponseEntity<ShopDTO> getShop(@RequestParam(value = "shopId") String shopId) {
         try{
             Shop shop = this.shopService.findShopById(Long.valueOf(shopId));
-            return new ShopDTO(shop);
+            return new ResponseEntity<>(new ShopDTO(shop), HttpStatus.OK);
         } catch (ShopDoesntExistException exception){
             throw new ShopNotFoundException(shopId);
         }

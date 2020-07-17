@@ -69,13 +69,18 @@ class ShoppingListTest {
 
         when(aProduct.getShop()).thenReturn(shop);
         when(aProduct.getPrice()).thenReturn(BigDecimal.valueOf(10));
+        when(aProduct.isType(ProductType.Bazaar)).thenReturn(true);
+        when(aProduct.getShop()).thenReturn(shop);
+
         when(shop.getActiveDiscounts()).thenReturn(discounts);
+
         when(discount.compare(discount)).thenReturn(0);
-        when(discount.calculateFor(any())).thenReturn(new BigDecimal(100));
+        when(discount.isValidFor(aProduct, aShoppingList.getEntriesList(), 0)).thenReturn(true);
+        when(discount.calculateFor(any(), any())).thenReturn(new BigDecimal(9));
 
         assertEquals(new BigDecimal(0), aShoppingList.totalValue());
         aShoppingList.addProduct(aProduct, 2);
-        assertEquals(new BigDecimal(120), aShoppingList.totalValue());
+        assertEquals(new BigDecimal(19), aShoppingList.totalValue());
     }
 
     @Test
@@ -116,6 +121,8 @@ class ShoppingListTest {
         Product product1 = mock(Product.class);
         Product product2 = mock(Product.class);
 
+        Shop shop = mock(Shop.class);
+
         when(product1.getId()).thenReturn(1L);
         when(product2.getId()).thenReturn(2L);
 
@@ -124,6 +131,11 @@ class ShoppingListTest {
 
         when(product1.getPrice()).thenReturn(BigDecimal.valueOf(1));
         when(product2.getPrice()).thenReturn(BigDecimal.valueOf(1));
+
+        when(product1.getShop()).thenReturn(shop);
+        when(product2.getShop()).thenReturn(shop);
+
+        when(shop.getActiveDiscounts()).thenReturn(new ArrayList<>());
 
         shoppingList.addProduct(product1, 1);
         shoppingList.addProduct(product2, 2);

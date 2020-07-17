@@ -11,6 +11,7 @@ import com.unq.dapp0.c1.comprandoencasa.model.objects.ShopCategory;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ShopSmallDTO {
@@ -42,5 +43,13 @@ public class ShopSmallDTO {
         this.deliveryRadius = shop.getDeliveryRadius();
         this.discounts = DiscountDTO.createDiscounts(shop.getActiveDiscounts());
         this.paymentMethods = shop.getPaymentMethods();
+    }
+
+    public static List<ShopSmallDTO> generateShopSmallDTOList(List<Shop> shops) {
+        List<ShopSmallDTO> returnList = new ArrayList<>();
+        for (Shop shop : shops){
+            returnList.add(new ShopSmallDTO(shop));
+        }
+        return returnList;
     }
 }

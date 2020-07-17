@@ -64,7 +64,10 @@ public class User {
     private BigDecimal totalThreshold;
 
     @ElementCollection
-    private Map<ProductType, BigDecimal> typesThreshold;
+    private Map<ProductType, BigDecimal> typeThresholds;
+
+    @ElementCollection
+    private Map<ProductType, BigDecimal> suggestedTypeThresholds;
 
     @OneToOne
     private ShoppingList activeShoppingList;
@@ -160,12 +163,12 @@ public class User {
         this.totalThreshold = threshold;
     }
 
-    public Map<ProductType, BigDecimal> getTypesThreshold() {
-        return this.typesThreshold;
+    public Map<ProductType, BigDecimal> getTypeThresholds() {
+        return this.typeThresholds;
     }
 
-    public void setTypesThreshold(Map<ProductType, BigDecimal> typeList) {
-        this.typesThreshold = typeList;
+    public void setTypeThresholds(Map<ProductType, BigDecimal> typeList) {
+        this.typeThresholds = typeList;
     }
 
     public void setActiveShoppingList(ShoppingList shoppingList) {
@@ -303,5 +306,13 @@ public class User {
 
     public void setHistoricDeliveries(List<ShopDelivery> historicDeliveries) {
         this.historicDeliveries = historicDeliveries;
+    }
+
+    public Map<ProductType, BigDecimal> getSuggestedTypeThresholds() {
+        return suggestedTypeThresholds;
+    }
+
+    public void setSuggestedTypeThresholds(Map<ProductType, BigDecimal> suggestedTypeThresholds) {
+        this.suggestedTypeThresholds = suggestedTypeThresholds;
     }
 }
