@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Turn;
-import org.springframework.lang.Nullable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

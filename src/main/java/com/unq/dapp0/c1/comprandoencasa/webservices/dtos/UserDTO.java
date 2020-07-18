@@ -1,6 +1,11 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices.dtos;
 
-import com.unq.dapp0.c1.comprandoencasa.model.objects.*;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.AuthProvider;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingList;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import org.springframework.lang.Nullable;
 
 import java.math.BigDecimal;

@@ -1,10 +1,18 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
-import com.unq.dapp0.c1.comprandoencasa.model.objects.*;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Discount;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountByMultiple;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountBySingle;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShopDelivery;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingListEntry;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import com.unq.dapp0.c1.comprandoencasa.repositories.DeliveryRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
 
-import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.NoActiveShoppingListException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductIsInDiscountException;
@@ -29,9 +37,6 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
-    private LocationService locationService;
 
     @Autowired
     private UserService userService;

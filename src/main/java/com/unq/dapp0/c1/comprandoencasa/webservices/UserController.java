@@ -8,7 +8,11 @@ import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistExcep
 import com.unq.dapp0.c1.comprandoencasa.services.UserService;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
 import com.unq.dapp0.c1.comprandoencasa.services.security.UserPrincipal;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.*;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopFullDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopSmallDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ThresholdSetDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.UserDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.UserThresholdsDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.EmptyFieldsBadRequestException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.LocationNotFoundException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistException;
@@ -20,10 +24,16 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

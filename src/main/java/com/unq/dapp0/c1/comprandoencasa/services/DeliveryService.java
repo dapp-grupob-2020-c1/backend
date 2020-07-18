@@ -1,6 +1,15 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
-import com.unq.dapp0.c1.comprandoencasa.model.objects.*;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DeliveryAtHome;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DeliveryAtShop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShopDelivery;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingList;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingListEntry;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Turn;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import com.unq.dapp0.c1.comprandoencasa.repositories.DeliveryRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ShoppingListEntryRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.TurnRepository;

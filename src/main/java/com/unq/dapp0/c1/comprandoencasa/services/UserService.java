@@ -3,7 +3,14 @@ package com.unq.dapp0.c1.comprandoencasa.services;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidEmailFormatException;
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.*;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.AuthProvider;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingList;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingListEntry;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ShoppingListEntryRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ShoppingListRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.UserRepository;
@@ -13,7 +20,10 @@ import com.unq.dapp0.c1.comprandoencasa.services.exceptions.NotAnActiveShoppingL
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.FieldAlreadyExistsException;
 import com.unq.dapp0.c1.comprandoencasa.services.security.TokenProvider;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.*;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShoppingListActiveDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ThresholdDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ThresholdSetDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.UserThresholdsDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,7 +35,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -53,9 +66,6 @@ public class UserService {
 
     @Autowired
     private ProductService productService;
-
-    @Autowired
-    private DeliveryService deliveryService;
 
     @Transactional
     public User createUser(String name, String email, String password) {
