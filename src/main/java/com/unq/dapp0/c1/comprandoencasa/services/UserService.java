@@ -13,10 +13,7 @@ import com.unq.dapp0.c1.comprandoencasa.services.exceptions.NotAnActiveShoppingL
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.FieldAlreadyExistsException;
 import com.unq.dapp0.c1.comprandoencasa.services.security.TokenProvider;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopDeliveryCreationDTO;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopDeliveryDTO;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShoppingListActiveDTO;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ThresholdDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.*;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -298,5 +295,25 @@ public class UserService {
         this.shoppingListRepository.save(shoppingList);
         this.shoppingListEntryRepository.delete(entry);
         return this.getActiveCart(userId);
+    }
+
+    @Transactional
+    public UserThresholdsDTO getThresholds(Long userId) {
+        User user = findUserById(userId);
+        return new UserThresholdsDTO(user);
+    }
+
+    @Transactional
+    public UserThresholdsDTO setThreshold(Long userId, ThresholdSetDTO thresholdDTO) {
+        User user = findUserById(userId);
+        user.setTypeThreshold(thresholdDTO.type, thresholdDTO.amount);
+        return new UserThresholdsDTO(user);
+    }
+
+    @Transactional
+    public UserThresholdsDTO setTotalThreshold(Long userId, BigDecimal threshold) {
+        User user = findUserById(userId);
+        user.setTotalThreshold(threshold);
+        return new UserThresholdsDTO(user);
     }
 }

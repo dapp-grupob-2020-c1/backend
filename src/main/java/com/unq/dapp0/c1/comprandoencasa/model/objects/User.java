@@ -345,4 +345,8 @@ public class User {
     public void cancelDelivery(ShopDelivery delivery) {
         this.activeDeliveries.remove(delivery);
     }
+
+    public void setTypeThreshold(ProductType type, BigDecimal amount) {
+        this.typeThresholds.replace(type, typeThresholds.get(type), amount);
+    }
 }

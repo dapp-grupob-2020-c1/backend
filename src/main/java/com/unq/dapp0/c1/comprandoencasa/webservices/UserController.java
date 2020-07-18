@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -121,25 +122,40 @@ public class UserController {
         }
     }
 
-    /*
     @CrossOrigin
     @GetMapping("/thresholds")
     public ResponseEntity<UserThresholdsDTO> getUserThresholds(@CurrentUser UserPrincipal userPrincipal){
-
+        try{
+            UserThresholdsDTO thresholdsDTO = this.userService.getThresholds(userPrincipal.getId());
+            return new ResponseEntity<>(thresholdsDTO, HttpStatus.OK);
+        } catch (UserDoesntExistException exception){
+            throw new UserNotFoundException(exception.getMessage());
+        }
     }
 
     @CrossOrigin
     @PostMapping("/threshold/type")
     public ResponseEntity<UserThresholdsDTO> setUserTypeThreshold(@CurrentUser UserPrincipal userPrincipal,
-                                                                  @RequestBody ThresholdDTO thresholdDTO){
-
+                                                                  @RequestBody ThresholdSetDTO thresholdDTO){
+        try{
+            UserThresholdsDTO thresholdsDTO = this.userService.setThreshold(userPrincipal.getId(), thresholdDTO);
+            return new ResponseEntity<>(thresholdsDTO, HttpStatus.OK);
+        } catch (UserDoesntExistException exception){
+            throw new UserNotFoundException(exception.getMessage());
+        }
     }
 
     @CrossOrigin
     @PostMapping("/threshold/total")
     public ResponseEntity<UserThresholdsDTO> setUserTotalThreshold(@CurrentUser UserPrincipal userPrincipal,
                                                                    @RequestParam(value = "threshold") String threshold){
-
-    }*/
+        try{
+            UserThresholdsDTO thresholdsDTO = this.userService
+                    .setTotalThreshold(userPrincipal.getId(), BigDecimal.valueOf(Long.parseLong(threshold)));
+            return new ResponseEntity<>(thresholdsDTO, HttpStatus.OK);
+        } catch (UserDoesntExistException exception){
+            throw new UserNotFoundException(exception.getMessage());
+        }
+    }
 
 }
