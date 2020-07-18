@@ -79,8 +79,8 @@ public class ShopService {
                 shopData.openingHour,
                 shopData.closingHour,
                 shopData.paymentMethods,
-                shopData.deliveryRadius
-        );
+                shopData.deliveryRadius,
+                shopData.imageUrl);
         this.repository.save(shop);
         shop.setUser(user);
         this.userService.save(user);
@@ -99,6 +99,7 @@ public class ShopService {
             this.locationService.delete(oldLocation);
         }
         shop.setName(shopData.name);
+        shop.setImageUrl(shopData.imageUrl);
         shop.setShopCategories(shopData.categories);
         shop.setDays(shopData.days);
         shop.setOpeningHour(shopData.openingHour);
@@ -281,5 +282,10 @@ public class ShopService {
         } else {
             throw new DeliveryDoesntExistException(deliveryId);
         }
+    }
+
+    @Transactional
+    public Iterable<Shop> saveAll(List<Shop> shops) {
+        return this.repository.saveAll(shops);
     }
 }

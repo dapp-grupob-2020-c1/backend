@@ -1,5 +1,7 @@
 package com.unq.dapp0.c1.comprandoencasa.model.objects;
 
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -47,13 +49,16 @@ public class ShoppingList {
         this.id = id;
     }
 
-    public void addProduct(Product aProduct, int aQuantity) {
-        Optional<ShoppingListEntry> entry = getEntryFor(aProduct);
-        if (entry.isPresent()){
-            entry.get().setQuantity(aQuantity);
+    public ShoppingListEntry addProduct(Product aProduct, int aQuantity) {
+        Optional<ShoppingListEntry> entryOptional = getEntryFor(aProduct);
+        if (entryOptional.isPresent()){
+            ShoppingListEntry entry = entryOptional.get();
+            entry.setQuantity(aQuantity);
+            return entry;
         } else {
             ShoppingListEntry newEntry = new ShoppingListEntry(aProduct, aQuantity);
             entries.add(newEntry);
+            return newEntry;
         }
     }
 
@@ -144,5 +149,17 @@ public class ShoppingList {
 
     public void removeEntry(ShoppingListEntry entry) {
         this.entries.remove(entry);
+    }
+
+    public ShoppingListEntry removeProduct(Product product) {
+        Optional<ShoppingListEntry> entryOptional = this.entries.stream()
+                .filter(entry -> entry.getProduct().getId().equals(product.getId())).findFirst();
+        if (entryOptional.isPresent()){
+            ShoppingListEntry entry = entryOptional.get();
+            this.entries.remove(entry);
+            return entry;
+        } else {
+            throw new ProductDoesntExistException(product.getId());
+        }
     }
 }

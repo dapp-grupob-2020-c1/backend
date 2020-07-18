@@ -2,14 +2,14 @@ package com.unq.dapp0.c1.comprandoencasa.webservices;
 
 import com.unq.dapp0.c1.comprandoencasa.model.exceptions.ProductIsInvalidForDiscount;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingList;
+import com.unq.dapp0.c1.comprandoencasa.services.DeliveryService;
 import com.unq.dapp0.c1.comprandoencasa.services.UserService;
-import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
-import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.*;
 import com.unq.dapp0.c1.comprandoencasa.services.security.UserPrincipal;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.*;
-import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.LocationNotFoundException;
-import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.UserNotFoundException;
+import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.*;
 import com.unq.dapp0.c1.comprandoencasa.webservices.security.CurrentUser;
+import com.unq.dapp0.c1.comprandoencasa.webservices.security.user.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -33,6 +33,9 @@ public class CartController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private DeliveryService deliveryService;
 
     @CrossOrigin
     @GetMapping("/historic")
@@ -61,11 +64,11 @@ public class CartController {
 
     @CrossOrigin
     @PostMapping
-    public ResponseEntity<ShoppingListDTO> createNewCart(@CurrentUser UserPrincipal userPrincipal,
+    public ResponseEntity<ShoppingListActiveDTO> createNewCart(@CurrentUser UserPrincipal userPrincipal,
                                                          @RequestParam(value = "locationId") String locationId){
         try{
-            ShoppingList shoppingList = userService.createShoppingList(userPrincipal.getId(), Long.valueOf(locationId));
-            return new ResponseEntity<>(new ShoppingListDTO(shoppingList), HttpStatus.CREATED);
+            ShoppingListActiveDTO shoppingList = userService.createShoppingList(userPrincipal.getId(), Long.valueOf(locationId));
+            return new ResponseEntity<>(shoppingList, HttpStatus.CREATED);
         } catch (UserDoesntExistException exception){
             throw new UserNotFoundException(exception.getMessage());
         } catch (ProductIsInvalidForDiscount exception){
@@ -75,26 +78,60 @@ public class CartController {
         }
     }
 
-    /*
     @CrossOrigin
     @PostMapping("/product")
-    public ResponseEntity<ShoppingListDTO> putUpdateProductInCart(@CurrentUser UserPrincipal userPrincipal,
+    public ResponseEntity<ShoppingListActiveDTO> putUpdateProductInCart(@CurrentUser UserPrincipal userPrincipal,
                                                                   @RequestBody ShoppingListEntryAddDTO listEntryAddDTO){
-
+        try {
+            ShoppingListActiveDTO shoppingList = userService
+                    .putUpdateProductInCart(userPrincipal.getId(),listEntryAddDTO.productId, listEntryAddDTO.amount);
+            return new ResponseEntity<>(shoppingList, HttpStatus.OK);
+        } catch (UserDoesntExistException exception){
+            throw new UserNotFoundException(exception.getMessage());
+        } catch (NotAnActiveShoppingListException exception){
+            throw new BadRequestException(exception.getMessage());
+        } catch (ProductDoesntExistException exception){
+            throw new ProductNotFoundException(exception.getMessage());
+        } catch (ProductIsInvalidForDiscount exception){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, exception.getLocalizedMessage());
+        }
     }
 
     @CrossOrigin
     @DeleteMapping("/product")
-    public ResponseEntity<ShoppingListDTO> deleteProductInCart(@CurrentUser UserPrincipal userPrincipal,
+    public ResponseEntity<ShoppingListActiveDTO> deleteProductInCart(@CurrentUser UserPrincipal userPrincipal,
                                                                @RequestParam(value = "productId") String productId){
-
+        try {
+            ShoppingListActiveDTO shoppingList = userService
+                    .deleteProductInCart(userPrincipal.getId(), Long.valueOf(productId));
+            return new ResponseEntity<>(shoppingList, HttpStatus.OK);
+        } catch (UserDoesntExistException exception){
+            throw new UserNotFoundException(exception.getMessage());
+        } catch (NotAnActiveShoppingListException exception){
+            throw new BadRequestException(exception.getMessage());
+        } catch (ProductDoesntExistException exception){
+            throw new ProductNotFoundException(exception.getMessage());
+        } catch (ProductIsInvalidForDiscount exception){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, exception.getLocalizedMessage());
+        }
     }
 
     @CrossOrigin
     @PostMapping("/purchase")
     public ResponseEntity<List<ShopDeliveryDTO>> doPurchase(@CurrentUser UserPrincipal userPrincipal,
                                                             @RequestBody CartPurchaseDTO purchaseDTO){
-
-    }*/
+        try {
+            List<ShopDeliveryDTO> list = this.deliveryService.doPurchase(userPrincipal.getId(), purchaseDTO.deliveries);
+            return new ResponseEntity<>(list, HttpStatus.CREATED);
+        } catch (UserDoesntExistException exception){
+            throw new UserNotFoundException(exception.getMessage());
+        } catch (NotAnActiveShoppingListException | MissingFieldsForDeliveryCreationException exception){
+            throw new BadRequestException(exception.getMessage());
+        } catch (ProductDoesntExistException exception){
+            throw new ProductNotFoundException(exception.getMessage());
+        } catch (ShopDoesntExistException exception){
+            throw new ShopNotFoundException(exception.getMessage());
+        }
+    }
 
 }

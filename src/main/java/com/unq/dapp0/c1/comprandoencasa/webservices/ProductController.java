@@ -77,7 +77,7 @@ public class ProductController {
         } catch (UserDoesntExistException exception){
             throw new UserNotFoundException(exception.getMessage());
         } catch (ShopDoesntExistException exception){
-            throw new ShopNotFoundException(String.valueOf(productSmallDTO.shopId));
+            throw new ShopNotFoundException(exception.getMessage());
         } catch (ProductDoesntExistException exception){
             throw new ProductNotFoundException(productSmallDTO.id);
         }
@@ -95,7 +95,7 @@ public class ProductController {
         } catch (UserDoesntExistException exception){
             throw new UserNotFoundException(exception.getMessage());
         } catch (ShopDoesntExistException exception){
-            throw new ShopNotFoundException(shopId);
+            throw new ShopNotFoundException(exception.getMessage());
         } catch (ProductDoesntExistException exception){
             throw new ProductNotFoundException(Long.valueOf(productId));
         } catch (ProductIsInDiscountException exception){
@@ -113,7 +113,7 @@ public class ProductController {
         } catch (UserDoesntExistException exception){
             throw new UserNotFoundException(exception.getMessage());
         } catch (ShopDoesntExistException exception){
-            throw new ShopNotFoundException(String.valueOf(productBatchDTO.shopId));
+            throw new ShopNotFoundException(exception.getMessage());
         } catch (ProductDoesntExistException exception){
             throw new ProductNotFoundException(exception.getMessage());
         }

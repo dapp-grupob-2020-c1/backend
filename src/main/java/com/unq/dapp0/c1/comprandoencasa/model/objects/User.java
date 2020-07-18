@@ -22,6 +22,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +99,17 @@ public class User {
         this.activeDeliveries = new ArrayList<>();
         this.historicDeliveries = new ArrayList<>();
         this.provider = AuthProvider.local;
+        this.totalThreshold = BigDecimal.valueOf(0);
+        this.typeThresholds = fillEmptyThresholds();
+        this.suggestedTypeThresholds = fillEmptyThresholds();
+    }
+
+    private Map<ProductType, BigDecimal> fillEmptyThresholds() {
+        Map<ProductType, BigDecimal> returnMap = new HashMap<>();
+        for (ProductType type : ProductType.values()){
+            returnMap.put(type, BigDecimal.valueOf(0));
+        }
+        return returnMap;
     }
 
     public Long getId() {
@@ -314,5 +326,14 @@ public class User {
 
     public void setSuggestedTypeThresholds(Map<ProductType, BigDecimal> suggestedTypeThresholds) {
         this.suggestedTypeThresholds = suggestedTypeThresholds;
+    }
+
+    public void addNewDelivery(ShopDelivery delivery) {
+        this.activeDeliveries.add(delivery);
+    }
+
+    public void finishPurchase() {
+        this.historicShoppingLists.add(this.activeShoppingList);
+        this.activeShoppingList = null;
     }
 }

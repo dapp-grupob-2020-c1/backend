@@ -9,9 +9,12 @@ import com.unq.dapp0.c1.comprandoencasa.repositories.ShoppingListRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.UserRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.LocationRepository;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.NotAnActiveShoppingListException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.FieldAlreadyExistsException;
 import com.unq.dapp0.c1.comprandoencasa.services.security.TokenProvider;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopDeliveryCreationDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopDeliveryDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShoppingListActiveDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ThresholdDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistException;
@@ -25,10 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -53,6 +53,12 @@ public class UserService {
 
     @Autowired
     private ShoppingListRepository shoppingListRepository;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private DeliveryService deliveryService;
 
     @Transactional
     public User createUser(String name, String email, String password) {
@@ -246,14 +252,14 @@ public class UserService {
     }
 
     @Transactional
-    public ShoppingList createShoppingList(Long userId, Long locationId) {
+    public ShoppingListActiveDTO createShoppingList(Long userId, Long locationId) {
         User user = findUserById(userId);
         Location location = getLocationOf(user, locationId);
         ShoppingList shoppingList = new ShoppingList(location, user);
         this.shoppingListRepository.save(shoppingList);
         user.setActiveShoppingList(shoppingList);
         this.userRepository.save(user);
-        return shoppingList;
+        return this.getActiveCart(userId);
     }
 
     private Location getLocationOf(User user, Long locationId) {
@@ -264,5 +270,33 @@ public class UserService {
         } else {
             throw new LocationDoesNotExistException(locationId);
         }
+    }
+
+    @Transactional
+    public ShoppingListActiveDTO putUpdateProductInCart(Long userId, Long productId, int amount) {
+        User user = findUserById(userId);
+        ShoppingList shoppingList = user.getActiveShoppingList();
+        if (shoppingList.getId() == null){
+            throw new NotAnActiveShoppingListException(userId);
+        }
+        Product product = this.productService.findProductById(productId);
+        ShoppingListEntry entry = shoppingList.addProduct(product, amount);
+        this.shoppingListEntryRepository.save(entry);
+        this.shoppingListRepository.save(shoppingList);
+        return this.getActiveCart(userId);
+    }
+
+    @Transactional
+    public ShoppingListActiveDTO deleteProductInCart(Long userId, Long productId) {
+        User user = findUserById(userId);
+        ShoppingList shoppingList = user.getActiveShoppingList();
+        if (shoppingList.getId() == null){
+            throw new NotAnActiveShoppingListException(userId);
+        }
+        Product product = this.productService.findProductById(productId);
+        ShoppingListEntry entry = shoppingList.removeProduct(product);
+        this.shoppingListRepository.save(shoppingList);
+        this.shoppingListEntryRepository.delete(entry);
+        return this.getActiveCart(userId);
     }
 }

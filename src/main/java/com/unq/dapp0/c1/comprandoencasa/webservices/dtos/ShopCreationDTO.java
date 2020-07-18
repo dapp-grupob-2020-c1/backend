@@ -18,6 +18,8 @@ public class ShopCreationDTO {
     @NotNull
     public String name;
     @NotNull
+    public String imageUrl;
+    @NotNull
     public List<ShopCategory> categories;
     @NotNull
     public Location location;

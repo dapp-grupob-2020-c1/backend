@@ -76,8 +76,8 @@ public class InitService {
                 opening,
                 closing,
                 new ArrayList<PaymentMethod>(),
-                10
-        );
+                10,
+                "");
 
         Product aProduct = new Product(
                 "Lata de Atún",
@@ -136,8 +136,8 @@ public class InitService {
                 opening,
                 closing,
                 regularPay,
-                20
-        );
+                20,
+                "");
 
         Shop piaveBernalShop = new Shop(
                 "Piave Bernal",
@@ -147,8 +147,8 @@ public class InitService {
                 opening,
                 closing,
                 regularPay,
-                10
-        );
+                10,
+                "");
 
         Shop outletQuilShop = new Shop(
                 "Outlet Quilmes",
@@ -158,8 +158,8 @@ public class InitService {
                 opening,
                 closing,
                 regularPay,
-                5
-        );
+                5,
+                "");
 
         Shop bkBeraShop = new Shop(
                 "Burger King Berazategui",
@@ -169,8 +169,8 @@ public class InitService {
                 opening,
                 closing,
                 regularPay,
-                20
-        );
+                20,
+                "");
 
         Shop piaveHudsonShop = new Shop(
                 "Piave Hudson",
@@ -180,8 +180,8 @@ public class InitService {
                 opening,
                 closing,
                 regularPay,
-                20
-        );
+                20,
+                "");
 
         Shop clubMilaPlataShop = new Shop(
                 "El Club de la Milanesa La Plata",
@@ -191,8 +191,8 @@ public class InitService {
                 opening,
                 closing,
                 regularPay,
-                10
-        );
+                10,
+                "");
 
         Shop queimadaPlataShop = new Shop(
                 "La Queimada La Plata",
@@ -202,8 +202,8 @@ public class InitService {
                 opening,
                 closing,
                 regularPay,
-                10
-        );
+                10,
+                "");
 
         Shop contiBestHeladosShop = new Shop(
                 "Heladeria Conti",
@@ -213,8 +213,8 @@ public class InitService {
                 opening,
                 closing,
                 regularPay,
-                20
-        );
+                20,
+                "");
 
         List<ProductType> bookTypes = new ArrayList<>();
         bookTypes.add(ProductType.BooksMoviesAndGames);

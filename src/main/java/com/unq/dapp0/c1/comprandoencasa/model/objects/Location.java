@@ -1,5 +1,7 @@
 package com.unq.dapp0.c1.comprandoencasa.model.objects;
 
+import org.springframework.lang.Nullable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,6 +23,7 @@ public class Location {
     private final Double EARTH_RADIUS = 6371.0;
     private final Double MINUTES_PER_KM = 2.0;
 
+    @Nullable
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

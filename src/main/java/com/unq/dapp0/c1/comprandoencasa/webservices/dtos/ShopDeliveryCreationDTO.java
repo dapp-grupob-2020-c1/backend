@@ -1,19 +1,28 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices.dtos;
 
-import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.Turn;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.springframework.lang.Nullable;
 
 import javax.validation.constraints.NotBlank;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.Collection;
 
 public class ShopDeliveryCreationDTO {
     @NotBlank
     public Long shopId;
     @NotBlank
-    public List<Long> products;
+    public Collection<Long> shoppingEntryIds;
     @Nullable
-    public Location location;
+    public Long locationId;
     @Nullable
-    public Turn turn;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    public LocalDateTime dateOfDelivery;
+    @Nullable
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    public LocalDateTime turn;
 }

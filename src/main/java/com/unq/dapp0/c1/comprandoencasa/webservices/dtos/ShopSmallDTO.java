@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShopSmallDTO {
+    public String imageUrl;
     public Long id;
     public String name;
     public List<ShopCategory> categories;
@@ -35,6 +36,7 @@ public class ShopSmallDTO {
     public ShopSmallDTO(Shop shop) {
         this.id = shop.getId();
         this.name = shop.getName();
+        this.imageUrl = shop.getImageUrl();
         this.categories = shop.getShopCategories();
         this.location = shop.getLocation();
         this.days = shop.getDays();

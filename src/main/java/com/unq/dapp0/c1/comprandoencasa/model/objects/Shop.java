@@ -36,6 +36,9 @@ public class Shop {
     @Column
     private String name;
 
+    @Column
+    private String imageUrl;
+
     @ElementCollection
     private List<ShopCategory> shopCategories;
 
@@ -82,7 +85,8 @@ public class Shop {
                 LocalTime openingHour,
                 LocalTime closingHour,
                 List<PaymentMethod> paymentMethods,
-                Integer deliveryRadius) {
+                Integer deliveryRadius,
+                String imageUrl) {
         this.name = name;
         this.shopCategories = shopCategories;
         this.location = location;
@@ -95,6 +99,7 @@ public class Shop {
         this.discounts = new ArrayList<>();
         this.activeDeliveries = new ArrayList<>();
         this.historicDeliveries = new ArrayList<>();
+        this.imageUrl = imageUrl;
     }
 
     public void setUser(User user){
@@ -307,4 +312,12 @@ public class Shop {
     }
 
     public void setHistoricDeliveries(List<ShopDelivery> deliveries){this.historicDeliveries = deliveries;}
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

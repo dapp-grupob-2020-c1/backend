@@ -17,6 +17,7 @@ public class ShopFullDTO {
     public List<PaymentMethod> paymentMethods;
     public Long id;
     public String name;
+    public String imageUrl;
     public List<ShopCategory> categories;
     public Location location;
     public List<DayOfWeek> days;
@@ -31,9 +32,12 @@ public class ShopFullDTO {
     public List<DiscountDTO> discounts;
     public List<ShopDeliveryDTO> orders;
 
+    public ShopFullDTO(){}
+
     public ShopFullDTO(Shop shop) {
         this.id = shop.getId();
         this.name = shop.getName();
+        this.imageUrl = shop.getImageUrl();
         this.categories = shop.getShopCategories();
         this.location = shop.getLocation();
         this.days = shop.getDays();
