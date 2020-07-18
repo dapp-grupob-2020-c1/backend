@@ -4,9 +4,10 @@ import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
-import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.NoActiveShoppingListException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.ProductService;
+import com.unq.dapp0.c1.comprandoencasa.services.security.UserPrincipal;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,10 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @SpringBootTest
@@ -159,20 +162,24 @@ public class ProductControllerTests extends AbstractRestTest {
         expectedProducts.add(product1);
         expectedProducts.add(product2);
 
-        Long locationId = 10L;
+        Long userId = 10L;
         Integer page = 0;
         Integer size = 5;
         String order = "priceAsc";
 
-        when(service.searchBy(keyword, categories, locationId, page, size, order)).thenReturn(expectedProducts);
+        when(service.searchBy(userId, keyword, categories, page, size, order)).thenReturn(expectedProducts);
+
+        String generic = "test";
+
+        UserPrincipal userDetails = new UserPrincipal(userId, generic, generic, new ArrayList<>());
 
         List<ProductDTO> expected = ProductController.parseProducts(expectedProducts);
 
         MvcResult mvcResult = this.mockMvc.perform(
                 get("/product/search")
+                        .with(user(userDetails))
                         .param("keyword", keyword)
                         .param("categories", categories.get(0).toString())
-                        .param("locationId", String.valueOf(locationId))
                         .param("page", String.valueOf(page))
                         .param("size", String.valueOf(size))
                         .param("order", order)
@@ -195,28 +202,42 @@ public class ProductControllerTests extends AbstractRestTest {
     @WithMockUser("spring")
     @Test
     public void endpointGETSearchReturnsBadRequestIfLocationIdIsMissingOrIfItContainsInvalidCategories() throws Exception {
+        Long userId = 1L;
+        String generic = "test";
+
+        UserPrincipal userDetails = new UserPrincipal(userId, generic, generic, new ArrayList<>());
+
+        List<ProductType> typesList = Arrays.stream(ProductType.values()).collect(Collectors.toCollection(ArrayList::new));
+
+        when(service.searchBy(userId, "", typesList, 0, 10, "idDesc"))
+                .thenThrow(new NoActiveShoppingListException(userId))
+                .thenReturn(new ArrayList<>());
+
         MvcResult noLocResult = this.mockMvc.perform(
-                get("/product/search"))
+                get("/product/search").with(user(userDetails)))
                 .andReturn();
 
         int noLocStatus = noLocResult.getResponse().getStatus();
-        assertEquals(400, noLocStatus);
-
+        assertEquals(404, noLocStatus);
 
         MvcResult invalidCatResult = this.mockMvc.perform(
                 get("/product/search")
                         .param("categories", "foo")
-                        .param("locationId", "1"))
+                        .with(user(userDetails)))
                 .andReturn();
 
         int invCatStatus = invalidCatResult.getResponse().getStatus();
         assertEquals(400, invCatStatus);
 
+        List<ProductType> validType = new ArrayList<>();
+        validType.add(ProductType.Bazaar);
+
+        when(service.searchBy(userId, "", validType, 0, 10, "idDesc")).thenReturn(new ArrayList<>());
 
         MvcResult correctCatResult = this.mockMvc.perform(
                 get("/product/search")
                         .param("categories", ProductType.Bazaar.toString())
-                        .param("locationId", "1"))
+                        .with(user(userDetails)))
                 .andReturn();
 
         int correctCatStatus = correctCatResult.getResponse().getStatus();
@@ -224,7 +245,7 @@ public class ProductControllerTests extends AbstractRestTest {
 
         MvcResult onlyLocResult = this.mockMvc.perform(
                 get("/product/search")
-                        .param("locationId", "1"))
+                        .with(user(userDetails)))
                 .andReturn();
 
         int onlyLocStatus = onlyLocResult.getResponse().getStatus();
@@ -236,22 +257,21 @@ public class ProductControllerTests extends AbstractRestTest {
     public void endpointGETSearchReturnsNotFoundIfLocationDoesNotExist() throws Exception {
         Long id = 0L;
 
-        when(service.searchBy("",
-                ProductController.parseToTypes(new ArrayList<>()),
-                Long.valueOf(id),
-                0,
-                10,
-                "idDesc")).thenThrow(new LocationDoesNotExistException(id));
+        when(service.searchBy(any(), any(), any(), any(), any(), any())).thenThrow(new NoActiveShoppingListException(id));
+
+        String generic = "test";
+
+        UserPrincipal userDetails = new UserPrincipal(id, generic, generic, new ArrayList<>());
 
         MvcResult mvcResult = this.mockMvc.perform(
                 get("/product/search")
-                        .param("locationId", String.valueOf(id))
+                        .with(user(userDetails))
                         .accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
 
         int status = mvcResult.getResponse().getStatus();
         assertEquals(404, status);
 
         String errorMessage = mvcResult.getResponse().getErrorMessage();
-        assertEquals("Location with id " + id + " does not exist", errorMessage);
+        assertEquals("There's no active shopping list for the user " + id, errorMessage);
     }
 }

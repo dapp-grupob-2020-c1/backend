@@ -53,12 +53,12 @@ public class ShopController {
 
     @CrossOrigin
     @GetMapping("/shop")
-    public ShopDTO getShop(@RequestParam(value = "shopId") String shopId) {
+    public ResponseEntity<ShopDTO> getShop(@RequestParam(value = "shopId") String shopId) {
         try{
             Shop shop = this.shopService.findShopById(Long.valueOf(shopId));
-            return new ShopDTO(shop);
+            return new ResponseEntity<>(new ShopDTO(shop), HttpStatus.OK);
         } catch (ShopDoesntExistException exception){
-            throw new ShopNotFoundException(shopId);
+            throw new ShopNotFoundException(exception.getMessage());
         }
     }
 
@@ -84,7 +84,7 @@ public class ShopController {
         } catch (UserDoesntExistException exception){
             throw new UserNotFoundException(exception.getMessage());
         } catch (ShopDoesntExistException exception){
-            throw new ShopNotFoundException(String.valueOf(shopData.id));
+            throw new ShopNotFoundException(exception.getMessage());
         }
     }
 
@@ -98,7 +98,7 @@ public class ShopController {
         } catch (UserDoesntExistException exception){
             throw new UserNotFoundException(exception.getMessage());
         } catch (ShopDoesntExistException exception){
-            throw new ShopNotFoundException(shopId);
+            throw new ShopNotFoundException(exception.getMessage());
         } catch (ShopHasActiveDeliveriesException exception){
             throw new BadRequestException(exception.getMessage());
         }
@@ -114,7 +114,7 @@ public class ShopController {
         } catch (UserDoesntExistException exception){
             throw new UserNotFoundException(exception.getMessage());
         } catch (ShopDoesntExistException exception){
-            throw new ShopNotFoundException(shopId);
+            throw new ShopNotFoundException(exception.getMessage());
         }
     }
 
@@ -132,7 +132,7 @@ public class ShopController {
         } catch (UserDoesntExistException exception){
             throw new UserNotFoundException(exception.getMessage());
         } catch (ShopDoesntExistException exception){
-            throw new ShopNotFoundException(String.valueOf(discountCreateDTO.shopId));
+            throw new ShopNotFoundException(exception.getMessage());
         } catch (ProductDoesntExistException exception){
             throw new ProductNotFoundException(exception.getMessage());
         }
@@ -152,7 +152,7 @@ public class ShopController {
         } catch (UserDoesntExistException exception){
             throw new UserNotFoundException(exception.getMessage());
         } catch (ShopDoesntExistException exception){
-            throw new ShopNotFoundException(String.valueOf(discountModifyDTO.shopId));
+            throw new ShopNotFoundException(exception.getMessage());
         } catch (ProductDoesntExistException exception){
             throw new ProductNotFoundException(exception.getMessage());
         } catch (DiscountDoesntExistException exception){
@@ -174,7 +174,7 @@ public class ShopController {
         } catch (UserDoesntExistException exception){
             throw new UserNotFoundException(exception.getMessage());
         } catch (ShopDoesntExistException exception){
-            throw new ShopNotFoundException(shopId);
+            throw new ShopNotFoundException(exception.getMessage());
         } catch (DiscountDoesntExistException exception){
             throw new DiscountNotFoundException(exception.getMessage());
         }
@@ -191,7 +191,7 @@ public class ShopController {
         } catch (UserDoesntExistException exception){
             throw new UserNotFoundException(exception.getMessage());
         } catch (ShopDoesntExistException exception){
-            throw new ShopNotFoundException(shopId);
+            throw new ShopNotFoundException(exception.getMessage());
         }
     }
 
@@ -207,7 +207,7 @@ public class ShopController {
         } catch (UserDoesntExistException exception){
             throw new UserNotFoundException(exception.getMessage());
         } catch (ShopDoesntExistException exception){
-            throw new ShopNotFoundException(shopId);
+            throw new ShopNotFoundException(exception.getMessage());
         } catch (DeliveryDoesntExistException exception){
             throw new DeliveryNotFound(exception.getMessage());
         }

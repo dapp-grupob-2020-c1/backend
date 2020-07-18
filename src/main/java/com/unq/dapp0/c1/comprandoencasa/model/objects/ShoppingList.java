@@ -1,5 +1,7 @@
 package com.unq.dapp0.c1.comprandoencasa.model.objects;
 
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,7 +12,6 @@ import javax.persistence.Table;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,13 +48,16 @@ public class ShoppingList {
         this.id = id;
     }
 
-    public void addProduct(Product aProduct, int aQuantity) {
-        Optional<ShoppingListEntry> entry = getEntryFor(aProduct);
-        if (entry.isPresent()){
-            entry.get().setQuantity(aQuantity);
+    public ShoppingListEntry addProduct(Product aProduct, int aQuantity) {
+        Optional<ShoppingListEntry> entryOptional = getEntryFor(aProduct);
+        if (entryOptional.isPresent()){
+            ShoppingListEntry entry = entryOptional.get();
+            entry.setQuantity(aQuantity);
+            return entry;
         } else {
             ShoppingListEntry newEntry = new ShoppingListEntry(aProduct, aQuantity);
             entries.add(newEntry);
+            return newEntry;
         }
     }
 
@@ -71,34 +75,6 @@ public class ShoppingList {
             sum += shoppingListEntry.getQuantity();
         }
         return sum;
-    }
-
-    public BigDecimal totalValue() {
-        HashSet<Shop> shops = new HashSet<>();
-        this.entries.forEach(shoppingListEntry -> {
-            Shop productShop = shoppingListEntry.getProduct().getShop();
-            shops.add(productShop);
-        });
-
-        ArrayList<Discount> discounts = new ArrayList<>();
-        shops.forEach(shop -> discounts.addAll(shop.getActiveDiscounts()));
-
-        discounts.sort(Discount::compare);
-
-        BigDecimal total = new BigDecimal(0);
-        List<ShoppingListEntry> products = new ArrayList<>(this.entries);
-
-        for (Discount discount : discounts) {
-            total = discount.calculateFor(products);
-        }
-
-        for (ShoppingListEntry shoppingListEntry : entries) {
-            BigDecimal productCalculatedPrice = shoppingListEntry.getProduct().getPrice();
-            BigDecimal entryQuantity = BigDecimal.valueOf(shoppingListEntry.getQuantity());
-            total = total.add(productCalculatedPrice.multiply(entryQuantity));
-        }
-
-        return total;
     }
 
     public List<ShoppingListEntry> getEntriesList() {
@@ -126,19 +102,63 @@ public class ShoppingList {
         return this.user;
     }
 
+    public BigDecimal totalValue() {
+        BigDecimal total = new BigDecimal(0);
+        for (ProductType type : ProductType.values()){
+            total = total.add(evaluateTotalFor(type));
+        }
+        return total;
+    }
+
     public BigDecimal evaluateTotalFor(ProductType productType) {
         BigDecimal total = new BigDecimal(0);
         for (ShoppingListEntry entry : this.entries) {
             Product product = entry.getProduct();
             if (product.isType(productType)) {
-                Integer quantity = entry.getQuantity();
-                total = total.add(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+                total = total.add(calculateFor(entry, entries));
             }
         }
         return total;
     }
 
+    private BigDecimal calculateFor(ShoppingListEntry entry, List<ShoppingListEntry> entries) {
+        BigDecimal total = new BigDecimal(0);
+        Product product = entry.getProduct();
+        List<Discount> discounts = product.getShop().getActiveDiscounts();
+        discounts.sort(Discount::compare);
+        for (int amountEvaluated=0; amountEvaluated < entry.getQuantity(); amountEvaluated++){
+            Optional<Discount> currentDiscount = findDiscount(product, entries, amountEvaluated, discounts);
+            if (currentDiscount.isPresent()){
+                total = total.add(currentDiscount.get().calculateFor(entry, entries));
+            } else {
+                total = total.add(product.getPrice());
+            }
+        }
+        return total;
+    }
+
+    private Optional<Discount> findDiscount(Product product, List<ShoppingListEntry> entries, int amountEvaluated, List<Discount> discounts) {
+        for (Discount discount : discounts){
+            if (discount.isValidFor(product, entries, amountEvaluated)){
+                return Optional.of(discount);
+            }
+        }
+        return Optional.empty();
+    }
+
     public void removeEntry(ShoppingListEntry entry) {
         this.entries.remove(entry);
+    }
+
+    public ShoppingListEntry removeProduct(Product product) {
+        Optional<ShoppingListEntry> entryOptional = this.entries.stream()
+                .filter(entry -> entry.getProduct().getId().equals(product.getId())).findFirst();
+        if (entryOptional.isPresent()){
+            ShoppingListEntry entry = entryOptional.get();
+            this.entries.remove(entry);
+            return entry;
+        } else {
+            throw new ProductDoesntExistException(product.getId());
+        }
     }
 }

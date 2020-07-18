@@ -51,8 +51,8 @@ public class ShopBuilder {
                 openingHour,
                 closingHour,
                 paymentMethods,
-                deliveryRadius
-        );
+                deliveryRadius,
+                "");
         products.forEach(shop::addProduct);
         shop.setUser(user);
         return shop;

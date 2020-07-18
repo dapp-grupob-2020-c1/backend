@@ -8,10 +8,12 @@ import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.ShopDelivery;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingListEntry;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import com.unq.dapp0.c1.comprandoencasa.repositories.DeliveryRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
 
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.NoActiveShoppingListException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.ProductIsInDiscountException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ProductBatchDTO;
@@ -35,9 +37,6 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
-    private LocationService locationService;
 
     @Autowired
     private UserService userService;
@@ -64,8 +63,12 @@ public class ProductService {
     }
 
     @Transactional
-    public List<Product> searchBy(String keyword, List<ProductType> categories, Long locationId, Integer page, Integer size, String order) {
-        Location location = locationService.findById(locationId);
+    public List<Product> searchBy(Long userId, String keyword, List<ProductType> categories, Integer page, Integer size, String order) {
+        User user = userService.findUserById(userId);
+        Location location = user.getActiveShoppingList().getDeliveryLocation();
+        if (location.getId() == null){
+            throw new NoActiveShoppingListException(userId);
+        }
         Sort sort = determineSort(order);
         Pageable pageable = PageRequest.of(page, size, sort);
         List<ProductType> cat = (categories.size() > 0) ? categories : Arrays.stream(ProductType.values()).collect(Collectors.toCollection(ArrayList::new));
@@ -184,13 +187,15 @@ public class ProductService {
     public Product deleteProduct(Shop shop, Product product) {
         List<ShopDelivery> historicDeliveries = shop.getHistoricDeliveries();
         for (ShopDelivery delivery : historicDeliveries){
-            List<Product> deliveryProducts = delivery.getProducts().stream()
-                    .filter(prod -> !prod.getId().equals(product.getId())).collect(Collectors.toList());
-            delivery.setProducts(deliveryProducts);
+            List<ShoppingListEntry> finalList = delivery.getProducts();
+            List<ShoppingListEntry> deliveryProducts = finalList.stream()
+                    .filter(prod -> prod.getProduct().getId().equals(product.getId())).collect(Collectors.toList());
+            finalList.removeAll(deliveryProducts);
+            delivery.setProducts(finalList);
+            this.deliveryRepository.save(delivery);
             User deliveryUser = delivery.getUser();
             this.userService.removeProductFromShoppingLists(deliveryUser, product);
         }
-        this.deliveryRepository.saveAll(historicDeliveries);
         shop.removeProduct(product);
         this.shopService.save(shop);
         this.productRepository.delete(product);

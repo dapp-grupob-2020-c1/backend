@@ -12,6 +12,9 @@ public class ScheduledTasks {
     @Autowired
     private DeliveryService deliveryService;
 
+    @Autowired
+    private UserService userService;
+
     private static final Logger log = LogManager.getLogger(ScheduledTasks.class);
 
     //@Scheduled(fixedRate = 5000) //Runs every 5 seconds
@@ -24,5 +27,17 @@ public class ScheduledTasks {
         } catch (Exception e){
             log.error("There has been an error during mail notification, with the following message: "+ e.getLocalizedMessage());
         }
+    }
+
+    //@Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 86400000) //Runs every 24hs
+    public void calculateSuggestedThresholds(){
+        log.info("Starting suggested thresholds calculations");
+        try {
+            this.userService.calculateAllSuggestedThresholds();
+        } catch (Exception e){
+            log.error("There has been an error during thresholds calculations " + e.getLocalizedMessage());
+        }
+
     }
 }

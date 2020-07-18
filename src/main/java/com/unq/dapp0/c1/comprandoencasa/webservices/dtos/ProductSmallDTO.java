@@ -2,6 +2,7 @@ package com.unq.dapp0.c1.comprandoencasa.webservices.dtos;
 
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingListEntry;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -44,9 +45,9 @@ public class ProductSmallDTO {
         return productSmallDTOList;
     }
 
-    public static List<Long> createProductsById(List<Product> products) {
+    public static List<Long> createProductsById(List<ShoppingListEntry> products) {
         List<Long> returnList = new ArrayList<>();
-        for (Product product : products){
+        for (ShoppingListEntry product : products){
             returnList.add(product.getId());
         }
         return returnList;

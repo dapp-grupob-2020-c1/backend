@@ -105,7 +105,7 @@ public abstract class Discount {
 
     public abstract int compare(Discount discount);
 
-    public BigDecimal calculateFor(List<ShoppingListEntry> entries) {
-        return null;
-    }
+    public abstract BigDecimal calculateFor(ShoppingListEntry entry, List<ShoppingListEntry> entries);
+
+    public abstract boolean isValidFor(Product product, List<ShoppingListEntry> entries, int amountEvaluated);
 }

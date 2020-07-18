@@ -5,7 +5,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @DiscriminatorValue("B")
@@ -19,7 +19,7 @@ public class DeliveryAtHome extends ShopDelivery {
 
     public DeliveryAtHome(){}
 
-    public DeliveryAtHome(Shop shop, ArrayList<Product> products, User user, Location location, LocalDateTime dateOfDelivery) {
+    public DeliveryAtHome(Shop shop, List<ShoppingListEntry> products, User user, Location location, LocalDateTime dateOfDelivery) {
         super(shop, products, user);
         this.location = location;
         this.dateOfDelivery = dateOfDelivery;

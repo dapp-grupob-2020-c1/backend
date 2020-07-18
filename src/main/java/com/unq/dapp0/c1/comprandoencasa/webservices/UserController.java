@@ -10,7 +10,9 @@ import com.unq.dapp0.c1.comprandoencasa.model.exceptions.EmptyFieldException;
 import com.unq.dapp0.c1.comprandoencasa.services.security.UserPrincipal;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopFullDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopSmallDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ThresholdSetDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.UserDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.UserThresholdsDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.EmptyFieldsBadRequestException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.LocationNotFoundException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistException;
@@ -26,11 +28,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -43,9 +46,9 @@ public class UserController {
 
     @GetMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    public UserDTO getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
+    public ResponseEntity<UserDTO> getCurrentUser(@CurrentUser UserPrincipal userPrincipal) {
         User user = userService.findUserById(userPrincipal.getId());
-        return new UserDTO(user);
+        return new ResponseEntity<>(new UserDTO(user), HttpStatus.OK);
     }
 
     @CrossOrigin
@@ -105,15 +108,7 @@ public class UserController {
     @GetMapping("/myshops")
     public ResponseEntity<List<ShopSmallDTO>> getMyShops(@CurrentUser UserPrincipal userPrincipal){
         List<Shop> shops = this.userService.getShopsFrom(userPrincipal.getId());
-        return new ResponseEntity<>(generateShopSmallDTOList(shops), HttpStatus.OK);
-    }
-
-    private List<ShopSmallDTO> generateShopSmallDTOList(List<Shop> shops) {
-        List<ShopSmallDTO> returnList = new ArrayList<>();
-        for (Shop shop : shops){
-            returnList.add(new ShopSmallDTO(shop));
-        }
-        return returnList;
+        return new ResponseEntity<>(ShopSmallDTO.generateShopSmallDTOList(shops), HttpStatus.OK);
     }
 
     @CrossOrigin
@@ -136,4 +131,41 @@ public class UserController {
             throw new EmptyFieldException(fieldName);
         }
     }
+
+    @CrossOrigin
+    @GetMapping("/thresholds")
+    public ResponseEntity<UserThresholdsDTO> getUserThresholds(@CurrentUser UserPrincipal userPrincipal){
+        try{
+            UserThresholdsDTO thresholdsDTO = this.userService.getThresholds(userPrincipal.getId());
+            return new ResponseEntity<>(thresholdsDTO, HttpStatus.OK);
+        } catch (UserDoesntExistException exception){
+            throw new UserNotFoundException(exception.getMessage());
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping("/threshold/type")
+    public ResponseEntity<UserThresholdsDTO> setUserTypeThreshold(@CurrentUser UserPrincipal userPrincipal,
+                                                                  @RequestBody ThresholdSetDTO thresholdDTO){
+        try{
+            UserThresholdsDTO thresholdsDTO = this.userService.setThreshold(userPrincipal.getId(), thresholdDTO);
+            return new ResponseEntity<>(thresholdsDTO, HttpStatus.OK);
+        } catch (UserDoesntExistException exception){
+            throw new UserNotFoundException(exception.getMessage());
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping("/threshold/total")
+    public ResponseEntity<UserThresholdsDTO> setUserTotalThreshold(@CurrentUser UserPrincipal userPrincipal,
+                                                                   @RequestParam(value = "threshold") String threshold){
+        try{
+            UserThresholdsDTO thresholdsDTO = this.userService
+                    .setTotalThreshold(userPrincipal.getId(), BigDecimal.valueOf(Long.parseLong(threshold)));
+            return new ResponseEntity<>(thresholdsDTO, HttpStatus.OK);
+        } catch (UserDoesntExistException exception){
+            throw new UserNotFoundException(exception.getMessage());
+        }
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.unq.dapp0.c1.comprandoencasa.model.objects;
 
+import com.unq.dapp0.c1.comprandoencasa.model.exceptions.ProductIsInvalidForDiscount;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import java.math.BigDecimal;
@@ -52,16 +54,20 @@ public class DiscountByCategory extends Discount {
     }
 
     @Override
-    public BigDecimal calculateFor(List<ShoppingListEntry> entries) {
-        BigDecimal total = new BigDecimal(0);
-        for (ShoppingListEntry entry : entries) {
-            Product product = entry.getProduct();
-            if (product.getShop().equals(this.shop) && product.isType(this.productType)) {
-                BigDecimal discount = BigDecimal.valueOf(this.percentage).multiply(BigDecimal.valueOf(0.01)).multiply(product.getPrice());
-                total = total.add(product.getPrice().subtract(discount).multiply(BigDecimal.valueOf(entry.getQuantity())));
-                entries.remove(entry);
-            }
+    public BigDecimal calculateFor(ShoppingListEntry entry, List<ShoppingListEntry> entries) {
+        Product product = entry.getProduct();
+        if (product.isType(productType)){
+            BigDecimal perc = BigDecimal.valueOf(this.percentage).multiply(BigDecimal.valueOf(0.01));
+            BigDecimal finalPerc = BigDecimal.valueOf(1).subtract(perc);
+            BigDecimal total = product.getPrice().multiply(finalPerc);
+            return total;
+        } else {
+            throw new ProductIsInvalidForDiscount(product, this);
         }
-        return total;
+    }
+
+    @Override
+    public boolean isValidFor(Product product, List<ShoppingListEntry> entries, int amountEvaluated) {
+        return product.isType(productType);
     }
 }

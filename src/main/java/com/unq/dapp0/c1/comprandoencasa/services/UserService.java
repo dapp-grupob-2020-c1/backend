@@ -6,6 +6,7 @@ import com.unq.dapp0.c1.comprandoencasa.model.exceptions.InvalidUserException;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.AuthProvider;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingList;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingListEntry;
@@ -15,9 +16,14 @@ import com.unq.dapp0.c1.comprandoencasa.repositories.ShoppingListRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.UserRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.LocationRepository;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.LocationDoesNotExistException;
+import com.unq.dapp0.c1.comprandoencasa.services.exceptions.NotAnActiveShoppingListException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.UserDoesntExistException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.FieldAlreadyExistsException;
 import com.unq.dapp0.c1.comprandoencasa.services.security.TokenProvider;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShoppingListActiveDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ThresholdDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ThresholdSetDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.UserThresholdsDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +34,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -54,6 +63,9 @@ public class UserService {
 
     @Autowired
     private ShoppingListRepository shoppingListRepository;
+
+    @Autowired
+    private ProductService productService;
 
     @Transactional
     public User createUser(String name, String email, String password) {
@@ -221,5 +233,105 @@ public class UserService {
             }
         }
         this.shoppingListRepository.save(shoppingList);
+    }
+
+    @Transactional
+    public List<ShoppingList> getHistoricCarts(Long userId) {
+        User user = findUserById(userId);
+        return user.getHistoricShoppingLists();
+    }
+
+    @Transactional
+    public ShoppingListActiveDTO getActiveCart(Long userId) {
+        User user = findUserById(userId);
+        ShoppingList shoppingList = user.getActiveShoppingList();
+        Map<ProductType, BigDecimal> typeThresholds = user.getTypeThresholds();
+        List<ThresholdDTO> thresholdDTOList = new ArrayList<>();
+        for (ProductType productType : typeThresholds.keySet()){
+            thresholdDTOList.add(
+                    new ThresholdDTO(
+                            productType,
+                            typeThresholds.get(productType),
+                            shoppingList.evaluateTotalFor(productType)
+                    ));
+        }
+        return new ShoppingListActiveDTO(shoppingList, user.getTotalThreshold(), thresholdDTOList);
+    }
+
+    @Transactional
+    public ShoppingListActiveDTO createShoppingList(Long userId, Long locationId) {
+        User user = findUserById(userId);
+        Location location = getLocationOf(user, locationId);
+        ShoppingList shoppingList = new ShoppingList(location, user);
+        this.shoppingListRepository.save(shoppingList);
+        user.setActiveShoppingList(shoppingList);
+        this.userRepository.save(user);
+        return this.getActiveCart(userId);
+    }
+
+    private Location getLocationOf(User user, Long locationId) {
+        Optional<Location> location = user.getLocations().stream()
+                .filter(loc -> loc.getId().equals(locationId)).findFirst();
+        if (location.isPresent()){
+            return location.get();
+        } else {
+            throw new LocationDoesNotExistException(locationId);
+        }
+    }
+
+    @Transactional
+    public ShoppingListActiveDTO putUpdateProductInCart(Long userId, Long productId, int amount) {
+        User user = findUserById(userId);
+        ShoppingList shoppingList = user.getActiveShoppingList();
+        if (shoppingList.getId() == null){
+            throw new NotAnActiveShoppingListException(userId);
+        }
+        Product product = this.productService.findProductById(productId);
+        ShoppingListEntry entry = shoppingList.addProduct(product, amount);
+        this.shoppingListEntryRepository.save(entry);
+        this.shoppingListRepository.save(shoppingList);
+        return this.getActiveCart(userId);
+    }
+
+    @Transactional
+    public ShoppingListActiveDTO deleteProductInCart(Long userId, Long productId) {
+        User user = findUserById(userId);
+        ShoppingList shoppingList = user.getActiveShoppingList();
+        if (shoppingList.getId() == null){
+            throw new NotAnActiveShoppingListException(userId);
+        }
+        Product product = this.productService.findProductById(productId);
+        ShoppingListEntry entry = shoppingList.removeProduct(product);
+        this.shoppingListRepository.save(shoppingList);
+        this.shoppingListEntryRepository.delete(entry);
+        return this.getActiveCart(userId);
+    }
+
+    @Transactional
+    public UserThresholdsDTO getThresholds(Long userId) {
+        User user = findUserById(userId);
+        return new UserThresholdsDTO(user);
+    }
+
+    @Transactional
+    public UserThresholdsDTO setThreshold(Long userId, ThresholdSetDTO thresholdDTO) {
+        User user = findUserById(userId);
+        user.setTypeThreshold(thresholdDTO.type, thresholdDTO.amount);
+        return new UserThresholdsDTO(user);
+    }
+
+    @Transactional
+    public UserThresholdsDTO setTotalThreshold(Long userId, BigDecimal threshold) {
+        User user = findUserById(userId);
+        user.setTotalThreshold(threshold);
+        return new UserThresholdsDTO(user);
+    }
+
+    @Transactional
+    public void calculateAllSuggestedThresholds() {
+        Iterable<User> users = this.userRepository.findAll();
+        for (User user : users){
+            user.evaluateSuggestedThresholds();
+        }
     }
 }

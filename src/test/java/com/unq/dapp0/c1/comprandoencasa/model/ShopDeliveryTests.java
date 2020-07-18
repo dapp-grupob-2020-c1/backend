@@ -3,9 +3,9 @@ package com.unq.dapp0.c1.comprandoencasa.model;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.DeliveryAtHome;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.DeliveryAtShop;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.ShopDelivery;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingListEntry;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Turn;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import org.junit.jupiter.api.Test;
@@ -32,9 +32,9 @@ public class ShopDeliveryTests {
 
     @Test
     public void aDeliveryHasAListOfProducts(){
-        Product product = mock(Product.class);
+        ShoppingListEntry product = mock(ShoppingListEntry.class);
 
-        ArrayList<Product> products = new ArrayList<>();
+        ArrayList<ShoppingListEntry> products = new ArrayList<>();
         products.add(product);
 
         ShopDelivery delivery = ShopDeliveryBuilder.anyDelivery()
@@ -81,7 +81,7 @@ public class ShopDeliveryTests {
 
 class ShopDeliveryBuilder{
     private Shop shop;
-    private ArrayList<Product> products;
+    private ArrayList<ShoppingListEntry> products;
     private User user;
     private Turn turn;
     private Location location;
@@ -112,7 +112,7 @@ class ShopDeliveryBuilder{
         return this;
     }
 
-    public ShopDeliveryBuilder withProducts(ArrayList<Product> products) {
+    public ShopDeliveryBuilder withProducts(ArrayList<ShoppingListEntry> products) {
         this.products = products;
         return this;
     }

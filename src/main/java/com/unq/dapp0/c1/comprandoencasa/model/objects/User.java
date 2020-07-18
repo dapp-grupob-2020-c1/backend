@@ -22,6 +22,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +65,10 @@ public class User {
     private BigDecimal totalThreshold;
 
     @ElementCollection
-    private Map<ProductType, BigDecimal> typesThreshold;
+    private Map<ProductType, BigDecimal> typeThresholds;
+
+    @ElementCollection
+    private Map<ProductType, BigDecimal> suggestedTypeThresholds;
 
     @OneToOne
     private ShoppingList activeShoppingList;
@@ -95,6 +99,17 @@ public class User {
         this.activeDeliveries = new ArrayList<>();
         this.historicDeliveries = new ArrayList<>();
         this.provider = AuthProvider.local;
+        this.totalThreshold = BigDecimal.valueOf(0);
+        this.typeThresholds = fillEmptyThresholds();
+        this.suggestedTypeThresholds = fillEmptyThresholds();
+    }
+
+    private Map<ProductType, BigDecimal> fillEmptyThresholds() {
+        Map<ProductType, BigDecimal> returnMap = new HashMap<>();
+        for (ProductType type : ProductType.values()){
+            returnMap.put(type, BigDecimal.valueOf(0));
+        }
+        return returnMap;
     }
 
     public Long getId() {
@@ -160,12 +175,12 @@ public class User {
         this.totalThreshold = threshold;
     }
 
-    public Map<ProductType, BigDecimal> getTypesThreshold() {
-        return this.typesThreshold;
+    public Map<ProductType, BigDecimal> getTypeThresholds() {
+        return this.typeThresholds;
     }
 
-    public void setTypesThreshold(Map<ProductType, BigDecimal> typeList) {
-        this.typesThreshold = typeList;
+    public void setTypeThresholds(Map<ProductType, BigDecimal> typeList) {
+        this.typeThresholds = typeList;
     }
 
     public void setActiveShoppingList(ShoppingList shoppingList) {
@@ -303,5 +318,51 @@ public class User {
 
     public void setHistoricDeliveries(List<ShopDelivery> historicDeliveries) {
         this.historicDeliveries = historicDeliveries;
+    }
+
+    public Map<ProductType, BigDecimal> getSuggestedTypeThresholds() {
+        return suggestedTypeThresholds;
+    }
+
+    public void setSuggestedTypeThresholds(Map<ProductType, BigDecimal> suggestedTypeThresholds) {
+        this.suggestedTypeThresholds = suggestedTypeThresholds;
+    }
+
+    public void addNewDelivery(ShopDelivery delivery) {
+        this.activeDeliveries.add(delivery);
+    }
+
+    public void finishPurchase() {
+        this.historicShoppingLists.add(this.activeShoppingList);
+        this.activeShoppingList = null;
+    }
+
+    public void confirmDeliveryReception(ShopDelivery delivery) {
+        this.getActiveDeliveries().remove(delivery);
+        this.getHistoricDeliveries().add(delivery);
+    }
+
+    public void cancelDelivery(ShopDelivery delivery) {
+        this.activeDeliveries.remove(delivery);
+    }
+
+    public void setTypeThreshold(ProductType type, BigDecimal amount) {
+        this.typeThresholds.replace(type, typeThresholds.get(type), amount);
+    }
+
+    public void evaluateSuggestedThresholds() {
+        for (ProductType type : this.suggestedTypeThresholds.keySet()){
+            evaluateThresholdForType(type);
+        }
+    }
+
+    private void evaluateThresholdForType(ProductType type) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (ShoppingList shoppingList : this.historicShoppingLists){
+            total = total.add(
+                    shoppingList.evaluateTotalFor(type)
+            );
+        }
+        this.suggestedTypeThresholds.replace(type, suggestedTypeThresholds.get(type), total);
     }
 }

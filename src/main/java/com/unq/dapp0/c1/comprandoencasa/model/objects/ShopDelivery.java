@@ -23,13 +23,13 @@ public abstract class ShopDelivery {
     @OneToOne
     protected Shop shop;
     @OneToMany
-    protected List<Product> products;
+    protected List<ShoppingListEntry> products;
     @OneToOne
     protected User user;
 
     public ShopDelivery(){}
 
-    public ShopDelivery(Shop shop, List<Product> products, User user) {
+    public ShopDelivery(Shop shop, List<ShoppingListEntry> products, User user) {
         this.shop = shop;
         this.products = products;
         this.user = user;
@@ -45,11 +45,11 @@ public abstract class ShopDelivery {
 
     public void setShop(Shop shop) {this.shop = shop;}
 
-    public List<Product> getProducts() {
+    public List<ShoppingListEntry> getProducts() {
         return this.products;
     }
 
-    public void setProducts(List<Product> products){this.products = products;}
+    public void setProducts(List<ShoppingListEntry> products){this.products = products;}
 
     public User getUser() {
         return this.user;
