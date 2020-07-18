@@ -66,37 +66,6 @@ public class InitService {
         aShopManager.setPassword(passwordEncoder.encode(aShopManager.getPassword()));
         this.userRepository.save(aShopManager);
 
-        Location aShopLocation = new Location("AAA 123", 1234d, 1234d);
-
-        Shop aShop = new Shop(
-                "La Marca",
-                new ArrayList<ShopCategory>(),
-                aShopLocation,
-                new ArrayList<DayOfWeek>(),
-                opening,
-                closing,
-                new ArrayList<PaymentMethod>(),
-                10,
-                "");
-
-        Product aProduct = new Product(
-                "Lata de Atún",
-                "Pepito",
-                "https://picsum.photos/200/300",
-                new BigDecimal("99.99"),
-                aShop,
-                new ArrayList<>()
-        );
-
-        Product anotherProduct = new Product(
-                "Lata de Sardinas",
-                "Pepito",
-                "https://picsum.photos/200/200",
-                new BigDecimal("89.99"),
-                aShop,
-                new ArrayList<>()
-        );
-
         Location unqLocation = new Location("Roque Sáenz Peña 352, Bernal, Provincia de Buenos Aires",-34.706339, -58.278542);
         Location piaveBernalLocation = new Location("9 de Julio 2, Bernal, Provincia de Buenos Aires",-34.7098631, -58.2807604);
         Location outletQuilmLocation = new Location("Av. Hipólito Yrigoyen 85, Quilmes, Provincia de Buenos Aires",-34.7153311, -58.2667184);
@@ -330,7 +299,6 @@ public class InitService {
 
         //Saving initial elements
 
-        this.locationRepository.save(aShopLocation);
         this.locationRepository.save(unqLocation);
         this.locationRepository.save(piaveBernalLocation);
         this.locationRepository.save(outletQuilmLocation);
@@ -340,7 +308,6 @@ public class InitService {
         this.locationRepository.save(queimadaPlataLocation);
         this.locationRepository.save(contiBestHeladosLocation);
 
-        this.shopRepository.save(aShop);
         this.shopRepository.save(unqShop);
         this.shopRepository.save(piaveBernalShop);
         this.shopRepository.save(outletQuilShop);
@@ -350,8 +317,6 @@ public class InitService {
         this.shopRepository.save(queimadaPlataShop);
         this.shopRepository.save(contiBestHeladosShop);
 
-        this.productRepository.save(aProduct);
-        this.productRepository.save(anotherProduct);
         this.productRepository.save(unqBook);
         this.productRepository.save(unqGear);
         this.productRepository.save(piaveBerTorta);
@@ -398,8 +363,6 @@ public class InitService {
 
         //Updating elements
 
-        aShop.addProduct(aProduct);
-        aShop.addProduct(anotherProduct);
         unqShop.addProduct(unqBook);
         unqShop.addProduct(unqGear);
         piaveBernalShop.addProduct(piaveBerTorta);
@@ -416,7 +379,6 @@ public class InitService {
         piaveBernalShop.addDiscount(randomPiaveDiscount);
         clubMilaPlataShop.addDiscount(randomMilaDiscount);
 
-        aShop.setUser(aShopManager);
         unqShop.setUser(aShopManager);
         piaveBernalShop.setUser(aShopManager);
         outletQuilShop.setUser(aShopManager);
@@ -428,7 +390,6 @@ public class InitService {
 
         this.userRepository.save(aShopManager);
 
-        this.shopRepository.save(aShop);
         this.shopRepository.save(unqShop);
         this.shopRepository.save(piaveBernalShop);
         this.shopRepository.save(outletQuilShop);
