@@ -349,4 +349,20 @@ public class User {
     public void setTypeThreshold(ProductType type, BigDecimal amount) {
         this.typeThresholds.replace(type, typeThresholds.get(type), amount);
     }
+
+    public void evaluateSuggestedThresholds() {
+        for (ProductType type : this.suggestedTypeThresholds.keySet()){
+            evaluateThresholdForType(type);
+        }
+    }
+
+    private void evaluateThresholdForType(ProductType type) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (ShoppingList shoppingList : this.historicShoppingLists){
+            total = total.add(
+                    shoppingList.evaluateTotalFor(type)
+            );
+        }
+        this.suggestedTypeThresholds.replace(type, suggestedTypeThresholds.get(type), total);
+    }
 }

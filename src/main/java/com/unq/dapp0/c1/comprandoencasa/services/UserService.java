@@ -316,4 +316,12 @@ public class UserService {
         user.setTotalThreshold(threshold);
         return new UserThresholdsDTO(user);
     }
+
+    @Transactional
+    public void calculateAllSuggestedThresholds() {
+        Iterable<User> users = this.userRepository.findAll();
+        for (User user : users){
+            user.evaluateSuggestedThresholds();
+        }
+    }
 }
