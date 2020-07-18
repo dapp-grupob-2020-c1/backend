@@ -336,4 +336,13 @@ public class User {
         this.historicShoppingLists.add(this.activeShoppingList);
         this.activeShoppingList = null;
     }
+
+    public void confirmDeliveryReception(ShopDelivery delivery) {
+        this.getActiveDeliveries().remove(delivery);
+        this.getHistoricDeliveries().add(delivery);
+    }
+
+    public void cancelDelivery(ShopDelivery delivery) {
+        this.activeDeliveries.remove(delivery);
+    }
 }

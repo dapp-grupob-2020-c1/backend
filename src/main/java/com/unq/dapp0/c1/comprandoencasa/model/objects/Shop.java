@@ -320,4 +320,13 @@ public class Shop {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public void confirmDeliveryReception(ShopDelivery delivery) {
+        this.activeDeliveries.remove(delivery);
+        this.historicDeliveries.add(delivery);
+    }
+
+    public void cancelDelivery(ShopDelivery delivery) {
+        this.activeDeliveries.remove(delivery);
+    }
 }

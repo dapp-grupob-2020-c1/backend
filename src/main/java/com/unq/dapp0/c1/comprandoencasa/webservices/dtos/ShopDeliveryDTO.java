@@ -8,7 +8,6 @@ import com.unq.dapp0.c1.comprandoencasa.model.objects.DeliveryAtHome;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.DeliveryAtShop;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.ShopDelivery;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.Turn;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,19 +18,21 @@ public class ShopDeliveryDTO {
     public Long shopId;
     public List<Long> productEntries;
     public UserPublicDTO user;
-    public Turn turn;
+    public Long turnId;
     public Location location;
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     public LocalDateTime dateOfDelivery;
 
     public ShopDeliveryDTO(ShopDelivery delivery) {
-        this.id = delivery.getId();
+        if (delivery.getId() != null){
+            this.id = delivery.getId();
+        }
         this.shopId = delivery.getShop().getId();
         this.productEntries = ProductSmallDTO.createProductsById(delivery.getProducts());
         this.user = new UserPublicDTO(delivery.getUser());
         if (delivery instanceof DeliveryAtShop){
-            this.turn = ((DeliveryAtShop) delivery).getTurn();
+            this.turnId = ((DeliveryAtShop) delivery).getTurn().getId();
         } else {
             this.location = ((DeliveryAtHome) delivery).getLocation();
             this.dateOfDelivery = ((DeliveryAtHome) delivery).getDateOfDelivery();
