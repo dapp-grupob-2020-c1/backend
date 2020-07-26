@@ -7,7 +7,7 @@ import com.unq.dapp0.c1.comprandoencasa.webservices.payload.ApiResponse;
 import com.unq.dapp0.c1.comprandoencasa.webservices.payload.AuthResponse;
 import com.unq.dapp0.c1.comprandoencasa.webservices.payload.LoginRequest;
 import com.unq.dapp0.c1.comprandoencasa.webservices.payload.SignUpRequest;
-import com.unq.dapp0.c1.comprandoencasa.webservices.security.user.BadRequestException;
+import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

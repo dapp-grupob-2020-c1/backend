@@ -18,7 +18,7 @@ import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopNotFoundExcep
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShoppingListNotFound;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.UserNotFoundException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.security.CurrentUser;
-import com.unq.dapp0.c1.comprandoencasa.webservices.security.user.BadRequestException;
+import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
@@ -45,10 +45,10 @@ public class ProductController {
 
     @CrossOrigin
     @GetMapping("/product")
-    public ProductDTO getProduct(@RequestParam(value = "productId") String productId) {
+    public ResponseEntity<ProductDTO> getProduct(@RequestParam(value = "productId") String productId) {
         try{
             Product product = this.productService.findProductById(Long.valueOf(productId));
-            return new ProductDTO(product);
+            return new ResponseEntity<>(new ProductDTO(product), HttpStatus.OK);
         } catch (ProductDoesntExistException exception){
             throw new ProductNotFoundException(Long.valueOf(productId));
         }
@@ -56,7 +56,7 @@ public class ProductController {
 
     @CrossOrigin
     @GetMapping("/product/search")
-    public List<ProductDTO> searchProducts(@CurrentUser UserPrincipal userPrincipal,
+    public ResponseEntity<List<ProductDTO>> searchProducts(@CurrentUser UserPrincipal userPrincipal,
                                            @RequestParam(value = "keyword", defaultValue = "") String keyword,
                                            @RequestParam(value = "categories", defaultValue = "") List<String> categories,
                                            @RequestParam(value = "page", defaultValue = "0") String page,
@@ -65,7 +65,7 @@ public class ProductController {
         try{
             List<ProductType> types = parseToTypes(categories);
             List<Product> response = productService.searchBy(userPrincipal.getId(), keyword, types, Integer.valueOf(page), Integer.valueOf(size), order);
-            return ProductDTO.parseProducts(response);
+            return new ResponseEntity<>(ProductDTO.parseProducts(response), HttpStatus.OK);
         } catch (IllegalArgumentException e){
             throw new ProductTypeBadRequestException();
         } catch (UserDoesntExistException e){
