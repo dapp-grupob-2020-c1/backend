@@ -153,7 +153,10 @@ public class ProductService {
         Shop shop = getShopFromUser(user, shopId);
         Product product = getProductFromShop(shop, productId);
         checkIfProductIsInDiscount(shop, product);
-        return deleteProduct(shop, product);
+        shop.removeProduct(product);
+        product.setEnabled(false);
+        this.shopService.save(shop);
+        return product;
     }
 
     private void checkIfProductIsInDiscount(Shop shop, Product product) {
@@ -183,22 +186,4 @@ public class ProductService {
         return shop.getProducts();
     }
 
-    @Transactional
-    public Product deleteProduct(Shop shop, Product product) {
-        List<ShopDelivery> historicDeliveries = shop.getHistoricDeliveries();
-        for (ShopDelivery delivery : historicDeliveries){
-            List<ShoppingListEntry> finalList = delivery.getProducts();
-            List<ShoppingListEntry> deliveryProducts = finalList.stream()
-                    .filter(prod -> prod.getProduct().getId().equals(product.getId())).collect(Collectors.toList());
-            finalList.removeAll(deliveryProducts);
-            delivery.setProducts(finalList);
-            this.deliveryRepository.save(delivery);
-            User deliveryUser = delivery.getUser();
-            this.userService.removeProductFromShoppingLists(deliveryUser, product);
-        }
-        shop.removeProduct(product);
-        this.shopService.save(shop);
-        this.productRepository.delete(product);
-        return product;
-    }
 }

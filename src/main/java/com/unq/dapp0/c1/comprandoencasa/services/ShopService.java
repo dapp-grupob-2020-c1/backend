@@ -118,23 +118,23 @@ public class ShopService {
         deleteDiscountsFromShop(shop);
         deleteProductsFromShop(shop);
         user.removeShop(shop);
+        this.save(shop);
         this.userService.save(user);
-        this.repository.delete(shop);
         return shop;
-    }
-
-    private void deleteProductsFromShop(Shop shop) {
-        List<Product> products = shop.getProducts();
-        for (Product product : products){
-            this.productService.deleteProduct(shop, product);
-        }
     }
 
     private void deleteDiscountsFromShop(Shop shop) {
         List<Discount> discounts = shop.getDiscounts();
         for (Discount discount : discounts){
             shop.removeDiscount(discount);
-            this.discountRepository.delete(discount);
+        }
+    }
+
+    private void deleteProductsFromShop(Shop shop) {
+        List<Product> products = shop.getProducts();
+        for (Product product : products){
+            product.setEnabled(false);
+            shop.removeProduct(product);
         }
     }
 
