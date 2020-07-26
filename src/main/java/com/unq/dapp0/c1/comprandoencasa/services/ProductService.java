@@ -8,7 +8,6 @@ import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
-import com.unq.dapp0.c1.comprandoencasa.repositories.DeliveryRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
 
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.NoActiveShoppingListException;
