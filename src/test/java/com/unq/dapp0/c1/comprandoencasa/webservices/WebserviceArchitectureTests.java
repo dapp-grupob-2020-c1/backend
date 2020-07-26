@@ -32,7 +32,7 @@ public class WebserviceArchitectureTests {
                     .because("All controller classes must have the descriptor Controller on their names.");
 
     @ArchTest
-    static ArchRule allPublicGetMethodsInTheWebserviceLayerShouldReturnResponseEntities =
+    public static ArchRule allPublicGetMethodsInTheWebserviceLayerShouldReturnResponseEntities =
             methods()
                     .that().areDeclaredInClassesThat().resideInAPackage("..webservices..")
                     .and().arePublic()
@@ -40,7 +40,7 @@ public class WebserviceArchitectureTests {
                     .should().haveRawReturnType(ResponseEntity.class)
                     .because("All controller methods should wrap the response objects with an API appropiate response object.");
     @ArchTest
-    static ArchRule allPublicPostMethodsInTheWebserviceLayerShouldReturnResponseEntities =
+    public static ArchRule allPublicPostMethodsInTheWebserviceLayerShouldReturnResponseEntities =
             methods()
                     .that().areDeclaredInClassesThat().resideInAPackage("..webservices..")
                     .and().arePublic()
@@ -48,7 +48,7 @@ public class WebserviceArchitectureTests {
                     .should().haveRawReturnType(ResponseEntity.class)
                     .because("All controller methods should wrap the response objects with an API appropiate response object.");
     @ArchTest
-    static ArchRule allPublicDeleteMethodsInTheWebserviceLayerShouldReturnResponseEntities =
+    public static ArchRule allPublicDeleteMethodsInTheWebserviceLayerShouldReturnResponseEntities =
             methods()
                     .that().areDeclaredInClassesThat().resideInAPackage("..webservices..")
                     .and().arePublic()
@@ -56,7 +56,7 @@ public class WebserviceArchitectureTests {
                     .should().haveRawReturnType(ResponseEntity.class)
                     .because("All controller methods should wrap the response objects with an API appropiate response object.");
     @ArchTest
-    static ArchRule allPublicPatchMethodsInTheWebserviceLayerShouldReturnResponseEntities =
+    public static ArchRule allPublicPatchMethodsInTheWebserviceLayerShouldReturnResponseEntities =
             methods()
                     .that().areDeclaredInClassesThat().resideInAPackage("..webservices..")
                     .and().arePublic()

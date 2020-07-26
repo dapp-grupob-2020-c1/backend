@@ -41,9 +41,6 @@ public class ShopService {
     private DiscountRepository discountRepository;
 
     @Autowired
-    private ProductService productService;
-
-    @Autowired
     private UserService userService;
 
     @Autowired

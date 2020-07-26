@@ -7,8 +7,6 @@ import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.ShopDelivery;
-import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingListEntry;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import com.unq.dapp0.c1.comprandoencasa.repositories.DeliveryRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
@@ -43,9 +41,6 @@ public class ProductService {
 
     @Autowired
     private ShopService shopService;
-
-    @Autowired
-    private DeliveryRepository deliveryRepository;
 
     @Transactional
     public Product save(Product model) {

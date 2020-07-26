@@ -121,4 +121,8 @@ public class Product {
     public void setEnabled(boolean value) {
         this.enabled = value;
     }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
 }
