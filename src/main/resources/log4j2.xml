@@ -9,7 +9,19 @@
         <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
             <PatternLayout pattern="${LOG_PATTERN}"/>
         </Console>
+
         <RollingFile name="FileAppender" fileName="logs/appLogs.log"
+                     filePattern="logs/appLogs-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout>
+                <Pattern>${LOG_PATTERN}</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+
+        <RollingFile name="AsyncTasks" fileName="logs/asyncLogs.log"
                      filePattern="logs/appLogs-%d{yyyy-MM-dd}-%i.log">
             <PatternLayout>
                 <Pattern>${LOG_PATTERN}</Pattern>
@@ -22,17 +34,35 @@
     </Appenders>
 
     <Loggers>
+
         <Logger name="com.unq.dapp0.c1.comprandoencasa.webservices.logging.LoggingHandler" level="error" additivity="false">
             <AppenderRef ref="ConsoleAppender" />
+        </Logger>
+        <Logger name="com.unq.dapp0.c1.comprandoencasa.webservices.logging.LoggingHandler" level="error" additivity="false">
+            <AppenderRef ref="FileAppender" />
         </Logger>
         <Logger name="com.unq.dapp0.c1.comprandoencasa.webservices.logging.LoggingHandler" level="info" additivity="false">
             <AppenderRef ref="FileAppender" />
         </Logger>
+
+        <Logger name="com.unq.dapp0.c1.comprandoencasa.services.ScheduledTasks" level="error" additivity="false">
+            <AppenderRef ref="ConsoleAppender" />
+        </Logger>
+        <Logger name="com.unq.dapp0.c1.comprandoencasa.services.ScheduledTasks" level="error" additivity="false">
+            <AppenderRef ref="AsyncTasks" />
+        </Logger>
+        <Logger name="com.unq.dapp0.c1.comprandoencasa.services.ScheduledTasks" level="info" additivity="false">
+            <AppenderRef ref="AsyncTasks" />
+        </Logger>
+
         <Logger name="com.unq.dapp0.c1.comprandoencasa.services.MailService" level="error" additivity="false">
             <AppenderRef ref="ConsoleAppender" />
         </Logger>
+        <Logger name="com.unq.dapp0.c1.comprandoencasa.services.MailService" level="error" additivity="false">
+            <AppenderRef ref="AsyncTasks" />
+        </Logger>
         <Logger name="com.unq.dapp0.c1.comprandoencasa.services.MailService" level="info" additivity="false">
-            <AppenderRef ref="FileAppender" />
+            <AppenderRef ref="AsyncTasks" />
         </Logger>
 
         <Root level="info">

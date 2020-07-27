@@ -38,6 +38,9 @@ public class Product {
     @ManyToOne
     private Shop shop;
 
+    @Column
+    private boolean enabled;
+
     public Product() {
     }
 
@@ -48,6 +51,7 @@ public class Product {
         this.price = price;
         this.types = types;
         this.shop = shop;
+        this.enabled = true;
     }
 
     public Long getId() {
@@ -112,5 +116,13 @@ public class Product {
 
     public Collection<ProductType> getTypes() {
         return this.types;
+    }
+
+    public void setEnabled(boolean value) {
+        this.enabled = value;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }

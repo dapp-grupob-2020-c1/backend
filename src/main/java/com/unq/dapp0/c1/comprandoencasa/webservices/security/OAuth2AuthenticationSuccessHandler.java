@@ -4,7 +4,7 @@ import com.unq.dapp0.c1.comprandoencasa.config.AppProperties;
 import com.unq.dapp0.c1.comprandoencasa.repositories.utils.CookieUtils;
 import com.unq.dapp0.c1.comprandoencasa.repositories.security.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.unq.dapp0.c1.comprandoencasa.services.security.TokenProvider;
-import com.unq.dapp0.c1.comprandoencasa.webservices.security.user.BadRequestException;
+import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;

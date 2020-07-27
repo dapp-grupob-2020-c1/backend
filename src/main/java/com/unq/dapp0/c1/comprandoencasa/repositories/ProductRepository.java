@@ -20,7 +20,8 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
     @Query(value = "SELECT DISTINCT p FROM Product p" +
                 " INNER JOIN p.types t" +
                 " INNER JOIN p.shop s" +
-                " WHERE p.name LIKE CONCAT('%', :keyword, '%')"+
+                " WHERE p.enabled = TRUE" +
+                " AND p.name LIKE CONCAT('%', :keyword, '%')"+
                 " AND t in :categories" +
                 " AND SQRT(Power( :latitude - s.location.latitude , 2)" + //Optimize search with Pythagorean teorem
                 " + Power( :longitude - s.location.longitude , 2)) < 30" +

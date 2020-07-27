@@ -216,26 +216,6 @@ public class UserService {
     }
 
     @Transactional
-    public void removeProductFromShoppingLists(User deliveryUser, Product product) {
-        List<ShoppingList> historicPurchases = deliveryUser.getHistoricShoppingLists();
-        for (ShoppingList shoppingList : historicPurchases){
-            this.removeProductFromShoppingList(shoppingList, product);
-        }
-        this.removeProductFromShoppingList(deliveryUser.getActiveShoppingList(), product);
-    }
-
-    private void removeProductFromShoppingList(ShoppingList shoppingList, Product product) {
-        List<ShoppingListEntry> listEntries = shoppingList.getEntriesList();
-        for (ShoppingListEntry entry : listEntries){
-            if (entry.getProduct().getId().equals(product.getId())){
-                shoppingList.removeEntry(entry);
-                this.shoppingListEntryRepository.delete(entry);
-            }
-        }
-        this.shoppingListRepository.save(shoppingList);
-    }
-
-    @Transactional
     public List<ShoppingList> getHistoricCarts(Long userId) {
         User user = findUserById(userId);
         return user.getHistoricShoppingLists();

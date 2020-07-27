@@ -28,7 +28,7 @@ import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopDoesntExistEx
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.ShopNotFoundException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.UserNotFoundException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.security.CurrentUser;
-import com.unq.dapp0.c1.comprandoencasa.webservices.security.user.BadRequestException;
+import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.http.HttpStatus;
