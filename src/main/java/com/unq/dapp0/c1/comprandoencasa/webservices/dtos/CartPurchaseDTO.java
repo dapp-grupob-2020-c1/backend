@@ -1,8 +1,8 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices.dtos;
 
-import java.util.Collection;
+import java.util.List;
 
 public class CartPurchaseDTO {
-    public Collection<ShopDeliveryCreationDTO> deliveries;
-    public Collection<ShopTakeawayCreationDTO> takeaway;
+    public List<ShopDeliveryCreationDTO> deliveries;
+    public List<ShopTakeawayCreationDTO> takeaway;
 }
