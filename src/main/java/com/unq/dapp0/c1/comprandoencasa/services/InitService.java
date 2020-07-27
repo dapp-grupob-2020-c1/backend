@@ -66,37 +66,6 @@ public class InitService {
         aShopManager.setPassword(passwordEncoder.encode(aShopManager.getPassword()));
         this.userRepository.save(aShopManager);
 
-        Location aShopLocation = new Location("AAA 123", 1234d, 1234d);
-
-        Shop aShop = new Shop(
-                "La Marca",
-                new ArrayList<ShopCategory>(),
-                aShopLocation,
-                new ArrayList<DayOfWeek>(),
-                opening,
-                closing,
-                new ArrayList<PaymentMethod>(),
-                10,
-                "");
-
-        Product aProduct = new Product(
-                "Lata de Atún",
-                "Pepito",
-                "https://picsum.photos/200/300",
-                new BigDecimal("99.99"),
-                aShop,
-                new ArrayList<>()
-        );
-
-        Product anotherProduct = new Product(
-                "Lata de Sardinas",
-                "Pepito",
-                "https://picsum.photos/200/200",
-                new BigDecimal("89.99"),
-                aShop,
-                new ArrayList<>()
-        );
-
         Location unqLocation = new Location("Roque Sáenz Peña 352, Bernal, Provincia de Buenos Aires",-34.706339, -58.278542);
         Location piaveBernalLocation = new Location("9 de Julio 2, Bernal, Provincia de Buenos Aires",-34.7098631, -58.2807604);
         Location outletQuilmLocation = new Location("Av. Hipólito Yrigoyen 85, Quilmes, Provincia de Buenos Aires",-34.7153311, -58.2667184);
@@ -121,6 +90,17 @@ public class InitService {
         List<PaymentMethod> regularPay = new ArrayList<>();
         regularPay.add(PaymentMethod.CASH);
 
+        List<PaymentMethod> digitalPaymentMethods = new ArrayList<>();
+        digitalPaymentMethods.add(PaymentMethod.DEBIT);
+        digitalPaymentMethods.add(PaymentMethod.CREDIT);
+        digitalPaymentMethods.add(PaymentMethod.MERCADOPAGO);
+
+        List<PaymentMethod> allPaymentMethods = new ArrayList<>();
+        allPaymentMethods.add(PaymentMethod.CASH);
+        allPaymentMethods.add(PaymentMethod.DEBIT);
+        allPaymentMethods.add(PaymentMethod.CREDIT);
+        allPaymentMethods.add(PaymentMethod.MERCADOPAGO);
+
         List<DayOfWeek> regularDays = new ArrayList<>();
         regularDays.add(DayOfWeek.MONDAY);
         regularDays.add(DayOfWeek.TUESDAY);
@@ -133,11 +113,11 @@ public class InitService {
                 unqCat,
                 unqLocation,
                 regularDays,
-                opening,
-                closing,
-                regularPay,
+                LocalTime.of(11, 0, 0, 0),
+                LocalTime.of(15, 0, 0, 0),
+                allPaymentMethods,
                 20,
-                "");
+                "https://eltermometroweb.com/wp-content/uploads/2020/03/UNQ.jpg");
 
         Shop piaveBernalShop = new Shop(
                 "Piave Bernal",
@@ -146,20 +126,20 @@ public class InitService {
                 regularDays,
                 opening,
                 closing,
-                regularPay,
+                digitalPaymentMethods,
                 10,
-                "");
+                "https://dondecomequilmes.com/wp-content/uploads/2016/05/El_Piave_lgn1.jpg");
 
         Shop outletQuilShop = new Shop(
                 "Outlet Quilmes",
                 shoppingCat,
                 outletQuilmLocation,
                 regularDays,
-                opening,
-                closing,
+                LocalTime.of(6, 0, 0, 0),
+                LocalTime.of(19, 0, 0, 0),
                 regularPay,
                 5,
-                "");
+                "https://www.perspectivasur.com/archivos/noticias/fotografias/60035_3.jpg");
 
         Shop bkBeraShop = new Shop(
                 "Burger King Berazategui",
@@ -168,7 +148,7 @@ public class InitService {
                 regularDays,
                 opening,
                 closing,
-                regularPay,
+                allPaymentMethods,
                 20,
                 "");
 
@@ -188,8 +168,8 @@ public class InitService {
                 foodCat,
                 clubMilaPlataLocation,
                 regularDays,
-                opening,
-                closing,
+                LocalTime.of(18, 0, 0, 0),
+                LocalTime.of(23, 0, 0, 0),
                 regularPay,
                 10,
                 "");
@@ -330,7 +310,6 @@ public class InitService {
 
         //Saving initial elements
 
-        this.locationRepository.save(aShopLocation);
         this.locationRepository.save(unqLocation);
         this.locationRepository.save(piaveBernalLocation);
         this.locationRepository.save(outletQuilmLocation);
@@ -340,7 +319,6 @@ public class InitService {
         this.locationRepository.save(queimadaPlataLocation);
         this.locationRepository.save(contiBestHeladosLocation);
 
-        this.shopRepository.save(aShop);
         this.shopRepository.save(unqShop);
         this.shopRepository.save(piaveBernalShop);
         this.shopRepository.save(outletQuilShop);
@@ -350,8 +328,6 @@ public class InitService {
         this.shopRepository.save(queimadaPlataShop);
         this.shopRepository.save(contiBestHeladosShop);
 
-        this.productRepository.save(aProduct);
-        this.productRepository.save(anotherProduct);
         this.productRepository.save(unqBook);
         this.productRepository.save(unqGear);
         this.productRepository.save(piaveBerTorta);
@@ -398,8 +374,6 @@ public class InitService {
 
         //Updating elements
 
-        aShop.addProduct(aProduct);
-        aShop.addProduct(anotherProduct);
         unqShop.addProduct(unqBook);
         unqShop.addProduct(unqGear);
         piaveBernalShop.addProduct(piaveBerTorta);
@@ -416,7 +390,6 @@ public class InitService {
         piaveBernalShop.addDiscount(randomPiaveDiscount);
         clubMilaPlataShop.addDiscount(randomMilaDiscount);
 
-        aShop.setUser(aShopManager);
         unqShop.setUser(aShopManager);
         piaveBernalShop.setUser(aShopManager);
         outletQuilShop.setUser(aShopManager);
@@ -428,7 +401,6 @@ public class InitService {
 
         this.userRepository.save(aShopManager);
 
-        this.shopRepository.save(aShop);
         this.shopRepository.save(unqShop);
         this.shopRepository.save(piaveBernalShop);
         this.shopRepository.save(outletQuilShop);
