@@ -17,8 +17,10 @@ import com.unq.dapp0.c1.comprandoencasa.services.exceptions.DeliveryDoesntExistE
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.EmailServiceExceptions;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.MissingFieldsForDeliveryCreationException;
 import com.unq.dapp0.c1.comprandoencasa.services.exceptions.NotAnActiveShoppingListException;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.CartPurchaseDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopDeliveryCreationDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopDeliveryDTO;
+import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopTakeawayCreationDTO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,13 +92,18 @@ public class DeliveryService {
     }
 
     @Transactional
-    public List<ShopDeliveryDTO> doPurchase(Long userId, Collection<ShopDeliveryCreationDTO> deliveries) {
+    public List<ShopDeliveryDTO> doPurchase(Long userId, CartPurchaseDTO purchaseDTO) {
         User user = this.userService.findUserById(userId);
         List<ShopDelivery> newDeliveries = new ArrayList<>();
         List<Shop> shops = new ArrayList<>();
-        for (ShopDeliveryCreationDTO deliveryDTO : deliveries) {
+        for (ShopDeliveryCreationDTO deliveryDTO : purchaseDTO.deliveries) {
             Shop shop = this.shopService.findShopById(deliveryDTO.shopId);
             newDeliveries.add(createNewDelivery(user, shop, deliveryDTO));
+            shops.add(shop);
+        }
+        for (ShopTakeawayCreationDTO takeawayDTO : purchaseDTO.takeaway) {
+            Shop shop = this.shopService.findShopById(takeawayDTO.shopId);
+            newDeliveries.add(createNewTakeaway(user, shop, takeawayDTO));
             shops.add(shop);
         }
         user.finishPurchase();
@@ -152,13 +159,7 @@ public class DeliveryService {
 
     private ShopDelivery createNewDelivery(User user, Shop shop, ShopDeliveryCreationDTO deliveryDTO) {
         List<ShoppingListEntry> products = findEntries(deliveryDTO.shoppingEntryIds);
-        if (deliveryDTO.turn != null) {
-            Turn turn = new Turn(shop, deliveryDTO.turn);
-            DeliveryAtShop delivery = new DeliveryAtShop(shop, products, user, turn);
-            shop.addDelivery(delivery);
-            user.addNewDelivery(delivery);
-            return delivery;
-        } else if (deliveryDTO.locationId != null && deliveryDTO.dateOfDelivery != null) {
+        if (deliveryDTO.locationId != null && deliveryDTO.dateOfDelivery != null) {
             ShoppingList activeList = user.getActiveShoppingList();
             if (activeList.getId() == null) {
                 throw new NotAnActiveShoppingListException(user.getId());
@@ -170,6 +171,19 @@ public class DeliveryService {
             return delivery;
         } else {
             throw new MissingFieldsForDeliveryCreationException(user, deliveryDTO);
+        }
+    }
+
+    private ShopDelivery createNewTakeaway(User user, Shop shop, ShopTakeawayCreationDTO takeawayDTO) {
+        List<ShoppingListEntry> products = findEntries(takeawayDTO.shoppingEntryIds);
+        if (takeawayDTO.turn != null) {
+            Turn turn = new Turn(shop, takeawayDTO.turn);
+            DeliveryAtShop delivery = new DeliveryAtShop(shop, products, user, turn);
+            shop.addDelivery(delivery);
+            user.addNewDelivery(delivery);
+            return delivery;
+        } else {
+            throw new MissingFieldsForDeliveryCreationException(user, takeawayDTO);
         }
     }
 

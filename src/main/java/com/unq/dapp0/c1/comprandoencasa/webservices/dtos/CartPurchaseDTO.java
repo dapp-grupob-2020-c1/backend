@@ -1,9 +1,8 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices.dtos;
 
-import javax.validation.constraints.NotEmpty;
-import java.util.Collection;
+import java.util.List;
 
 public class CartPurchaseDTO {
-    @NotEmpty
-    public Collection<ShopDeliveryCreationDTO> deliveries;
+    public List<ShopDeliveryCreationDTO> deliveries;
+    public List<ShopTakeawayCreationDTO> takeaway;
 }
