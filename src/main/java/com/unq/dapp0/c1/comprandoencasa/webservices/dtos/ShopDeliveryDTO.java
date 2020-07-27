@@ -20,8 +20,6 @@ public class ShopDeliveryDTO {
     public UserPublicDTO user;
     public Long turnId;
     public Location location;
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
     public LocalDateTime dateOfDelivery;
 
     public ShopDeliveryDTO(ShopDelivery delivery) {

@@ -14,7 +14,7 @@ import com.unq.dapp0.c1.comprandoencasa.services.security.UserPrincipal;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.DiscountCreateDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.DiscountDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.DiscountModifyDTO;
-import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.DiscountNotFoundException;
+import com.unq.dapp0.c1.comprandoencasa.webservices.exceptions.DiscountNotFoundException;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopCreationDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopDTO;
 import com.unq.dapp0.c1.comprandoencasa.webservices.dtos.ShopDeliveryDTO;

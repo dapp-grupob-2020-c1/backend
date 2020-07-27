@@ -1,5 +1,6 @@
 package com.unq.dapp0.c1.comprandoencasa.repositories;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
 import com.unq.dapp0.c1.comprandoencasa.model.LocationBuilder;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @DataJpaTest
+@Import(ObjectMapper.class)
 @ActiveProfiles("test")
 public class ProductRepositoryTests {
 
