@@ -90,6 +90,17 @@ public class InitService {
         List<PaymentMethod> regularPay = new ArrayList<>();
         regularPay.add(PaymentMethod.CASH);
 
+        List<PaymentMethod> digitalPaymentMethods = new ArrayList<>();
+        digitalPaymentMethods.add(PaymentMethod.DEBIT);
+        digitalPaymentMethods.add(PaymentMethod.CREDIT);
+        digitalPaymentMethods.add(PaymentMethod.MERCADOPAGO);
+
+        List<PaymentMethod> allPaymentMethods = new ArrayList<>();
+        allPaymentMethods.add(PaymentMethod.CASH);
+        allPaymentMethods.add(PaymentMethod.DEBIT);
+        allPaymentMethods.add(PaymentMethod.CREDIT);
+        allPaymentMethods.add(PaymentMethod.MERCADOPAGO);
+
         List<DayOfWeek> regularDays = new ArrayList<>();
         regularDays.add(DayOfWeek.MONDAY);
         regularDays.add(DayOfWeek.TUESDAY);
@@ -102,11 +113,11 @@ public class InitService {
                 unqCat,
                 unqLocation,
                 regularDays,
-                opening,
-                closing,
-                regularPay,
+                LocalTime.of(11, 0, 0, 0),
+                LocalTime.of(15, 0, 0, 0),
+                allPaymentMethods,
                 20,
-                "");
+                "https://eltermometroweb.com/wp-content/uploads/2020/03/UNQ.jpg");
 
         Shop piaveBernalShop = new Shop(
                 "Piave Bernal",
@@ -115,20 +126,20 @@ public class InitService {
                 regularDays,
                 opening,
                 closing,
-                regularPay,
+                digitalPaymentMethods,
                 10,
-                "");
+                "https://dondecomequilmes.com/wp-content/uploads/2016/05/El_Piave_lgn1.jpg");
 
         Shop outletQuilShop = new Shop(
                 "Outlet Quilmes",
                 shoppingCat,
                 outletQuilmLocation,
                 regularDays,
-                opening,
-                closing,
+                LocalTime.of(6, 0, 0, 0),
+                LocalTime.of(19, 0, 0, 0),
                 regularPay,
                 5,
-                "");
+                "https://www.perspectivasur.com/archivos/noticias/fotografias/60035_3.jpg");
 
         Shop bkBeraShop = new Shop(
                 "Burger King Berazategui",
@@ -137,7 +148,7 @@ public class InitService {
                 regularDays,
                 opening,
                 closing,
-                regularPay,
+                allPaymentMethods,
                 20,
                 "");
 
@@ -157,8 +168,8 @@ public class InitService {
                 foodCat,
                 clubMilaPlataLocation,
                 regularDays,
-                opening,
-                closing,
+                LocalTime.of(18, 0, 0, 0),
+                LocalTime.of(23, 0, 0, 0),
                 regularPay,
                 10,
                 "");
