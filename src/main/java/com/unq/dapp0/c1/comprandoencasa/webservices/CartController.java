@@ -133,7 +133,7 @@ public class CartController {
     public ResponseEntity<List<ShopDeliveryDTO>> doPurchase(@CurrentUser UserPrincipal userPrincipal,
                                                             @RequestBody CartPurchaseDTO purchaseDTO){
         try {
-            List<ShopDeliveryDTO> list = this.deliveryService.doPurchase(userPrincipal.getId(), purchaseDTO.deliveries);
+            List<ShopDeliveryDTO> list = this.deliveryService.doPurchase(userPrincipal.getId(), purchaseDTO);
             return new ResponseEntity<>(list, HttpStatus.CREATED);
         } catch (UserDoesntExistException exception){
             throw new UserNotFoundException(exception.getMessage());
