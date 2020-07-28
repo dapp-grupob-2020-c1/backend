@@ -29,8 +29,8 @@ public class ScheduledTasks {
         }
     }
 
-    //@Scheduled(fixedRate = 5000)
-    @Scheduled(fixedRate = 86400000) //Runs every 24hs
+    @Scheduled(fixedRate = 120000) //Runs every 2 minutes
+    //@Scheduled(fixedRate = 86400000) //Runs every 24hs
     public void calculateSuggestedThresholds(){
         log.info("Starting suggested thresholds calculations");
         try {

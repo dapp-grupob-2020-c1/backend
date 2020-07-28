@@ -7,7 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import java.util.List;
@@ -18,13 +19,13 @@ import java.util.List;
 public abstract class ShopDelivery {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     protected long id;
     @OneToOne
     protected Shop shop;
-    @OneToMany
+    @ManyToMany
     protected List<ShoppingListEntry> products;
-    @OneToOne
+    @ManyToOne
     protected User user;
 
     public ShopDelivery(){}

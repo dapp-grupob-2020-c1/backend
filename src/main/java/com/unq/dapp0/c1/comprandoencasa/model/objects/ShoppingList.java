@@ -112,7 +112,7 @@ public class ShoppingList {
 
     public BigDecimal evaluateTotalFor(ProductType productType) {
         BigDecimal total = new BigDecimal(0);
-        for (ShoppingListEntry entry : this.entries) {
+        for (ShoppingListEntry entry : this.getEntriesList()) {
             Product product = entry.getProduct();
             if (product.isType(productType)) {
                 total = total.add(calculateFor(entry, entries));
@@ -151,7 +151,7 @@ public class ShoppingList {
     }
 
     public ShoppingListEntry removeProduct(Product product) {
-        Optional<ShoppingListEntry> entryOptional = this.entries.stream()
+        Optional<ShoppingListEntry> entryOptional = this.getEntriesList().stream()
                 .filter(entry -> entry.getProduct().getId().equals(product.getId())).findFirst();
         if (entryOptional.isPresent()){
             ShoppingListEntry entry = entryOptional.get();

@@ -25,4 +25,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
     Boolean existsByEmail(String email);
+
+    @Query("select u.id from User u")
+    Iterable<Long> getAllIds();
 }

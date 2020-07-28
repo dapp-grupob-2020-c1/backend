@@ -225,7 +225,7 @@ public class UserService {
     public ShoppingListActiveDTO getActiveCart(Long userId) {
         User user = findUserById(userId);
         ShoppingList shoppingList = user.getActiveShoppingList();
-        Map<ProductType, BigDecimal> typeThresholds = user.getTypeThresholds();
+        Map<ProductType, BigDecimal> typeThresholds = user.getSuggestedTypeThresholds();
         List<ThresholdDTO> thresholdDTOList = new ArrayList<>();
         for (ProductType productType : typeThresholds.keySet()){
             thresholdDTOList.add(
@@ -309,9 +309,14 @@ public class UserService {
 
     @Transactional
     public void calculateAllSuggestedThresholds() {
-        Iterable<User> users = this.userRepository.findAll();
-        for (User user : users){
-            user.evaluateSuggestedThresholds();
+        Iterable<Long> userIds = this.userRepository.getAllIds();
+        for (Long id : userIds){
+            this.evaluateForUser(id);
         }
+    }
+
+    private void evaluateForUser(Long userId) {
+        User user = this.findUserById(userId);
+        user.evaluateSuggestedThresholds();
     }
 }
