@@ -14,12 +14,14 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.HashMap;
@@ -82,8 +84,8 @@ public class User {
     @OneToMany
     private List<ShopDelivery> historicDeliveries;
 
-    @OneToMany
-    private List<Shop> shops = new ArrayList<>();
+    @ManyToMany
+    private List<Shop> shops;
 
     public User() {}
 
@@ -102,6 +104,7 @@ public class User {
         this.totalThreshold = BigDecimal.valueOf(0);
         this.typeThresholds = fillEmptyThresholds();
         this.suggestedTypeThresholds = fillEmptyThresholds();
+        this.shops = new ArrayList<>();
     }
 
     private Map<ProductType, BigDecimal> fillEmptyThresholds() {
@@ -351,18 +354,26 @@ public class User {
     }
 
     public void evaluateSuggestedThresholds() {
-        for (ProductType type : this.suggestedTypeThresholds.keySet()){
+        for (ProductType type : ProductType.values()){
             evaluateThresholdForType(type);
         }
     }
 
     private void evaluateThresholdForType(ProductType type) {
         BigDecimal total = BigDecimal.ZERO;
+        int amount = 0;
         for (ShoppingList shoppingList : this.historicShoppingLists){
+            BigDecimal copy = total;
             total = total.add(
                     shoppingList.evaluateTotalFor(type)
             );
+            if (total.compareTo(copy) > 0 ){
+                amount += 1;
+            }
         }
-        this.suggestedTypeThresholds.replace(type, suggestedTypeThresholds.get(type), total);
+        if (amount > 0){
+            total = total.divide(BigDecimal.valueOf(amount), RoundingMode.HALF_UP);
+            this.suggestedTypeThresholds.replace(type, suggestedTypeThresholds.get(type), total);
+        }
     }
 }

@@ -1,9 +1,5 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices.dtos;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.DeliveryAtHome;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.DeliveryAtShop;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
@@ -20,8 +16,6 @@ public class ShopDeliveryDTO {
     public UserPublicDTO user;
     public Long turnId;
     public Location location;
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
     public LocalDateTime dateOfDelivery;
 
     public ShopDeliveryDTO(ShopDelivery delivery) {

@@ -1,5 +1,7 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DeliveryAtHome;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DeliveryAtShop;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Discount;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountByCategory;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountByMultiple;
@@ -10,12 +12,18 @@ import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.ShopCategory;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingList;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingListEntry;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Turn;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
-
+import com.unq.dapp0.c1.comprandoencasa.repositories.DeliveryRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.DiscountRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.LocationRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.ShopRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.ShoppingListEntryRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.ShoppingListRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.TurnRepository;
 import com.unq.dapp0.c1.comprandoencasa.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +35,7 @@ import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +58,18 @@ public class InitService {
 
     @Autowired
     private DiscountRepository discountRepository;
+
+    @Autowired
+    private ShoppingListRepository shoppingListRepository;
+
+    @Autowired
+    private ShoppingListEntryRepository shoppingListEntryRepository;
+
+    @Autowired
+    private TurnRepository turnRepository;
+
+    @Autowired
+    private DeliveryRepository deliveryRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -409,5 +430,45 @@ public class InitService {
         this.shopRepository.save(clubMilaPlataShop);
         this.shopRepository.save(queimadaPlataShop);
         this.shopRepository.save(contiBestHeladosShop);
+
+        ShoppingList aShoppingList = new ShoppingList(unqLocation, aShopManager);
+        ShoppingListEntry oneEntry = aShoppingList.addProduct(unqBook, 2);
+        ShoppingListEntry anotherEntry = aShoppingList.addProduct(unqGear, 1);
+
+        DeliveryAtHome aDelivery = new DeliveryAtHome(
+                unqShop,
+                aShoppingList.getEntriesList(),
+                aShopManager, unqLocation,
+                LocalDateTime.of(2020, 6, 1, 20, 0));
+
+        ShoppingList aShoppingList2 = new ShoppingList(unqLocation, aShopManager);
+        ShoppingListEntry oneEntry2 = aShoppingList2.addProduct(unqBook, 4);
+
+        Turn aTurn = new Turn(unqShop, LocalDateTime.of(2020, 7, 1, 10, 0));
+
+        DeliveryAtShop anotherDelivery = new DeliveryAtShop(
+                unqShop, aShoppingList2.getEntriesList(), aShopManager, aTurn);
+
+        aShopManager.addLocation(unqLocation);
+        aShopManager.setTotalThreshold(BigDecimal.valueOf(1000));
+        aShopManager.addHistoricShoppingList(aShoppingList);
+        aShopManager.addHistoricShoppingList(aShoppingList2);
+        aShopManager.addNewDelivery(aDelivery);
+        aShopManager.addNewDelivery(anotherDelivery);
+        aShopManager.confirmDeliveryReception(aDelivery);
+
+        this.shoppingListEntryRepository.save(oneEntry);
+        this.shoppingListEntryRepository.save(oneEntry2);
+        this.shoppingListEntryRepository.save(anotherEntry);
+
+        this.shoppingListRepository.save(aShoppingList);
+        this.shoppingListRepository.save(aShoppingList2);
+
+        this.turnRepository.save(aTurn);
+
+        this.deliveryRepository.save(aDelivery);
+        this.deliveryRepository.save(anotherDelivery);
+
+        this.userRepository.save(aShopManager);
     }
 }

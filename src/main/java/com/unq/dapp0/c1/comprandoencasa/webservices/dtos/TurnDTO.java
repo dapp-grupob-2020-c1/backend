@@ -1,9 +1,5 @@
 package com.unq.dapp0.c1.comprandoencasa.webservices.dtos;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.Turn;
 
 import java.time.LocalDateTime;
@@ -14,8 +10,6 @@ public class TurnDTO {
 
     public Long id;
     public Long shopId;
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
     public LocalDateTime time;
 
     public TurnDTO(){}

@@ -1,10 +1,12 @@
 package com.unq.dapp0.c1.comprandoencasa.repositories;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -15,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
+@Import(ObjectMapper.class)
 @ActiveProfiles("test")
 public class UserRepositoryTests {
 
