@@ -1,8 +1,30 @@
 package com.unq.dapp0.c1.comprandoencasa.services;
 
-import com.unq.dapp0.c1.comprandoencasa.model.objects.*;
-
-import com.unq.dapp0.c1.comprandoencasa.repositories.*;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DeliveryAtHome;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DeliveryAtShop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Discount;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountByCategory;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountByMultiple;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.DiscountBySingle;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Location;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.PaymentMethod;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Product;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ProductType;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Shop;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShopCategory;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingList;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.ShoppingListEntry;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.Turn;
+import com.unq.dapp0.c1.comprandoencasa.model.objects.User;
+import com.unq.dapp0.c1.comprandoencasa.repositories.DeliveryRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.DiscountRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.LocationRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.ProductRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.ShopRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.ShoppingListEntryRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.ShoppingListRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.TurnRepository;
+import com.unq.dapp0.c1.comprandoencasa.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
